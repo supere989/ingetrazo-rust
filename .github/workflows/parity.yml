@@ -91,7 +91,7 @@ jobs:
           if [[ "$GITHUB_REF" != refs/heads/review/metal-* ]]; then
             cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
           fi
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example sheet_picture_workflows --example composer_picture_authoring --example composer_picture_gestures --example composer_legend_authoring --example paper_system_font_probe --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example sheet_picture_workflows --example sheet_annotation_workflows --example composer_picture_authoring --example composer_picture_gestures --example composer_legend_authoring --example paper_system_font_probe --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
       - uses: actions/setup-python@v5
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         with:
@@ -108,6 +108,9 @@ jobs:
       - name: Strict frozen picture drawing on native Metal
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: python3 scripts/replay-sheet-pictures.py target/debug/examples/sheet_picture_workflows docs/audits/metal-combined-gui-ci/sheet-pictures > docs/audits/metal-combined-gui-ci/sheet-pictures-replay.log 2>&1
+      - name: Strict frozen six-family sheet annotations on native Metal
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: python3 scripts/replay-sheet-annotations.py target/debug/examples/sheet_annotation_workflows docs/audits/metal-combined-gui-ci/sheet-annotations > docs/audits/metal-combined-gui-ci/sheet-annotations-replay.log 2>&1
       - name: Frozen native picture authoring and original-reader comparison
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: python3 scripts/replay-picture-authoring.py target/debug/examples/composer_picture_authoring docs/audits/metal-combined-gui-ci/picture-authoring > docs/audits/metal-combined-gui-ci/picture-authoring-replay.log 2>&1
@@ -322,7 +325,7 @@ jobs:
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         id: integratedconsumers
         run: |
-          cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example sheet_image_workflows --example sheet_picture_workflows --example composer_picture_authoring --example composer_picture_gestures --example composer_legend_authoring --example sheet_symbols_workflows --example view_frame_caption_workflows --example sheet_legend_workflows --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
+          cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example sheet_image_workflows --example sheet_picture_workflows --example sheet_annotation_workflows --example composer_picture_authoring --example composer_picture_gestures --example composer_legend_authoring --example sheet_symbols_workflows --example view_frame_caption_workflows --example sheet_legend_workflows --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
           echo "ready=true" >> "$GITHUB_OUTPUT"
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
@@ -654,6 +657,11 @@ jobs:
         run: |
           mkdir -p docs/audits/sheet-pictures-ci
           python scripts/replay-sheet-pictures.py target/debug/examples/sheet_picture_workflows docs/audits/sheet-pictures-ci/replay --software > docs/audits/sheet-pictures-ci/replay.log 2>&1
+      - name: Strict frozen six-family physical sheet annotations
+        if: ${{ !cancelled() && steps.integratedconsumers.outputs.ready == 'true' }}
+        run: |
+          mkdir -p docs/audits/sheet-annotations-ci
+          python scripts/replay-sheet-annotations.py target/debug/examples/sheet_annotation_workflows docs/audits/sheet-annotations-ci/replay --software > docs/audits/sheet-annotations-ci/replay.log 2>&1
       - name: Frozen picture authoring and original-reader comparison
         if: ${{ !cancelled() && steps.integratedconsumers.outputs.ready == 'true' }}
         run: |
