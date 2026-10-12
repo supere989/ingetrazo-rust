@@ -95,6 +95,9 @@ pub struct ExecutionReceipt {
     pub stderr: String,
     pub error: Option<String>,
     pub changed: bool,
+    /// Internal console diagnostics; the bridge result exposes only source fields.
+    pub document_published: bool,
+    pub vm_changed: bool,
 }
 
 #[rustpython_vm::pymodule]

@@ -311,10 +311,28 @@ impl crate::IngeTrazoApp {
         }
     }
     pub(crate) fn run_engineering_python(&mut self, code: &str) {
-        if let Ok(receipt) = self.execute_engineering_python(code) {
-            if let Some(error) = receipt.error {
-                self.status_message = error.clone();
-                self.console_logs.push(format!("Engineering Python refused: {error}"));
+        match self.execute_engineering_python(code) {
+            Ok(receipt) => {
+                let message = if receipt.document_published && receipt.vm_changed {
+                    "Engineering Python mesh command committed"
+                } else if receipt.document_published {
+                    "Engineering Python document updated without a new history command"
+                } else if receipt.vm_changed {
+                    "Engineering Python VM-only command completed; visible document unchanged"
+                } else {
+                    "Engineering Python command completed without history change"
+                };
+                self.console_logs.push(message.into());
+                if !receipt.stdout.is_empty() { self.console_logs.push(receipt.stdout); }
+                if !receipt.stderr.is_empty() { self.console_logs.push(receipt.stderr); }
+                if let Some(error) = receipt.error {
+                    self.status_message = error;
+                    self.console_logs.push(format!("Engineering Python refused: {}",self.status_message));
+                }
+            }
+            Err(error) => {
+                self.status_message = error;
+                self.console_logs.push(format!("Engineering Python refused: {}",self.status_message));
             }
         }
     }
@@ -327,8 +345,6 @@ impl crate::IngeTrazoApp {
         -> Result<ingetrazo_ai_interpreter_proof::vm_mesh::ExecutionReceipt, String>
     {
         if self.undo_stack.try_reserve(1).is_err() {
-            self.console_logs
-                .push("Engineering Python refused before execution: history capacity".into());
             return Err("Engineering Python history capacity refused".into());
         }
         match self
@@ -360,7 +376,6 @@ impl crate::IngeTrazoApp {
                             self.status_message =
                                 "Group shares publication refused; interpreter scope retired"
                                     .into();
-                            self.console_logs.push(self.status_message.clone());
                             return Err(self.status_message.clone());
                         }
                     }
@@ -380,10 +395,6 @@ impl crate::IngeTrazoApp {
                             self.status_message = format!(
                                 "Native publication refused; interpreter scope retired: {error}"
                             );
-                            self.console_logs.push(format!(
-                                "Engineering Python refused: {}",
-                                self.status_message
-                            ));
                             return Err(self.status_message.clone());
                         }
                     };
@@ -408,27 +419,13 @@ impl crate::IngeTrazoApp {
                     self.scene.bump_version();
                     self.engineering_python.published(self.model_revision);
                 }
-                self.console_logs.push(
-                    if published && changed {
-                        "Engineering Python mesh command committed"
-                    } else if published {
-                        "Engineering Python document updated without a new history command"
-                    } else if changed {
-                        "Engineering Python VM-only command completed; visible document unchanged"
-                    } else {
-                        "Engineering Python command completed without history change"
-                    }
-                    .into(),
-                );
+                execution_receipt.document_published = published;
+                execution_receipt.vm_changed = changed;
                 execution_receipt.changed = published && changed;
-                if !execution_receipt.stdout.is_empty() { self.console_logs.push(execution_receipt.stdout.clone()); }
-                if !execution_receipt.stderr.is_empty() { self.console_logs.push(execution_receipt.stderr.clone()); }
                 Ok(execution_receipt)
             }
             Err(error) => {
                 self.status_message = error.clone();
-                self.console_logs
-                    .push(format!("Engineering Python refused: {error}"));
                 Err(error)
             }
         }
