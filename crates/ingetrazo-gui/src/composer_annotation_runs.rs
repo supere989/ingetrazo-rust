@@ -138,6 +138,9 @@ pub(super) fn reconcile(app: &mut IngeTrazoApp) -> Result<(), String> {
     let Some(sheet) = state.sheet else {
         return Ok(());
     };
+    if state.segments.is_empty() {
+        return Ok(());
+    }
     // The owning history clones tokens: equal payloads never substitute for removed entities.
     let current = app
         .scene
