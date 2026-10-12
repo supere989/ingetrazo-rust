@@ -25,6 +25,7 @@ log.workspace = true
 libc = "0.2"
 image.workspace = true
 blake3.workspace = true
+sha2 = "0.10"
 thiserror.workspace = true
 uuid.workspace = true
 
@@ -94,5 +95,4 @@ name = "engineering_console_nested_fixture"
 required-features = ["engineering-python"]
 
 [dev-dependencies]
-sha2 = "0.10"
 zip.workspace = true
