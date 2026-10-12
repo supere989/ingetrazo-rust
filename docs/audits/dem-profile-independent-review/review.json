@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "e206c4b4c91c7e9c2487ea3ff07b1d5b99a4ede648ea98a150f9bcea06689c2a",
+  "members": 70,
+  "source_file_hashes": 8,
+  "producer_hashes": 3,
+  "unchanged_original_states": 22,
+  "restart_pairs": 4,
+  "csv_files": 21,
+  "source_only": true
+}
