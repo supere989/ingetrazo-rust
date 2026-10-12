@@ -273,7 +273,7 @@ mod tests {
     #[test]
     fn placed_component_pieces_update_shared_definition_and_undo_once() {
         use ingetrazo_core::{groups::Group, mesh::Mesh};
-        let mut app = IngeTrazoApp::new();
+        let mut app = IngeTrazoApp::new().without_startup_figure_for_test();
         app.scene.mesh.clear();
         let mut mesh = Mesh::new();
         cube(&mut mesh, 0.);

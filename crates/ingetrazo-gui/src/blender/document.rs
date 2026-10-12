@@ -390,7 +390,7 @@ mod cancel_tests {
     #[test]
     fn cancel_keeps_global_lights_and_their_undo_without_working_geometry() {
         use ingetrazo_core::{groups::Group, scene::SelectionItem};
-        let mut a = IngeTrazoApp::new();
+        let mut a = IngeTrazoApp::new().without_startup_figure_for_test();
         a.system_clipboard = None;
         a.scene.groups.push(Group::new("edit"));
         a.scene.select(SelectionItem::Group(0));

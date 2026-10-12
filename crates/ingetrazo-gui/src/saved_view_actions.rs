@@ -25,7 +25,7 @@ impl IngeTrazoApp {
 }
 #[cfg(test)]mod tests{use super::*;use glam::DVec3;use ingetrazo_core::{groups::Group,section::SectionPlane};
     #[test]fn selected_update_preserves_metadata_and_recalls_hidden_tree_section_style(){
-        let mut app=IngeTrazoApp::new();let mut parent=Group::new("parent");let mut child=Group::new("child");child.hidden=true;parent.children.push(child);app.scene.groups.push(parent);
+        let mut app=IngeTrazoApp::new().without_startup_figure_for_test();let mut parent=Group::new("parent");let mut child=Group::new("child");child.hidden=true;parent.children.push(child);app.scene.groups.push(parent);
         app.scene.section_planes.push(SectionPlane::new(DVec3::ZERO,DVec3::Z,"cut","A"));app.style.visual_style=VisualStyle::XRay;app.shadows_enabled=true;app.camera.two_point=true;
         app.add_saved_view("first".into());app.add_saved_view("second".into());app.scene.saved_views[1].native_document=serde_json::json!({"opaque":17});app.scene.saved_views[1].style.as_mut().unwrap()["opaque_style"]=serde_json::json!(19);
         let first=app.scene.saved_views[0].clone();app.camera.distance=33.;app.update_selected_saved_view();assert_eq!(app.scene.saved_views[0],first);assert_eq!(app.scene.saved_views[1].native_document["opaque"],17);assert_eq!(app.scene.saved_views[1].style.as_ref().unwrap()["opaque_style"],19);

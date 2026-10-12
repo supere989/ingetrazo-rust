@@ -471,7 +471,7 @@ mod tests {
     }
     #[test]
     fn reference_only_finish_keeps_precise_prototype_and_layer_owned_history() {
-        let mut a = IngeTrazoApp::new();
+        let mut a = IngeTrazoApp::new().without_startup_figure_for_test();
         a.system_clipboard = None;
         let mut m = Mesh::new();
         m.add_vertex(DVec3::new(0.123456789, 0.234567891, 0.345678912));

@@ -289,7 +289,7 @@ mod tests {
     }
     #[test]
     fn bim_tagged_object_history_cache_selection_and_real_exports() {
-        let mut a = app();
+        let mut a = app().without_startup_figure_for_test();
         a.scene.select(SelectionItem::Face(0));
         a.scene.select(SelectionItem::Face(1));
         a.scene.select(SelectionItem::Group(0));
@@ -463,7 +463,7 @@ mod draw_tests {
     #[test]
     fn active_draw_context_uses_root_identity_and_local_history() {
         use ingetrazo_core::{groups::Group,scene::SelectionItem};
-        let mut a=app();rect(&mut a,20.,20.);
+        let mut a=app().without_startup_figure_for_test();rect(&mut a,20.,20.);
         a.scene.mesh.faces[0].attrs.insert("ifc".into(),serde_json::json!({"id":40,"class":"IfcSlab","name":"root"}));
         a.scene.groups.push(Group::new("group"));
         a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
@@ -501,7 +501,7 @@ mod draw_tests {
     #[test]
     fn context_group_row_targets_root_placement_not_active_child_index() {
         use ingetrazo_core::{groups::Group,scene::SelectionItem};
-        let mut a=app();let mut parent=Group::new("parent");
+        let mut a=app().without_startup_figure_for_test();let mut parent=Group::new("parent");
         parent.ifc_tag=Some(serde_json::json!({"class":"IfcSlab","name":"parent slab"}));
         parent.children.push(Group::new("child"));a.scene.groups.push(parent);
         let parent_id=a.scene.groups[0].id;let child_id=a.scene.groups[0].children[0].id;
@@ -536,7 +536,7 @@ mod draw_tests {
     #[test]
     fn mixed_metadata_nested_placed_leaf_fold_restores_geometry_and_root_tags() {
         use ingetrazo_core::{groups::Group,scene::SelectionItem};
-        let mut a=app();rect(&mut a,20.,20.);let root=a.scene.mesh.clone();
+        let mut a=app().without_startup_figure_for_test();rect(&mut a,20.,20.);let root=a.scene.mesh.clone();
         let mut child=Group::new("child");let ids=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|child.mesh.add_vertex(p));child.mesh.add_face(ids.to_vec(),vec![]).unwrap();child.transform=glam::DMat4::from_translation(DVec3::new(2.,0.,0.));let child_before=child.mesh.clone();
         let mut parent=Group::new("parent");parent.children.push(child);parent.transform=glam::DMat4::from_translation(DVec3::new(4.,5.,0.));a.scene.groups.push(parent);
         a.scene.select(SelectionItem::Group(0));a.begin_component_edit();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);
@@ -561,7 +561,7 @@ mod draw_tests {
     #[test]
     fn ifc_export_finishes_all_nested_edits_before_census_and_writing() {
         use ingetrazo_core::{groups::Group,scene::SelectionItem};
-        let mut a=app();rect(&mut a,20.,20.);
+        let mut a=app().without_startup_figure_for_test();rect(&mut a,20.,20.);
         let root=a.scene.mesh.clone();let mut parent=Group::new("parent");parent.children.push(Group::new("child"));
         a.scene.groups.push(parent);a.scene.select(SelectionItem::Group(0));a.begin_component_edit();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);
         assert_eq!(a.component_edit_stack.len(),2);

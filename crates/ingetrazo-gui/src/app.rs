@@ -1532,7 +1532,7 @@ mod tests {
 
     #[test]
     fn test_cad_clipboard_and_group_operations() {
-        let mut app = IngeTrazoApp::new();
+        let mut app = IngeTrazoApp::new().without_startup_figure_for_test();
         let v0 = app.scene.mesh.add_vertex(DVec3::new(0.0, 0.0, 0.0));
         let v1 = app.scene.mesh.add_vertex(DVec3::new(2.0, 0.0, 0.0));
         let v2 = app.scene.mesh.add_vertex(DVec3::new(2.0, 2.0, 0.0));

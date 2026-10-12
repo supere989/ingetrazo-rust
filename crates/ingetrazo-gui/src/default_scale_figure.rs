@@ -142,3 +142,23 @@ impl crate::IngeTrazoApp {
         }
     }
 }
+
+#[cfg(test)]
+impl crate::IngeTrazoApp {
+    /// Geometry fixtures declare an empty starting document explicitly. Real
+    /// constructor/New acceptance continues to use the source startup figure.
+    pub(crate) fn without_startup_figure_for_test(mut self) -> Self {
+        if let Some(owner) = self.startup_scale_figure.take() {
+            if let Some(index) = self.scene.groups.iter().position(|g| g.id == owner.group) {
+                let group = self.scene.groups.remove(index);
+                if let Some(mesh_owner) = group.mesh_share {
+                    self.scene.mesh_shares.remove(&mesh_owner);
+                }
+                self.scene.embedded_textures.remove(&owner.texture);
+                self.scene.bump_version();
+            }
+        }
+        self.mark_document_clean();
+        self
+    }
+}

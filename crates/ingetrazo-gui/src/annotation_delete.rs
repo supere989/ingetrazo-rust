@@ -264,7 +264,7 @@ mod tests {
             glam::DMat4::IDENTITY,
             glam::DMat4::from_translation(DVec3::new(2., 0., 0.)),
         ] {
-            let mut a = IngeTrazoApp::new();
+            let mut a = IngeTrazoApp::new().without_startup_figure_for_test();
             a.system_clipboard = None;
             let mut mesh = Mesh::new();
             let p = DVec3::new(1. + 2f64.powi(-40), 0., 0.);

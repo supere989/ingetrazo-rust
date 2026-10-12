@@ -80,7 +80,7 @@ pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
 }
 #[cfg(test)]mod tests{use super::*;use glam::{DMat4,DVec3};use ingetrazo_core::mesh::Mesh;
     #[test]fn cut_list_controls_apply_precision_surface_filter_and_document_units(){
-        let mut app=IngeTrazoApp::new();for(name,length)in[("near A",1.0004),("near B",1.00049)]{let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X*length);mesh.add_edge(a,b);app.scene.groups.push(Group::with_mesh(name,mesh));}
+        let mut app=IngeTrazoApp::new().without_startup_figure_for_test();for(name,length)in[("near A",1.0004),("near B",1.00049)]{let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X*length);mesh.add_edge(a,b);app.scene.groups.push(Group::with_mesh(name,mesh));}
         assert!(app.outliner_cut_list().contains("2\tnear A, near B"));assert!(app.outliner_cut_list().contains("surface"));assert!(app.outliner_cut_list().contains("1.000 m"));
         app.parts_options.precision_mm=0.01;assert_eq!(app.outliner_cut_list().lines().count(),3);
         app.parts_options.include_surfaces=false;assert_eq!(app.outliner_cut_list().lines().count(),1);app.parts_options.include_surfaces=true;app.scene.unit=ingetrazo_core::units::LengthUnit::Millimeters;assert!(app.outliner_cut_list().contains("1000.40 mm"));
@@ -89,7 +89,7 @@ pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
         let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::ZERO);let b=mesh.add_vertex(DVec3::X);mesh.add_edge(a,b);let first=Group::with_mesh("Piece 10",mesh.clone());let second=Group::with_mesh("Piece 2",mesh);app.scene.groups=vec![first,second];let before=app.scene.clone();app.all_outliner_parts_visible(false);assert!(app.scene.groups.iter().all(|g|g.hidden));assert_eq!(app.undo_stack.len(),1);app.undo();assert_eq!(app.scene,before);assert!(app.outliner_cut_list().contains("2\tPiece 2, Piece 10"));app.refresh_parts_cache();let id=app.scene.groups[0].id;assert_eq!(app.parts_cache.rows[&id].size[0],1.);app.scene.groups[0].transform=DMat4::from_scale(DVec3::splat(2.));app.scene.bump_version();app.refresh_parts_cache();assert_eq!(app.parts_cache.rows[&id].size[0],2.);
     }
     #[test]fn nested_selection_opens_correct_context_and_properties_roundtrip_with_undo(){
-        let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();mesh.add_vertex(DVec3::new(1.,2.,3.));let leaf=Group::with_mesh("leaf",mesh);let id=leaf.id;
+        let mut app=IngeTrazoApp::new().without_startup_figure_for_test();let mut mesh=Mesh::new();mesh.add_vertex(DVec3::new(1.,2.,3.));let leaf=Group::with_mesh("leaf",mesh);let id=leaf.id;
         let mut middle=Group::new("middle");middle.transform=DMat4::from_translation(DVec3::X);middle.children.push(leaf);
         let mut outer=Group::new("outer");outer.children.push(middle);app.scene.groups.push(outer);
         let before=app.scene.clone();app.set_outliner_visibility(id,false);assert!(!app.select_outliner_group(id,false));app.undo();assert_eq!(app.scene,before);
