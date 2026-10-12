@@ -1,0 +1,934 @@
+{
+  "schema": 1,
+  "archive_sha256": "f421285489ed0d35821155003a92033af6a58a3404b8829c2bc9409651cf7fb2",
+  "members": {
+    "r1/exchange/native/dae-400-saved.igz": {
+      "size": 307418,
+      "sha256": "3ac25635c5da9baf8ab357d764862ff0512a73067d9ad092a87e963e9de003c2",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/dae-400-saved.igz"
+    },
+    "r1/exchange/native/dae-401-leaf-saved.igz": {
+      "size": 397023,
+      "sha256": "6f07e4d289562fc00acfaeb85b995b69ce9c3031ec3f2a5e4fb34ebbc30f348c",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/dae-401-leaf-saved.igz"
+    },
+    "r1/exchange/native/dae-datum-saved.igz": {
+      "size": 8225,
+      "sha256": "95376e6828b73d80c1616c38d414435bfff13cd0f82f492ea3b48cf7ef45df47",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/dae-datum-saved.igz"
+    },
+    "r1/exchange/native/dae-existing-datum-saved.igz": {
+      "size": 8225,
+      "sha256": "54920e600f315fc73f1df35d932d7d6ee4d4c18d6f70b3862352a877af149325",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/dae-existing-datum-saved.igz"
+    },
+    "r1/exchange/native/dae-y-inch-leaf-saved.igz": {
+      "size": 11846,
+      "sha256": "1996a3bfa8fed85f39ddf8a98dd06e76eebab77e3911f499d35ba0eeb242811b",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/dae-y-inch-leaf-saved.igz"
+    },
+    "r1/exchange/native/dae-z-root-saved.igz": {
+      "size": 8093,
+      "sha256": "84c08b85f06095258be871fc367072864783ec129b6456e067176f4d219c8a6b",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/dae-z-root-saved.igz"
+    },
+    "r1/exchange/native/native-exchange.partial.json": {
+      "size": 7212112,
+      "sha256": "5cfb257a47dfddf76b0b51a88c1fffdde14eb4578587fa06cdef7725e242906d",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native/native-exchange.partial.json"
+    },
+    "r1/exchange/native.log": {
+      "size": 102,
+      "sha256": "6a98f7860113384cebc79c742ab98181e950dbd8d109938d732fa159da191c20",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/native.log"
+    },
+    "r1/exchange/prefix-diagnostic.json": {
+      "size": 1921,
+      "sha256": "37eddc3fc2a6c3b5a9b9eb33bcf8a0e89f31812b458636185b91e530441b648c",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/prefix-diagnostic.json"
+    },
+    "r1/exchange/result.json": {
+      "size": 510,
+      "sha256": "2593d9c2de8cba74dec587070371656dfb61c0b95f2217a2f0069d7c29e0ba9a",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r1/result.json"
+    },
+    "r1/integration/affected-result.json": {
+      "size": 834,
+      "sha256": "2cfb91a2efee2ab8d2bfb0e605c97e1703833345c5a349a1db6e23fe0e9b4270",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/affected-result.json"
+    },
+    "r1/integration/build.log": {
+      "size": 28605,
+      "sha256": "7d6f19cd1756daa5ac8d3c2967675f437a9c17585191d0bf1e5605836ba6752a",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/build.log"
+    },
+    "r1/integration/image/checker.log": {
+      "size": 1000,
+      "sha256": "4e7afd6a27b32f587a21542e565880243d42162454b2fccea691ab3295c7b4be",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/checker.log"
+    },
+    "r1/integration/image/comparison.json": {
+      "size": 1064,
+      "sha256": "34cd4a76ab54b11a14e7dc8b734f5d7683ebe29cb3760e0a323dad46e122cb50",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/comparison.json"
+    },
+    "r1/integration/image/native/native-image-import.json": {
+      "size": 909249,
+      "sha256": "5f72513cdb8ff91ae0e05eb761959c28184b707d042fea7fdc64612342996a1b",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/native/native-image-import.json"
+    },
+    "r1/integration/image/native/reopens-image-import.json": {
+      "size": 98003,
+      "sha256": "98ca649e457740fa27149efab6f384381fc75bffda18d72ebaebfe7c63e7dd7e",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/native/reopens-image-import.json"
+    },
+    "r1/integration/image/native.log": {
+      "size": 37,
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/native.log"
+    },
+    "r1/integration/image/reader.log": {
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/reader.log"
+    },
+    "r1/integration/image/result.json": {
+      "size": 1450,
+      "sha256": "68a15b68adc833bcaa2453a7fb6758c10ce55f980da4989c87d592f1daeb4496",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image/result.json"
+    },
+    "r1/integration/image.log": {
+      "size": 1226,
+      "sha256": "408bca202167ba3434e9c469218331f02544fd8cf0b10a671b7c22a5c88a8fa4",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/image.log"
+    },
+    "r1/integration/stl/checker.log": {
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/checker.log"
+    },
+    "r1/integration/stl/comparison.json": {
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/comparison.json"
+    },
+    "r1/integration/stl/native/native-stl.json": {
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/native/native-stl.json"
+    },
+    "r1/integration/stl/native/reopens-stl.json": {
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/native/reopens-stl.json"
+    },
+    "r1/integration/stl/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/native.log"
+    },
+    "r1/integration/stl/result.json": {
+      "size": 1431,
+      "sha256": "37323aa001fa2caf2598386eadad448f173149183384bc2eca53cc8cf6d02bea",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/result.json"
+    },
+    "r1/integration/stl.log": {
+      "size": 1207,
+      "sha256": "b1d9187dae25518f4ddb0ffdd2b5558109095b9535c0fa82199f6a3b2fc9cc9d",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl.log"
+    },
+    "r2/exchange/all-field-differences.json": {
+      "size": 181987,
+      "sha256": "f58ad6db970be22c594d22ee560dae7037db847285b55adbcb58434ffa24588a",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/all-field-differences.json"
+    },
+    "r2/exchange/checker.log": {
+      "size": 83,
+      "sha256": "fd02bfae6905a3fb297c73a03074349b1cb95188c4e97c8da5b51a806d4efb7b",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/checker.log"
+    },
+    "r2/exchange/comparison.json": {
+      "size": 89,
+      "sha256": "d7d207c7e9979e756e09e8bf481e726933bb9ec71334cbb66a4bc386994c37a9",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/comparison.json"
+    },
+    "r2/exchange/full-diagnostic.json": {
+      "size": 8972,
+      "sha256": "e40f115893d76b23d98dfe27bd06664f7acebacca0d4868c2bb4aa484b43ea1f",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/full-diagnostic.json"
+    },
+    "r2/exchange/native/dae-401-leaf-saved.igz": {
+      "size": 397021,
+      "sha256": "bdd5f6fad64586900d37b9a8a6e512bb369abe9d5a43ed3d290409f79f13add7",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-401-leaf-saved.igz"
+    },
+    "r2/exchange/native/dae-combined-leaf-saved.igz": {
+      "size": 1514,
+      "sha256": "0f4f5cca33924570cc560cde07c0ff5339c5eaa6323383fac001658295d98729",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-combined-leaf-saved.igz"
+    },
+    "r2/exchange/native/dae-datum-saved.igz": {
+      "size": 8225,
+      "sha256": "d32069b85e62ec79c73aee6d32b41550ef15a8c95ec40d67bff308d3e69188bf",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-datum-saved.igz"
+    },
+    "r2/exchange/native/dae-existing-datum-saved.igz": {
+      "size": 8225,
+      "sha256": "d0de2a7928fd24bbb427763180fda2b461f5543d3d4a30f32954dea1d7a5daa4",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-existing-datum-saved.igz"
+    },
+    "r2/exchange/native/dae-mixed-textures-saved.igz": {
+      "size": 1647,
+      "sha256": "06468f849ce3f9117c8b905e2069185924125ced840c7a0dc7d5fa6e60720918",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-mixed-textures-saved.igz"
+    },
+    "r2/exchange/native/dae-y-inch-leaf-saved.igz": {
+      "size": 11844,
+      "sha256": "d42d9e9e3bffb32829fca3d29b9af4bdddb611718302391cddc79ed3d275f126",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-y-inch-leaf-saved.igz"
+    },
+    "r2/exchange/native/dae-z-root-saved.igz": {
+      "size": 8093,
+      "sha256": "60672d9bdf8bfdb5c89eafb064423c257af6c9ced55c3f21bb210e2bca558809",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-z-root-saved.igz"
+    },
+    "r2/exchange/native/glb-named-saved.igz": {
+      "size": 5474,
+      "sha256": "ff2392beddc55ce63694446f7619f14efd92c241a7a94c91a3459d6936ddbecb",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/glb-named-saved.igz"
+    },
+    "r2/exchange/native/glb-textured-leaf-saved.igz": {
+      "size": 1289,
+      "sha256": "f515b3623ed7214ccc709c1daeaf457eaed3a52a692679784c7703bfd56f0030",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/glb-textured-leaf-saved.igz"
+    },
+    "r2/exchange/native/gltf-scale-saved.igz": {
+      "size": 5390,
+      "sha256": "e324422fb97da3858ecea2c6bd6e9181fed5d4a87cc776d72cfbfe6c7283e8a5",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/gltf-scale-saved.igz"
+    },
+    "r2/exchange/native/native-exchange.json": {
+      "size": 7697073,
+      "sha256": "d363aba0898e99dfc2cfe2d9b4f32dbbd12c6eeac7c8bf8fc5b6ef96efdbe5dd",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/native-exchange.json"
+    },
+    "r2/exchange/native/native-exchange.partial.json": {
+      "size": 7696695,
+      "sha256": "aa1f3981aebb8409c53f02ae56261261b0a11c3eb4392460e29b756f9ad87e83",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/native-exchange.partial.json"
+    },
+    "r2/exchange/native/reopens-exchange.json": {
+      "size": 4471391,
+      "sha256": "9aaf0915f7aee98e528369e8c12bd40ffa4c5f1d53ca022e60a55bf467fd5e78",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/reopens-exchange.json"
+    },
+    "r2/exchange/reader.log": {
+      "size": 25,
+      "sha256": "fb988518dad5b01a619e46ad59fb738ddb26b7b7169566cf8b5382471bfc0f1b",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/reader.log"
+    },
+    "r2/exchange/result.json": {
+      "size": 1224,
+      "sha256": "c9dc867e70141d908f1c28781eb20252ccebd1cc0f2d05c6cd3f666a2fe1c732",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/result.json"
+    },
+    "r2/integration/affected-result.json": {
+      "size": 835,
+      "sha256": "ac4704a21a48bae6f331e0ef3d9200211971daa73081046d5fc96d785205ca97",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/affected-result.json"
+    },
+    "r2/integration/build.log": {
+      "size": 28323,
+      "sha256": "b9fbbad399ab86b69cd48ca3bfd0b8c3660ce10d9508a9397dc43621a94eae80",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/build.log"
+    },
+    "r2/integration/image/result.json": {
+      "size": 1449,
+      "sha256": "5625b76df4c1ccf0d420ec28410afc7bb9480cf0b91394f9ea66de9256514dd9",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/result.json"
+    },
+    "r2/integration/image.log": {
+      "size": 1225,
+      "sha256": "00c9c0e57f5db2768ac878b2c7b76cd90e8705547dec149367d90d30de96e48a",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image.log"
+    },
+    "r2/integration/stl/result.json": {
+      "size": 1432,
+      "sha256": "fde1c6217be35fdbb3d2c841a66f18d8f848e77a2516c652602109665f80a434",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/result.json"
+    },
+    "r2/integration/stl.log": {
+      "size": 1208,
+      "sha256": "a25eed51f6d557ceec64969e564b8eb0871d4cf5325af10751901117fc9a1cb2",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl.log"
+    },
+    "r3/exchange/full-diagnostic.json": {
+      "size": 155612,
+      "sha256": "670055b8f87fbc23444501f191d7917a16687cc8f21ad12d2853cbc9acb76581",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/full-diagnostic.json"
+    },
+    "r3/exchange/independent-residual-classification.json": {
+      "size": 1512,
+      "sha256": "17f927404ee7add537e0cee08d9d89947dcef14a57a185e9915c9545a78ed374",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/independent-residual-classification.json"
+    },
+    "r3/exchange/native/dae-401-leaf-saved.igz": {
+      "size": 397021,
+      "sha256": "2645d8b79c746cdfe5bfa6dd23da633ebac50d8f2d1cea672c31a38c06c14c91",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-401-leaf-saved.igz"
+    },
+    "r3/exchange/native/dae-combined-leaf-saved.igz": {
+      "size": 1527,
+      "sha256": "9287b74ad8a75ba20deb0ca31b56e6c817623391f10d3054166adc24189a5947",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-combined-leaf-saved.igz"
+    },
+    "r3/exchange/native/dae-datum-saved.igz": {
+      "size": 8225,
+      "sha256": "92d0ca3c20bcf59a4c2c1632ec4421f2323f87907551210029962371330e3748",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-datum-saved.igz"
+    },
+    "r3/exchange/native/dae-existing-datum-saved.igz": {
+      "size": 8225,
+      "sha256": "95fabf7216f1daa00065b8232b108f7d2022a611539eb562e8f12a16d7b22168",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-existing-datum-saved.igz"
+    },
+    "r3/exchange/native/dae-mixed-textures-saved.igz": {
+      "size": 1649,
+      "sha256": "37c9af3b15a7157005cbbaa8e0631652b88b485e4b6b247534ef65d07496e8ab",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-mixed-textures-saved.igz"
+    },
+    "r3/exchange/native/dae-y-inch-leaf-saved.igz": {
+      "size": 11844,
+      "sha256": "4da6ed74ff84e948fa09d6a42de485907936fe28e5a6de2a54897496f6fc2a9d",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-y-inch-leaf-saved.igz"
+    },
+    "r3/exchange/native/dae-z-root-saved.igz": {
+      "size": 8093,
+      "sha256": "0b5173a2c548320101337b26507a06efb0c767dbecfdfa50f3ec7bed32eb142a",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-z-root-saved.igz"
+    },
+    "r3/exchange/native/glb-named-saved.igz": {
+      "size": 5465,
+      "sha256": "1f1dae458e262d9e9ded1f7b6639b5bcbacc997163a3bc80f20f3c5e7c400131",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/glb-named-saved.igz"
+    },
+    "r3/exchange/native/glb-textured-leaf-saved.igz": {
+      "size": 1264,
+      "sha256": "59780af4c98f1fd06a3598126e6971a210f99a44c30aad87e9566a17a1ddb954",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/glb-textured-leaf-saved.igz"
+    },
+    "r3/exchange/native/gltf-scale-saved.igz": {
+      "size": 5381,
+      "sha256": "8142bce56fc797c72ec7d892f5d8a5d6582fd0a41c7dce5fe8a59d6a292dee84",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/gltf-scale-saved.igz"
+    },
+    "r3/exchange/native/native-exchange.json": {
+      "size": 7696857,
+      "sha256": "9f9ad227aabe59e548ec1a240c4529588704de40a2376e8bdb53c050d7c94682",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/native-exchange.json"
+    },
+    "r3/exchange/native/native-exchange.partial.json": {
+      "size": 7696479,
+      "sha256": "835356b101dace8ff317a0e0f048c44c9611ef8338529bb3c007bd232230b005",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/native-exchange.partial.json"
+    },
+    "r3/exchange/native/reopens-exchange.json": {
+      "size": 4471357,
+      "sha256": "98020d43f5650c653015277c4984ade0e2be8308bc5cc7e0b01985a1257a8543",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/reopens-exchange.json"
+    },
+    "r3/exchange/result.json": {
+      "size": 1222,
+      "sha256": "908ed2157160e93bcf623d25a1f6e4937ebe5dac14e037028c279386b40e87e2",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/result.json"
+    },
+    "r3/integration/build.log": {
+      "size": 28148,
+      "sha256": "f4262f90f88de8b3ad241ac27c800e2c1b8910df8ef5142323f8b48dfb312e80",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/build.log"
+    },
+    "r3/integration/exchange.log": {
+      "size": 1788,
+      "sha256": "cceb415589a62a9768fd9b1cdc70e109dd6ee884a5ab13dff4fe9da87fd10cc6",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/exchange.log"
+    },
+    "r3/integration/image/result.json": {
+      "size": 1450,
+      "sha256": "91ff4bce5116603880b7ea1246ad0f75165ca1c607a214ec510bba47bbe5f7d0",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/result.json"
+    },
+    "r3/integration/image.log": {
+      "size": 1226,
+      "sha256": "d7e749264d6589d334e87281b212c0c86a22b9099939013dbf7e6a42eda178ce",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image.log"
+    },
+    "r3/integration/result.json": {
+      "size": 1147,
+      "sha256": "355807b3a609a449e170711eba8504bdf168d3ca509e4dd07d30cc7b2c6a2c51",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/result.json"
+    },
+    "r3/integration/stl/result.json": {
+      "size": 1431,
+      "sha256": "cd4f60aa30288767b1306b0dc96e0d67b628e3fafc5d5516c3afaaa128b35051",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/result.json"
+    },
+    "r3/integration/stl.log": {
+      "size": 1207,
+      "sha256": "1e989fc8930eef0790a1f6518f51066a5c3abef1ad612792e2cb84ecaefe9731",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl.log"
+    },
+    "provenance/retained-root-verification-helper.py": {
+      "size": 1420,
+      "sha256": "933937d2b0b05ea7be2c56cb031d7e41a64ce652dd1c4cc968a78d2d1f7e4e79",
+      "producer_path": "/tmp/ingetrazo-verify-exchange.py"
+    }
+  },
+  "identical_file_aliases": {
+    "r1/integration/stl/reader.log": {
+      "retained_member": "r1/integration/image/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r1/stl/reader.log"
+    },
+    "r2/exchange/native/dae-400-saved.igz": {
+      "retained_member": "r1/exchange/native/dae-400-saved.igz",
+      "size": 307418,
+      "sha256": "3ac25635c5da9baf8ab357d764862ff0512a73067d9ad092a87e963e9de003c2",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native/dae-400-saved.igz"
+    },
+    "r2/exchange/native.log": {
+      "retained_member": "r1/integration/stl/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r2/native.log"
+    },
+    "r2/integration/image/checker.log": {
+      "retained_member": "r1/integration/image/checker.log",
+      "size": 1000,
+      "sha256": "4e7afd6a27b32f587a21542e565880243d42162454b2fccea691ab3295c7b4be",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/checker.log"
+    },
+    "r2/integration/image/comparison.json": {
+      "retained_member": "r1/integration/image/comparison.json",
+      "size": 1064,
+      "sha256": "34cd4a76ab54b11a14e7dc8b734f5d7683ebe29cb3760e0a323dad46e122cb50",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/comparison.json"
+    },
+    "r2/integration/image/native/native-image-import.json": {
+      "retained_member": "r1/integration/image/native/native-image-import.json",
+      "size": 909249,
+      "sha256": "5f72513cdb8ff91ae0e05eb761959c28184b707d042fea7fdc64612342996a1b",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/native/native-image-import.json"
+    },
+    "r2/integration/image/native/reopens-image-import.json": {
+      "retained_member": "r1/integration/image/native/reopens-image-import.json",
+      "size": 98003,
+      "sha256": "98ca649e457740fa27149efab6f384381fc75bffda18d72ebaebfe7c63e7dd7e",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/native/reopens-image-import.json"
+    },
+    "r2/integration/image/native.log": {
+      "retained_member": "r1/integration/image/native.log",
+      "size": 37,
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/native.log"
+    },
+    "r2/integration/image/reader.log": {
+      "retained_member": "r1/integration/image/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/image/reader.log"
+    },
+    "r2/integration/stl/checker.log": {
+      "retained_member": "r1/integration/stl/checker.log",
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/checker.log"
+    },
+    "r2/integration/stl/comparison.json": {
+      "retained_member": "r1/integration/stl/comparison.json",
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/comparison.json"
+    },
+    "r2/integration/stl/native/native-stl.json": {
+      "retained_member": "r1/integration/stl/native/native-stl.json",
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/native/native-stl.json"
+    },
+    "r2/integration/stl/native/reopens-stl.json": {
+      "retained_member": "r1/integration/stl/native/reopens-stl.json",
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/native/reopens-stl.json"
+    },
+    "r2/integration/stl/native.log": {
+      "retained_member": "r1/integration/stl/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/native.log"
+    },
+    "r2/integration/stl/reader.log": {
+      "retained_member": "r1/integration/image/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r2/stl/reader.log"
+    },
+    "r3/exchange/checker.log": {
+      "retained_member": "r2/exchange/checker.log",
+      "size": 83,
+      "sha256": "fd02bfae6905a3fb297c73a03074349b1cb95188c4e97c8da5b51a806d4efb7b",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/checker.log"
+    },
+    "r3/exchange/comparison.json": {
+      "retained_member": "r2/exchange/comparison.json",
+      "size": 89,
+      "sha256": "d7d207c7e9979e756e09e8bf481e726933bb9ec71334cbb66a4bc386994c37a9",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/comparison.json"
+    },
+    "r3/exchange/native/dae-400-saved.igz": {
+      "retained_member": "r1/exchange/native/dae-400-saved.igz",
+      "size": 307418,
+      "sha256": "3ac25635c5da9baf8ab357d764862ff0512a73067d9ad092a87e963e9de003c2",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native/dae-400-saved.igz"
+    },
+    "r3/exchange/native.log": {
+      "retained_member": "r1/integration/stl/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/native.log"
+    },
+    "r3/exchange/reader.log": {
+      "retained_member": "r2/exchange/reader.log",
+      "size": 25,
+      "sha256": "fb988518dad5b01a619e46ad59fb738ddb26b7b7169566cf8b5382471bfc0f1b",
+      "producer_path": "/tmp/ingetrazo-exchange-replay-r3/reader.log"
+    },
+    "r3/integration/image/checker.log": {
+      "retained_member": "r1/integration/image/checker.log",
+      "size": 1000,
+      "sha256": "4e7afd6a27b32f587a21542e565880243d42162454b2fccea691ab3295c7b4be",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/checker.log"
+    },
+    "r3/integration/image/comparison.json": {
+      "retained_member": "r1/integration/image/comparison.json",
+      "size": 1064,
+      "sha256": "34cd4a76ab54b11a14e7dc8b734f5d7683ebe29cb3760e0a323dad46e122cb50",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/comparison.json"
+    },
+    "r3/integration/image/native/native-image-import.json": {
+      "retained_member": "r1/integration/image/native/native-image-import.json",
+      "size": 909249,
+      "sha256": "5f72513cdb8ff91ae0e05eb761959c28184b707d042fea7fdc64612342996a1b",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/native/native-image-import.json"
+    },
+    "r3/integration/image/native/reopens-image-import.json": {
+      "retained_member": "r1/integration/image/native/reopens-image-import.json",
+      "size": 98003,
+      "sha256": "98ca649e457740fa27149efab6f384381fc75bffda18d72ebaebfe7c63e7dd7e",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/native/reopens-image-import.json"
+    },
+    "r3/integration/image/native.log": {
+      "retained_member": "r1/integration/image/native.log",
+      "size": 37,
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/native.log"
+    },
+    "r3/integration/image/reader.log": {
+      "retained_member": "r1/integration/image/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/image/reader.log"
+    },
+    "r3/integration/stl/checker.log": {
+      "retained_member": "r1/integration/stl/checker.log",
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/checker.log"
+    },
+    "r3/integration/stl/comparison.json": {
+      "retained_member": "r1/integration/stl/comparison.json",
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/comparison.json"
+    },
+    "r3/integration/stl/native/native-stl.json": {
+      "retained_member": "r1/integration/stl/native/native-stl.json",
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/native/native-stl.json"
+    },
+    "r3/integration/stl/native/reopens-stl.json": {
+      "retained_member": "r1/integration/stl/native/reopens-stl.json",
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/native/reopens-stl.json"
+    },
+    "r3/integration/stl/native.log": {
+      "retained_member": "r1/integration/stl/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/native.log"
+    },
+    "r3/integration/stl/reader.log": {
+      "retained_member": "r1/integration/image/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "producer_path": "/tmp/ingetrazo-exchange-integration-r3/stl/reader.log"
+    }
+  },
+  "runtime_revision": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_archive": "docs/audits/exchange-import/source-records.zip",
+  "source_archive_sha256": "57c6e27431cc444dc4ce231546dedc9d90bd5c013931f8c964ad92af04981c46",
+  "source_manifest_sha256": "d8c7c98fd2dcb97aa4e460a66e575e66270b6502a2c19997ef3f167e1b59ae42",
+  "attempts": [
+    {
+      "attempt": 1,
+      "revision": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+      "receipt": "r1/exchange/result.json",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/dae_app_import.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "eb2f1117882dcb64bb78d7e4701b4e9847d9fc69e40a9beb2ea57e81123b42fc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/dae_import.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "250c7998a2084b05941700d988c53a5c3706a9395c809e426ec3f2bc9a7d17c8"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/exchange.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "151d8cbc238b97b6b6b0fcb769733c82ac09c197053a625b4cf105517a211139"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/gltf_app_import.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "07a7d0e128368b00fbead8492ecedf3702f7c3ec6cf879239b1c15c5e0b94ac5"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/gltf_import.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "a0d73fbb4094aad57f4af87ec152e0bc0022e4c15fbbf37e62a9ac265ad166b5"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/lib.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "cf08769078cd4fcb7878db7de362d07aea1a6e063602a850f5def5fcf454ee2a"
+        },
+        {
+          "path": "crates/ingetrazo-gui/examples/exchange_import_workflows.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "d802812decb547ed225c8f7a044aeddbe854ad87102c46a26cf90da128e263a2"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/app.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "fedd0f15a8f6fc1d0e9fcde3b27382ec0755c9a7a046e003584c672ecbd40434"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/exchange_import.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "4de2b01f0f1f3db7990b688a1116c21bc9d5ad467c1944d0044675f6c942c3de"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/import_units.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "f0a6415b6cee09b684d0a9ffcff9249db4cb55a369a0f2866b79649e70ecd95e"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/lib.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "734507e7f9dab203c9482499f4b9a17e842f4fe43901c8cae71a80f0e9dfcbf8"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/menu.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "ad2921a1618961cb6c0854a655da4319964088127118c49117cb175eaa664096"
+        },
+        {
+          "path": "scripts/check-exchange-import.py",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "147608edc1933b5490908b4028a81fb45a89ade8240ef63dc9de692b19fd062f"
+        },
+        {
+          "path": "scripts/exchange_import_observations.py",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+        },
+        {
+          "path": "scripts/reference-exchange-import-reopens.py",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "73bd270e78cded1d7e11b38889f49857d98e932fb4a42ef907594eee2a98a480"
+        }
+      ],
+      "binary_sha256": "1a0069e6edc85653d835885c1a85549ee1c5047bf84c67ca77a91c705c83e3f3"
+    },
+    {
+      "attempt": 2,
+      "revision": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+      "receipt": "r2/exchange/result.json",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/dae_app_import.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "eb2f1117882dcb64bb78d7e4701b4e9847d9fc69e40a9beb2ea57e81123b42fc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/dae_import.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "2b80873470de6e22fb42271998a6124847f2ee95ce1bc38daec3384ccd00471e"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/exchange.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "151d8cbc238b97b6b6b0fcb769733c82ac09c197053a625b4cf105517a211139"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/gltf_app_import.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "07a7d0e128368b00fbead8492ecedf3702f7c3ec6cf879239b1c15c5e0b94ac5"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/gltf_import.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "a0d73fbb4094aad57f4af87ec152e0bc0022e4c15fbbf37e62a9ac265ad166b5"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/lib.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "cf08769078cd4fcb7878db7de362d07aea1a6e063602a850f5def5fcf454ee2a"
+        },
+        {
+          "path": "crates/ingetrazo-gui/examples/exchange_import_workflows.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "3237a9f3dcc55499a4830ffde1ce4178366bf5ab7ee7563832965f134d81afde"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/app.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "fedd0f15a8f6fc1d0e9fcde3b27382ec0755c9a7a046e003584c672ecbd40434"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/exchange_import.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "4de2b01f0f1f3db7990b688a1116c21bc9d5ad467c1944d0044675f6c942c3de"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/import_units.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "f0a6415b6cee09b684d0a9ffcff9249db4cb55a369a0f2866b79649e70ecd95e"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/lib.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "734507e7f9dab203c9482499f4b9a17e842f4fe43901c8cae71a80f0e9dfcbf8"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/menu.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "ad2921a1618961cb6c0854a655da4319964088127118c49117cb175eaa664096"
+        },
+        {
+          "path": "scripts/check-exchange-import.py",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "147608edc1933b5490908b4028a81fb45a89ade8240ef63dc9de692b19fd062f"
+        },
+        {
+          "path": "scripts/exchange_import_observations.py",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+        },
+        {
+          "path": "scripts/reference-exchange-import-reopens.py",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "73bd270e78cded1d7e11b38889f49857d98e932fb4a42ef907594eee2a98a480"
+        }
+      ],
+      "binary_sha256": "b18f4e0633da9e4fbc8af7c5a70c9262fc301d529924323c02906a99cc3dd802"
+    },
+    {
+      "attempt": 3,
+      "revision": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+      "receipt": "r3/exchange/result.json",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/dae_app_import.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "eb2f1117882dcb64bb78d7e4701b4e9847d9fc69e40a9beb2ea57e81123b42fc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/dae_import.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "2b80873470de6e22fb42271998a6124847f2ee95ce1bc38daec3384ccd00471e"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/exchange.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "151d8cbc238b97b6b6b0fcb769733c82ac09c197053a625b4cf105517a211139"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/gltf_app_import.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "93f13af05a47c8ee9c6af74994205f386bc6152afb73bca99964c30d556e1cb2"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/gltf_import.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "352f1a4cbc960029fae0f389fbbbcf0f970861577de2557cbbb48d72ae38cd8f"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/lib.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "cf08769078cd4fcb7878db7de362d07aea1a6e063602a850f5def5fcf454ee2a"
+        },
+        {
+          "path": "crates/ingetrazo-gui/examples/exchange_import_workflows.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "3237a9f3dcc55499a4830ffde1ce4178366bf5ab7ee7563832965f134d81afde"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/app.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "fedd0f15a8f6fc1d0e9fcde3b27382ec0755c9a7a046e003584c672ecbd40434"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/exchange_import.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "4de2b01f0f1f3db7990b688a1116c21bc9d5ad467c1944d0044675f6c942c3de"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/import_units.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "f0a6415b6cee09b684d0a9ffcff9249db4cb55a369a0f2866b79649e70ecd95e"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/lib.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "734507e7f9dab203c9482499f4b9a17e842f4fe43901c8cae71a80f0e9dfcbf8"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/menu.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "ad2921a1618961cb6c0854a655da4319964088127118c49117cb175eaa664096"
+        },
+        {
+          "path": "scripts/check-exchange-import.py",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "147608edc1933b5490908b4028a81fb45a89ade8240ef63dc9de692b19fd062f"
+        },
+        {
+          "path": "scripts/exchange_import_observations.py",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+        },
+        {
+          "path": "scripts/reference-exchange-import-reopens.py",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "73bd270e78cded1d7e11b38889f49857d98e932fb4a42ef907594eee2a98a480"
+        }
+      ],
+      "binary_sha256": "8f16b9f373e2c1747914b3122e2398518c7871ac1ce4108807f9feec225b01bd"
+    }
+  ],
+  "strict_pass": false,
+  "counts": {
+    "cases": 13,
+    "states": 61,
+    "strict_matching_states_with_declared_source_correction": 45,
+    "strict_winding_residual_states": 16,
+    "original_reader_pairs": 11,
+    "strict_reader_matches": 6,
+    "reader_winding_residuals": 5
+  },
+  "classification": {
+    "scope": "Classification only: directed outer ring orientation and its lexical face ordering. Exact checker stays FAIL. No coordinate/material/UV/history/transform/resource field removal; holes required empty. Camera distance uses preaccepted numeric contract; one named source datum fault correction preserved.",
+    "states": 61,
+    "strict_mismatching_states": [
+      [
+        "dae-z-root",
+        "import"
+      ],
+      [
+        "dae-z-root",
+        "redo"
+      ],
+      [
+        "dae-z-root",
+        "finish"
+      ],
+      [
+        "dae-y-inch-leaf",
+        "import"
+      ],
+      [
+        "dae-y-inch-leaf",
+        "redo"
+      ],
+      [
+        "dae-y-inch-leaf",
+        "finish"
+      ],
+      [
+        "dae-datum",
+        "import"
+      ],
+      [
+        "dae-datum",
+        "redo"
+      ],
+      [
+        "dae-datum",
+        "finish"
+      ],
+      [
+        "dae-existing-datum",
+        "import"
+      ],
+      [
+        "dae-existing-datum",
+        "redo"
+      ],
+      [
+        "dae-existing-datum",
+        "finish"
+      ],
+      [
+        "dae-combined-leaf",
+        "import"
+      ],
+      [
+        "dae-combined-leaf",
+        "redo"
+      ],
+      [
+        "dae-combined-leaf",
+        "finish"
+      ],
+      [
+        "dae-combined-leaf",
+        "finish-redo"
+      ]
+    ],
+    "reader_pairs": 11,
+    "strict_mismatching_readers": [
+      "dae-z-root",
+      "dae-y-inch-leaf",
+      "dae-datum",
+      "dae-existing-datum",
+      "dae-combined-leaf"
+    ],
+    "all_other_values_types_and_signed_zero_exact": true,
+    "checker_sha256": "147608edc1933b5490908b4028a81fb45a89ade8240ef63dc9de692b19fd062f"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-native-font-merge-target/debug/examples/exchange_import_workflows",
+    "sha256": "8f16b9f373e2c1747914b3122e2398518c7871ac1ce4108807f9feec225b01bd",
+    "revision": "5d400ab3f5591e677fb6c35e3432c9024d7060d7"
+  },
+  "fresh_source_captures": 0,
+  "cleanup_performed": false,
+  "helper_provenance_note": "Retained /tmp verification helper bytes are packaging-time evidence; exact historical Git binding is not asserted for this untracked root orchestration helper. Native/checker/reader Git bindings and actual subprocess verdicts are stage-bound."
+}

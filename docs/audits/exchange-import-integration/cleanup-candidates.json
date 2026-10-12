@@ -1,0 +1,2060 @@
+{
+  "removed": 0,
+  "candidates": [
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/picker/kdialog",
+      "size": 82854352,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-400/config/settings.json",
+      "size": 569,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-401-leaf/config/settings.json",
+      "size": 579,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-combined-leaf/config/settings.json",
+      "size": 513,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-datum/config/settings.json",
+      "size": 573,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-existing-datum/config/settings.json",
+      "size": 591,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-y-inch-leaf/config/settings.json",
+      "size": 585,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-z-root/config/settings.json",
+      "size": 575,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+      "size": 372245,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/native/picker/kdialog",
+      "size": 83280544,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/LICENSE",
+      "size": 35149,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/base.jpg",
+      "size": 825,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/base.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/invalid.png",
+      "size": 21,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan-exif.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.bmp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.png.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.webp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan16.tif.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/bmp-free-aspect-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/bmp-free-aspect-saved.igz",
+      "size": 374256,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/cancel-invalid-escape-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/cancel-invalid-escape-saved.igz",
+      "size": 374590,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/invocation.json",
+      "size": 685,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/result.json",
+      "size": 737,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/stderr.log",
+      "size": 179,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/stdout.log",
+      "size": 0,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/invocation.json",
+      "size": 642,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/result.json",
+      "size": 694,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/stderr.log",
+      "size": 3802,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/stdout.log",
+      "size": 42,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+      "size": 1819,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+      "size": 15184,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/scripts/reference-image-import.py",
+      "size": 15166,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/completed-cases.json",
+      "size": 895843,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/base.jpg",
+      "size": 825,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/base.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/invalid.png",
+      "size": 21,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan-exif.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.bmp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.png.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.webp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan16.tif.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/original-image-import.partial.json",
+      "size": 3476,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/jpeg-exif-pair-input.igz",
+      "size": 373085,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/jpeg-exif-pair-saved.igz",
+      "size": 374230,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/nested-width-cm-input.igz",
+      "size": 1366,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/nested-width-cm-saved.igz",
+      "size": 2048,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/oblique-face-width-input.igz",
+      "size": 373157,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/oblique-face-width-saved.igz",
+      "size": 374673,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/original-image-import.json",
+      "size": 899350,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/original-image-import.partial.json",
+      "size": 875078,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/png-drag-transparency-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/png-drag-transparency-saved.igz",
+      "size": 374592,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/tiff16-orientation-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/tiff16-orientation-saved.igz",
+      "size": 375817,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/webp-reuse-names-input.igz",
+      "size": 373088,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/webp-reuse-names-saved.igz",
+      "size": 374055,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/native/picker/kdialog",
+      "size": 83008080,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/LICENSE",
+      "size": 35149,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/ascii.stl",
+      "size": 1397,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/invocation.json",
+      "size": 556,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/result.json",
+      "size": 607,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/stderr.log",
+      "size": 3269,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/stdout.log",
+      "size": 43,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture-source/scripts/reference-stl-import.py",
+      "size": 9601,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/chooser-cancel-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/completed-cases.json",
+      "size": 3060997,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/cube.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/default-cube-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/default-cube-saved.igz",
+      "size": 7516,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/degenerate.stl",
+      "size": 734,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/flat-large-editable-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/flat-large-editable-saved.igz",
+      "size": 6532,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/grid.stl",
+      "size": 63084,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/ignored-normal.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-nested-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-nested-saved.igz",
+      "size": 396807,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-root-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-root-saved.igz",
+      "size": 396535,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large.stl",
+      "size": 20134,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/malformed.stl",
+      "size": 43,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/none-cube-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/none-cube-saved.igz",
+      "size": 7516,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/nonfinite.stl",
+      "size": 134,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/group.py",
+      "size": 37346,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/history.py",
+      "size": 161511,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/i18n.py",
+      "size": 3089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/mesh.py",
+      "size": 74619,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/scene.py",
+      "size": 34219,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/topology.py",
+      "size": 69455,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/dae.py",
+      "size": 48406,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/fuse.py",
+      "size": 16553,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/igz.py",
+      "size": 41235,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/stl.py",
+      "size": 11852,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/tests/test_stl_import.py",
+      "size": 9053,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/views/main_window.py",
+      "size": 286141,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/views/viewport.py",
+      "size": 622724,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-stl.json",
+      "size": 3092735,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-stl.partial.json",
+      "size": 3060727,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/parse-failure-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/settings/STLProof/STLProof.ini",
+      "size": 70,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/small-nested-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/small-nested-saved.igz",
+      "size": 9392,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/solid-binary.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-all-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-all-saved.igz",
+      "size": 4528,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-principal-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-principal-saved.igz",
+      "size": 4882,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted.stl",
+      "size": 184,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/trailing.stl",
+      "size": 700,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/unit-cancel-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/picker/kdialog",
+      "size": 82854400,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/chooser-cancel/config/settings.json",
+      "size": 510,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/context-retired/config/settings.json",
+      "size": 506,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-400/config/settings.json",
+      "size": 569,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-401-leaf/config/settings.json",
+      "size": 579,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-combined-leaf/config/settings.json",
+      "size": 589,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-datum/config/settings.json",
+      "size": 573,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-existing-datum/config/settings.json",
+      "size": 591,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-failure-datum/config/settings.json",
+      "size": 513,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-mixed-textures/config/settings.json",
+      "size": 591,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-y-inch-leaf/config/settings.json",
+      "size": 585,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-z-root/config/settings.json",
+      "size": 575,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/glb-named/config/settings.json",
+      "size": 573,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/glb-textured-leaf/config/settings.json",
+      "size": 589,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/gltf-scale/config/settings.json",
+      "size": 575,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+      "size": 372245,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/native/picker/kdialog",
+      "size": 83280544,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/LICENSE",
+      "size": 35149,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/base.jpg",
+      "size": 825,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/base.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/invalid.png",
+      "size": 21,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan-exif.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.bmp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.png.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.webp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan16.tif.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/bmp-free-aspect-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/bmp-free-aspect-saved.igz",
+      "size": 374256,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/cancel-invalid-escape-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/cancel-invalid-escape-saved.igz",
+      "size": 374590,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/invocation.json",
+      "size": 685,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/result.json",
+      "size": 737,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/stderr.log",
+      "size": 179,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/stdout.log",
+      "size": 0,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/invocation.json",
+      "size": 642,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/result.json",
+      "size": 694,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/stderr.log",
+      "size": 3802,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/stdout.log",
+      "size": 42,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+      "size": 1819,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+      "size": 15184,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/scripts/reference-image-import.py",
+      "size": 15166,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/completed-cases.json",
+      "size": 895843,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/base.jpg",
+      "size": 825,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/base.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/invalid.png",
+      "size": 21,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan-exif.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.bmp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.png.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.webp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan16.tif.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/original-image-import.partial.json",
+      "size": 3476,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/jpeg-exif-pair-input.igz",
+      "size": 373085,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/jpeg-exif-pair-saved.igz",
+      "size": 374230,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/nested-width-cm-input.igz",
+      "size": 1366,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/nested-width-cm-saved.igz",
+      "size": 2048,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/oblique-face-width-input.igz",
+      "size": 373157,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/oblique-face-width-saved.igz",
+      "size": 374673,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/original-image-import.json",
+      "size": 899350,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/original-image-import.partial.json",
+      "size": 875078,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/png-drag-transparency-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/png-drag-transparency-saved.igz",
+      "size": 374592,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/tiff16-orientation-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/tiff16-orientation-saved.igz",
+      "size": 375817,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/webp-reuse-names-input.igz",
+      "size": 373088,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/webp-reuse-names-saved.igz",
+      "size": 374055,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/native/picker/kdialog",
+      "size": 83008096,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/LICENSE",
+      "size": 35149,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/ascii.stl",
+      "size": 1397,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/invocation.json",
+      "size": 556,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/result.json",
+      "size": 607,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/stderr.log",
+      "size": 3269,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/stdout.log",
+      "size": 43,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture-source/scripts/reference-stl-import.py",
+      "size": 9601,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/chooser-cancel-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/completed-cases.json",
+      "size": 3060997,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/cube.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/default-cube-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/default-cube-saved.igz",
+      "size": 7516,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/degenerate.stl",
+      "size": 734,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/flat-large-editable-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/flat-large-editable-saved.igz",
+      "size": 6532,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/grid.stl",
+      "size": 63084,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/ignored-normal.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-nested-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-nested-saved.igz",
+      "size": 396807,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-root-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-root-saved.igz",
+      "size": 396535,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large.stl",
+      "size": 20134,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/malformed.stl",
+      "size": 43,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/none-cube-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/none-cube-saved.igz",
+      "size": 7516,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/nonfinite.stl",
+      "size": 134,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/group.py",
+      "size": 37346,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/history.py",
+      "size": 161511,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/i18n.py",
+      "size": 3089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/mesh.py",
+      "size": 74619,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/scene.py",
+      "size": 34219,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/topology.py",
+      "size": 69455,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/dae.py",
+      "size": 48406,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/fuse.py",
+      "size": 16553,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/igz.py",
+      "size": 41235,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/stl.py",
+      "size": 11852,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/tests/test_stl_import.py",
+      "size": 9053,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/views/main_window.py",
+      "size": 286141,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/views/viewport.py",
+      "size": 622724,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-stl.json",
+      "size": 3092735,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-stl.partial.json",
+      "size": 3060727,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/parse-failure-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/settings/STLProof/STLProof.ini",
+      "size": 70,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/small-nested-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/small-nested-saved.igz",
+      "size": 9392,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/solid-binary.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-all-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-all-saved.igz",
+      "size": 4528,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-principal-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-principal-saved.igz",
+      "size": 4882,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted.stl",
+      "size": 184,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/trailing.stl",
+      "size": 700,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/unit-cancel-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/picker/kdialog",
+      "size": 82863232,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/chooser-cancel/config/settings.json",
+      "size": 510,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/context-retired/config/settings.json",
+      "size": 506,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-400/config/settings.json",
+      "size": 569,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-401-leaf/config/settings.json",
+      "size": 579,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-combined-leaf/config/settings.json",
+      "size": 589,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-datum/config/settings.json",
+      "size": 573,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-existing-datum/config/settings.json",
+      "size": 591,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-failure-datum/config/settings.json",
+      "size": 513,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-mixed-textures/config/settings.json",
+      "size": 591,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-y-inch-leaf/config/settings.json",
+      "size": 585,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-z-root/config/settings.json",
+      "size": 575,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/glb-named/config/settings.json",
+      "size": 573,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/glb-textured-leaf/config/settings.json",
+      "size": 589,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/gltf-scale/config/settings.json",
+      "size": 575,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+      "size": 372245,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/native/picker/kdialog",
+      "size": 83280544,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/LICENSE",
+      "size": 35149,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/base.jpg",
+      "size": 825,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/base.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/invalid.png",
+      "size": 21,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan-exif.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.bmp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.png.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.webp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan16.tif.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/bmp-free-aspect-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/bmp-free-aspect-saved.igz",
+      "size": 374256,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/cancel-invalid-escape-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/cancel-invalid-escape-saved.igz",
+      "size": 374590,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/invocation.json",
+      "size": 685,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/result.json",
+      "size": 737,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/stderr.log",
+      "size": 179,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/stdout.log",
+      "size": 0,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/invocation.json",
+      "size": 642,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/result.json",
+      "size": 694,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/stderr.log",
+      "size": 3802,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/stdout.log",
+      "size": 42,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+      "size": 1819,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+      "size": 15184,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/scripts/reference-image-import.py",
+      "size": 15166,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/completed-cases.json",
+      "size": 895843,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/base.jpg",
+      "size": 825,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/base.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/invalid.png",
+      "size": 21,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan-exif.jpg",
+      "size": 861,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan-exif.jpg.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.bmp",
+      "size": 918,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.bmp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.png",
+      "size": 1253,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.png.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.webp",
+      "size": 270,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.webp.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan16.tif",
+      "size": 2470,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan16.tif.rgba",
+      "size": 1152,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/original-image-import.partial.json",
+      "size": 3476,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/jpeg-exif-pair-input.igz",
+      "size": 373085,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/jpeg-exif-pair-saved.igz",
+      "size": 374230,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/nested-width-cm-input.igz",
+      "size": 1366,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/nested-width-cm-saved.igz",
+      "size": 2048,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/oblique-face-width-input.igz",
+      "size": 373157,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/oblique-face-width-saved.igz",
+      "size": 374673,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/original-image-import.json",
+      "size": 899350,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/original-image-import.partial.json",
+      "size": 875078,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/png-drag-transparency-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/png-drag-transparency-saved.igz",
+      "size": 374592,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/tiff16-orientation-input.igz",
+      "size": 373089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/tiff16-orientation-saved.igz",
+      "size": 375817,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/webp-reuse-names-input.igz",
+      "size": 373088,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/webp-reuse-names-saved.igz",
+      "size": 374055,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/native/picker/kdialog",
+      "size": 83021032,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/LICENSE",
+      "size": 35149,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/ascii.stl",
+      "size": 1397,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/invocation.json",
+      "size": 556,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/result.json",
+      "size": 607,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/stderr.log",
+      "size": 3269,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/stdout.log",
+      "size": 43,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture-source/scripts/reference-stl-import.py",
+      "size": 9601,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/chooser-cancel-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/completed-cases.json",
+      "size": 3060997,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/cube.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/default-cube-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/default-cube-saved.igz",
+      "size": 7516,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/degenerate.stl",
+      "size": 734,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/flat-large-editable-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/flat-large-editable-saved.igz",
+      "size": 6532,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/grid.stl",
+      "size": 63084,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/ignored-normal.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-nested-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-nested-saved.igz",
+      "size": 396807,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-root-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-root-saved.igz",
+      "size": 396535,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large.stl",
+      "size": 20134,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/malformed.stl",
+      "size": 43,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/none-cube-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/none-cube-saved.igz",
+      "size": 7516,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/nonfinite.stl",
+      "size": 134,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/group.py",
+      "size": 37346,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/history.py",
+      "size": 161511,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/i18n.py",
+      "size": 3089,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/mesh.py",
+      "size": 74619,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/scene.py",
+      "size": 34219,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/topology.py",
+      "size": 69455,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/dae.py",
+      "size": 48406,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/fuse.py",
+      "size": 16553,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/igz.py",
+      "size": 41235,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/stl.py",
+      "size": 11852,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/tests/test_stl_import.py",
+      "size": 9053,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/views/main_window.py",
+      "size": 286141,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/views/viewport.py",
+      "size": 622724,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-stl.json",
+      "size": 3092735,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-stl.partial.json",
+      "size": 3060727,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/parse-failure-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/settings/STLProof/STLProof.ini",
+      "size": 70,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/small-nested-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/small-nested-saved.igz",
+      "size": 9392,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/solid-binary.stl",
+      "size": 684,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-all-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-all-saved.igz",
+      "size": 4528,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-principal-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-principal-saved.igz",
+      "size": 4882,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted.stl",
+      "size": 184,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/trailing.stl",
+      "size": 700,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/unit-cancel-input.igz",
+      "size": 3552,
+      "reason": "Disposable or duplicated source extraction; not removed"
+    }
+  ],
+  "authenticated_duplicate_paths": [
+    "/tmp/ingetrazo-exchange-integration-r1/stl/reader.log",
+    "/tmp/ingetrazo-exchange-replay-r2/native/dae-400-saved.igz",
+    "/tmp/ingetrazo-exchange-replay-r2/native.log",
+    "/tmp/ingetrazo-exchange-integration-r2/image/checker.log",
+    "/tmp/ingetrazo-exchange-integration-r2/image/comparison.json",
+    "/tmp/ingetrazo-exchange-integration-r2/image/native/native-image-import.json",
+    "/tmp/ingetrazo-exchange-integration-r2/image/native/reopens-image-import.json",
+    "/tmp/ingetrazo-exchange-integration-r2/image/native.log",
+    "/tmp/ingetrazo-exchange-integration-r2/image/reader.log",
+    "/tmp/ingetrazo-exchange-integration-r2/stl/checker.log",
+    "/tmp/ingetrazo-exchange-integration-r2/stl/comparison.json",
+    "/tmp/ingetrazo-exchange-integration-r2/stl/native/native-stl.json",
+    "/tmp/ingetrazo-exchange-integration-r2/stl/native/reopens-stl.json",
+    "/tmp/ingetrazo-exchange-integration-r2/stl/native.log",
+    "/tmp/ingetrazo-exchange-integration-r2/stl/reader.log",
+    "/tmp/ingetrazo-exchange-replay-r3/checker.log",
+    "/tmp/ingetrazo-exchange-replay-r3/comparison.json",
+    "/tmp/ingetrazo-exchange-replay-r3/native/dae-400-saved.igz",
+    "/tmp/ingetrazo-exchange-replay-r3/native.log",
+    "/tmp/ingetrazo-exchange-replay-r3/reader.log",
+    "/tmp/ingetrazo-exchange-integration-r3/image/checker.log",
+    "/tmp/ingetrazo-exchange-integration-r3/image/comparison.json",
+    "/tmp/ingetrazo-exchange-integration-r3/image/native/native-image-import.json",
+    "/tmp/ingetrazo-exchange-integration-r3/image/native/reopens-image-import.json",
+    "/tmp/ingetrazo-exchange-integration-r3/image/native.log",
+    "/tmp/ingetrazo-exchange-integration-r3/image/reader.log",
+    "/tmp/ingetrazo-exchange-integration-r3/stl/checker.log",
+    "/tmp/ingetrazo-exchange-integration-r3/stl/comparison.json",
+    "/tmp/ingetrazo-exchange-integration-r3/stl/native/native-stl.json",
+    "/tmp/ingetrazo-exchange-integration-r3/stl/native/reopens-stl.json",
+    "/tmp/ingetrazo-exchange-integration-r3/stl/native.log",
+    "/tmp/ingetrazo-exchange-integration-r3/stl/reader.log"
+  ],
+  "requires_root_authentication_before_purge": true
+}
