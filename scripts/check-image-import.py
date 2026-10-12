@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Strict frozen actual Image App/resource/history and original-reader comparison."""
-import copy,hashlib,json,math,sys
+import copy,hashlib,json,math,sys,subprocess,zipfile
 from pathlib import Path
 PIN='6be29fe437a7cd992d4e079f71720821b25216b9'
 NAMES=['png-drag-transparency','nested-width-cm','jpeg-exif-pair','webp-reuse-names','bmp-free-aspect','tiff16-orientation','cancel-invalid-escape','oblique-face-width']
@@ -27,6 +27,41 @@ def sha(path):
  with path.open('rb')as stream:
   for b in iter(lambda:stream.read(1024*1024),b''):h.update(b)
  return h.hexdigest()
+def canonical_source(a,source,native):
+ mapping=json.loads(file(native,'source-material-observations.json').read_text())
+ assert mapping['source_pin']==PIN
+ materials=mapping['materials'];used={}
+ result=copy.deepcopy(a)
+ def walk(value,case):
+  if isinstance(value,list):
+   for item in value:walk(item,case)
+  elif isinstance(value,dict):
+   texture=value.get('texture')
+   if isinstance(texture,dict)and isinstance(texture.get('path'),str):
+    path=texture['path'];assert path in materials,('unboundsourcegeometryresource',path)
+    used.setdefault(path,set()).add(case);texture['path']=copy.deepcopy(materials[path]['resource'])
+   for item in value.values():walk(item,case)
+ for state in result['states']:walk(state['scene']['geometry'],state['case'])
+ assert materials.keys()==used.keys(),'materialmappinginventory'
+ original=(Path(__file__).resolve().parents[1]/'ingetrazo').resolve()
+ cases={c['name']:c for c in a['cases']}
+ for raw,row in materials.items():
+  assert row['original_commit']==PIN
+  path=row['original_path'];assert isinstance(path,str)and not Path(path).is_absolute()and '..'not in Path(path).parts
+  encoded=subprocess.check_output(['git','-C',str(original),'show',PIN+':'+path])
+  assert hashlib.sha256(encoded).hexdigest()==row['resource']['encoded_sha256'],('originalmaterialencoded',raw)
+  resource=row['resource'];assert resource.keys()=={'encoded_sha256','rgba_sha256','size'}
+  assert len(resource['size'])==2 and all(type(v)is int and v>0 for v in resource['size'])
+  assert len(resource['rgba_sha256'])==64
+  decoded=file(native,row['decoded_rgba']);assert decoded.stat().st_size==resource['size'][0]*resource['size'][1]*4
+  assert sha(decoded)==resource['rgba_sha256'],('originalmaterialQtbytes',raw)
+  members=row['input_members'];assert {v['case']for v in members}==used[raw],('materialcasecoverage',raw)
+  for entry in members:
+   assert entry['input']==cases[entry['case']]['input']
+   with zipfile.ZipFile(file(source,entry['input']))as archive:
+    data=archive.read(entry['member'])
+   assert hashlib.sha256(data).hexdigest()==entry['sha256']==resource['encoded_sha256'],('materialinputbytes',entry['case'])
+ return result
 def metadata(a,b):
  assert a['source_pin']==b['source_pin']==PIN
  assert a['callback_errors']==[]
@@ -85,11 +120,11 @@ def negatives(a,b,readers):
  return len(probes)+3
 s=Path(sys.argv[1]).resolve();n=Path(sys.argv[2]).resolve();report=Path(sys.argv[3]);result={'ok':False}
 try:
- a=json.loads(file(s,'original-image-import.json').read_text());b=json.loads(file(n,'native-image-import.json').read_text());metadata(a,b)
+ a=json.loads(file(s,'original-image-import.json').read_text());b=json.loads(file(n,'native-image-import.json').read_text());a=canonical_source(a,s,n);metadata(a,b)
  result.update(cases=len(a['cases']),states=len(a['states']),headers=len(a['headers']),literal_states=True)
  bytes_check(s,n,a);result['decoded_bytes']=True
  readers=json.loads(file(n,'reopens-image-import.json').read_text());readers_check(readers);result['readers']=len(readers)
  for c in b['cases']:file(n,c['saved'])
- count=negatives(a,b,readers);result.update(ok=True,negative_controls=count,guards=GUARDS,scope='Literal App/model/transient tool/history/camera/resource bytes and actual original IGZ readers. Source error-message text diagnostic only; required operative native modal/refusal guards. No framebuffer/GPU/general-codec claim.')
+ count=negatives(a,b,readers);result.update(ok=True,negative_controls=count,guards=GUARDS,scope='Literal App/model/transient tool/history/camera/resource bytes and actual original IGZ readers. Source error-message text diagnostic only; pinned original/input-bound material locator-to-resource identity supplement preserves all geometry metadata. Required operative native modal/refusal guards. No framebuffer/GPU/general-codec claim.')
 except Exception as e:result['error']=repr(e)
 report.parent.mkdir(parents=True,exist_ok=True);report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result));sys.exit(0 if result['ok']else 1)
