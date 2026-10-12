@@ -26,7 +26,7 @@ def validate(s,n,readers,sr,corrected):
   equal({k:a[k]for k in KEYS},{k:b[k]for k in KEYS})
  assert [r['case']for r in readers]==NAMES and [r['case']for r in sr]==NAMES;equal(sr,readers)
  for k in ['actual_egui','unknown_metadata','source_failed_geometry_history']:assert n[k]is True,k
- for k in ['atomic_refusal','warm_preview']:assert n['controls'][k]is True,k
+ for k in ['atomic_refusal','warm_preview','delete_save_empty']:assert n['controls'][k]is True,k
 
 def guard_values(doc,guards):
  for guard in guards:
@@ -37,6 +37,7 @@ def guard_values(doc,guards):
 p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('native',type=Path);p.add_argument('comparison',type=Path);a=p.parse_args();s=json.loads((a.source/'original-legend.json').read_text());n=json.loads((a.native/'native-legend.json').read_text());r=json.loads((a.native/'native-reopens.json').read_text());sr=json.loads((a.source/'original-reopens.json').read_text());corrected=json.loads((a.source/'native-gesture-expectations.json').read_text())['states'];a.comparison.parent.mkdir(parents=True,exist_ok=True)
 try:
  validate(s,n,r,sr,corrected)
+ deleted=json.loads((a.native/'native-deleted-reopen.json').read_text());source_deleted=next(x for x in s['states']if (x['case'],x['phase'])==('loaded-locked','loaded-delete'));equal({k:source_deleted[k]for k in ['case','phase','composition','layers']},deleted,'deleted-reader')
  errors=s['callback_errors'];assert len(errors)==3 and [e['phase']for e in errors]==['move-release','resize-release','minimum-release']
  assert all(e['type']=='AttributeError'and "property 'h_mm'"in e['message']and 'has no setter'in e['message']for e in errors)
  assert all(x['undo']==0 and x['redo']==0 for x in s['states']if x['case']=='single-legend-gestures')
@@ -68,6 +69,7 @@ negative('missing-reader',lambda n,r:r.pop())
 negative('reordered-reader',lambda n,r:r.reverse())
 negative('false-ui',lambda n,r:n.update(actual_egui=False))
 negative('false-atomic-refusal',lambda n,r:n['controls'].update(atomic_refusal=False))
+negative('false-delete-save',lambda n,r:n['controls'].update(delete_save_empty=False))
 negative('false-warm-preview',lambda n,r:n['controls'].update(warm_preview=False))
 negative('unreported-source-divergence',lambda n,r:n.update(source_failed_geometry_history=False))
 negative('native-inert-undo',lambda n,r:next(x for x in n['states']if x['phase']=='move-undo-source')['composition']['leyendas'][0].update(x_mm=63.,y_mm=63.))
@@ -77,5 +79,9 @@ for name,change in [('opaque-sheet-loss',lambda d:d['scene']['compositions'][0].
  try:guard_values(v,guard)
  except (AssertionError,KeyError,TypeError,IndexError):rejected.append(name)
  else:raise AssertionError('Accepted '+name)
-report=dict(result='pass',cases=4,source_exact_authoring_states=53,explicit_native_correctness_gesture_states=16,reader_pairs=4,source_gesture_exceptions=3,negative_controls=rejected,scope='Literal original authoring and saved-reader equality; native reversible gesture history is an explicit correctness difference from original read-only height failure. No physical pixel or multi-item claim.')
+v=copy.deepcopy(deleted);v['composition']['leyendas']=[{'title':'Resurrected'}]
+try:equal({k:source_deleted[k]for k in ['case','phase','composition','layers']},v,'deleted-reader')
+except (AssertionError,KeyError,TypeError,IndexError):rejected.append('deleted-reader-resurrection')
+else:raise AssertionError('Accepted deleted reader resurrection')
+report=dict(result='pass',cases=4,source_exact_authoring_states=53,explicit_native_correctness_gesture_states=16,reader_pairs=4,deleted_original_reader=1,source_gesture_exceptions=3,negative_controls=rejected,scope='Literal original authoring and saved-reader equality; native reversible gesture history is an explicit correctness difference from original read-only height failure. No physical pixel or multi-item claim.')
 a.comparison.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
