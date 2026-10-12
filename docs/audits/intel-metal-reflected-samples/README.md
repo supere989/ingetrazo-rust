@@ -13,3 +13,7 @@ Production document annotations, valid Apple CGL selected-depth semantics, full 
 A read-only GitHub API inventory confirmed default branch `main` and 18 available workflows; the new reflected diagnostic was absent. Its narrowly scoped review-branch push trigger permits discovery/execution without adding the diagnostic to default main. No push or dispatch was performed.
 
 Root metadata preflight: Intel-target Metal library/all targets pass. GUI consumer cross-check is blocked by Linux C compiler macOS flags in libz-sys; actual macOS CI remains required. Initial missing original fixture mount and both attempts are retained in metadata-preflight.zip. No native execution or acceptance is inferred.
+
+## Explicit native source-depth-format candidate
+
+The next diagnostic adds `--depth24-diagnostic` together with `--reflected-diagnostic`. It requires the actual device's `isDepth24Stencil8PixelFormatSupported`; unsupported devices refuse. A cold World chooses native `Depth24Unorm_Stencil8` before any target/pipeline/cache publication. World, material, stencil, contour and billboard attachments use the same immutable format; warm mode changes refuse. Existing allocation-size accounting owns the targets and no extra image, pass or shader depth quantization is added. The checker still requires exact source images and raw bits, and authenticates actual transport format/sample count. The first failing result remains separately immutable.

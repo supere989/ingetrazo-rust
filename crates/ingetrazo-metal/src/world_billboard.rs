@@ -22,6 +22,7 @@ struct BufferOwner { vertices: Buffer, asset: Option<Arc<Asset>>, color: Option<
 struct Draw { order: usize, buffer: usize, first: usize, count: usize }
 pub(crate) struct Prepared {
  reflected:bool,
+ depth24:bool,
     owner:super::world::Owner,
     pipeline: Option<Arc<Pipeline>>,
     buffers: Vec<BufferOwner>,
@@ -44,9 +45,9 @@ impl Key {
 impl Prepared {
  pub fn validate_owner(&self,metal:&NativeMetal)->Result<(),String>{self.owner.validate(metal)}
  pub fn retained_bytes(&self)->usize{std::mem::size_of::<Self>()+self.buffers.capacity()*std::mem::size_of::<BufferOwner>()+self.draws.capacity()*std::mem::size_of::<Draw>()+self.assets.capacity()*std::mem::size_of::<(String,Arc<Asset>)>()+self.assets.iter().map(|a|a.0.capacity()).sum::<usize>()}
- pub fn prepare(metal:&NativeMetal,scene:&Scene,packet:&Packet,camera:&OrbitCamera,eye:glam::Vec3,key:Key,previous:Option<&Self>,reuse_images:bool,world_assets:&[Arc<Asset>],reflected:bool)->Result<Self,String>{
-  if let Some(previous)=previous{previous.validate_owner(metal)?;if previous.reflected!=reflected{return Err("Billboard diagnostic orientation owner mismatch".into());}}
-  let mut out=Self{reflected,owner:super::world::Owner::new(metal),pipeline:None,buffers:Vec::new(),draws:Vec::new(),assets:Vec::new(),uploads:0,texture_uploads:0,bytes:0};
+ pub fn prepare(metal:&NativeMetal,scene:&Scene,packet:&Packet,camera:&OrbitCamera,eye:glam::Vec3,key:Key,previous:Option<&Self>,reuse_images:bool,world_assets:&[Arc<Asset>],reflected:bool,depth24:bool)->Result<Self,String>{
+  if let Some(previous)=previous{previous.validate_owner(metal)?;if previous.reflected!=reflected||previous.depth24!=depth24{return Err("Billboard diagnostic orientation owner mismatch".into());}}
+  let mut out=Self{reflected,depth24,owner:super::world::Owner::new(metal),pipeline:None,buffers:Vec::new(),draws:Vec::new(),assets:Vec::new(),uploads:0,texture_uploads:0,bytes:0};
   if !key.enabled||packet.runs.is_empty(){
    // Hiding a receiver retires its geometry, while its immutable image cache
    // remains available for Hide/Unhide and style restoration.
@@ -80,7 +81,7 @@ impl Prepared {
    for draw in geometry.draws {out.draws.push(Draw{order:draw.source.order,buffer:index,first:draw.first as usize,count:draw.count as usize});}
   }
   out.draws.sort_unstable_by_key(|d|d.order);
-  if !out.draws.is_empty(){out.pipeline=Some(if let Some(p)=previous.and_then(|p|p.pipeline.as_ref()).filter(|p|p.samples==key.samples&&p.stencil==key.stencil){p.clone()}else{Arc::new(Pipeline::new(metal,key.samples,key.stencil,reflected)?)});}
+  if !out.draws.is_empty(){out.pipeline=Some(if let Some(p)=previous.and_then(|p|p.pipeline.as_ref()).filter(|p|p.samples==key.samples&&p.stencil==key.stencil){p.clone()}else{Arc::new(Pipeline::new(metal,key.samples,key.stencil,reflected,depth24)?)});}
   if out.retained_bytes()>8*1024*1024{return Err("Metal billboard metadata exceeds8MiB".into());}Ok(out)
  }
  pub(crate) fn assets(&self)->&[(String,Arc<Asset>)]{&self.assets}
@@ -108,12 +109,12 @@ impl Prepared {
  }
 }
 impl Pipeline {
- fn new(metal:&NativeMetal,samples:usize,stencil:bool,reflected:bool)->Result<Self,String>{
+ fn new(metal:&NativeMetal,samples:usize,stencil:bool,reflected:bool,depth24:bool)->Result<Self,String>{
   let lib=metal.device.newLibraryWithSource_options_error(&NSString::from_str(&format!("#define SOURCE_REFLECT_Y {}\n{}",u8::from(reflected),include_str!("shaders/world.metal"))),None).map_err(|e|format!("Metal billboard shader:{e:?}"))?;
   let make=|fragment:&str|->Result<_,String>{
    let d=MTLRenderPipelineDescriptor::new();let vertex=lib.newFunctionWithName(&NSString::from_str("world_texture_vertex")).ok_or("Metal billboard vertex missing")?;let fragment=lib.newFunctionWithName(&NSString::from_str(fragment)).ok_or("Metal billboard fragment missing")?;
    d.setVertexFunction(Some(&vertex));d.setFragmentFunction(Some(&fragment));d.setRasterSampleCount(samples);
-   let format=if stencil{MTLPixelFormat::Depth32Float_Stencil8}else{MTLPixelFormat::Depth32Float};d.setDepthAttachmentPixelFormat(format);if stencil{d.setStencilAttachmentPixelFormat(format);}
+   let format=super::world::depth_format(stencil,depth24);d.setDepthAttachmentPixelFormat(format);if stencil{d.setStencilAttachmentPixelFormat(format);}
    let color=unsafe{d.colorAttachments().objectAtIndexedSubscript(0)};color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);color.setBlendingEnabled(true);color.setSourceRGBBlendFactor(MTLBlendFactor::SourceAlpha);color.setDestinationRGBBlendFactor(MTLBlendFactor::OneMinusSourceAlpha);color.setRgbBlendOperation(MTLBlendOperation::Add);color.setSourceAlphaBlendFactor(MTLBlendFactor::Zero);color.setDestinationAlphaBlendFactor(MTLBlendFactor::One);color.setAlphaBlendOperation(MTLBlendOperation::Add);
    metal.device.newRenderPipelineStateWithDescriptor_error(&d).map_err(|e|format!("Metal billboard pipeline:{e:?}"))
   };

@@ -11,8 +11,9 @@ def authenticate():
  for path,row in m['files'].items():
   data=(ROOT/path).read_bytes();assert len(data)==row['size'] and hashlib.sha256(data).hexdigest()==row['sha256'],path
  return m
-def samples(root,case,source):
+def samples(root,case,source,depth24):
  n=json.loads((root/(case+'-samples.json')).read_text());rows=source['pixels'];assert n['selected_source_sample']==0
+ if depth24:assert n['transport']['depth']['format']=='MTLPixelFormat(255)' and n['transport']['depth']['samples']==4
  assert n['points_top_origin'][:len(rows)]==[r['point_top_origin']for r in rows]
  assert len(n['sample_rgba_bits'])==len(n['sample_depth_bits'])==16
  assert all(type(v)is int and 0<=v<=0xffffffff for row in n['sample_rgba_bits']for v in row)
@@ -54,7 +55,10 @@ def main():
   result['images']=strict.validate(a.native,ROOT/'docs/audits/section-original-gl')
   with zipfile.ZipFile(ROOT/'docs/audits/section-sample-observation/records.zip')as z:closed=json.loads(z.read('mesa/report.json'))
   with zipfile.ZipFile(ROOT/'docs/audits/section-iso-samples/source.zip')as z:iso=json.loads(z.read('report.json'))
-  result['samples']=[samples(a.native,'closed',closed),samples(a.native,'closed-iso',iso)]
+  depth24=report.get('depth24_diagnostic',False);assert type(depth24)is bool
+  if depth24:assert report['depth24_capability'] is True
+  result['depth24_diagnostic']=depth24
+  result['samples']=[samples(a.native,'closed',closed,depth24),samples(a.native,'closed-iso',iso,depth24)]
   image=strict.strict.image(ROOT/'docs/audits/section-original-gl/closed-iso.png')
   expected_samples=[v for r in closed['pixels']for v in r['sample_float_bits']];expected_depth=[v for r in iso['pixels']for v in r['sample_depth_bits']]
   result['negative_controls']=negatives(image,expected_samples,expected_depth)

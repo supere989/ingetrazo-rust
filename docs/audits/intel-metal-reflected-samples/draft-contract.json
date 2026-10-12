@@ -37,5 +37,14 @@
     "outputs": "Original native reference and reflected candidate rawRGBA; sample JSON per case with 16 RGBA float-bit values and 16 depth float-bit values at retained four source diagnostic pixels; warm/cache receipts",
     "acceptance": "Actual Metal strict source image comparison remains external and mandatory; no success inferred from mathematical pattern eligibility",
     "controls": "Pinned-target budget admission refusal retaining held GPU frame pixels; foreign context rejection; incompatible samples and warm mode replacement refusal; three warm frames without target/pipeline/geometry rebuild; fill/cuts off route controls"
+  },
+  "depth24_candidate": {
+    "scope": "Separate explicit source native-format experiment; original failing e2 artifact unchanged",
+    "admission": "requires cold reflected World and actual isDepth24Stencil8PixelFormatSupported; refuses unsupported",
+    "source_law": "Actual original GL_DEPTH24_STENCIL8 versus prior native Depth32Float_Stencil8, no fitted offset/quantization",
+    "consumer": "native_metal_section_resolve OUTPUT --reflected-diagnostic --depth24-diagnostic",
+    "ownership": "Immutable World format selected before pipelines/targets/adapter; all world/material/stencil/billboard/contour attachment formats agree; warm format mutation refused",
+    "budget": "Existing native allocation-size admission retained; Depth24 packed pixel estimate4bytes, no extra image/pass",
+    "verdict": "Strict full source pixels and raw sample/depth bits unchanged; no production admission"
   }
 }

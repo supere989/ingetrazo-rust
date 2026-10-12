@@ -1077,7 +1077,7 @@ impl crate::world::World {
             Arc::new(packet)
         }else{adapter.billboard_topology.as_ref().unwrap().1.clone()};
         let billboard_changed=billboard_topology_changed||adapter.billboards.as_ref().is_none_or(|old|old.0!=billboard_key);
-        let billboard_frame=if billboard_changed{Arc::new(super::world_billboard::Prepared::prepare(metal,scene,&billboard_topology,camera,eye.as_vec3(),billboard_key,adapter.billboards.as_ref().map(|p|p.1.as_ref()),!billboard_topology_changed,self.sampled_assets(),self.reflected_diagnostic)?)}else{adapter.billboards.as_ref().unwrap().1.clone()};
+        let billboard_frame=if billboard_changed{Arc::new(super::world_billboard::Prepared::prepare(metal,scene,&billboard_topology,camera,eye.as_vec3(),billboard_key,adapter.billboards.as_ref().map(|p|p.1.as_ref()),!billboard_topology_changed,self.sampled_assets(),self.reflected_diagnostic,self.depth24_diagnostic)?)}else{adapter.billboards.as_ref().unwrap().1.clone()};
         let candidate_billboard_bytes=billboard_topology.retained_bytes()+billboard_frame.retained_bytes();
         if adapter.retained_payload_bytes().saturating_sub(adapter.billboard_payload_bytes()).checked_add(candidate_billboard_bytes).is_none_or(|n|n>MAX_BYTES*3){return Err("Metal adapter billboard storage exceeds24MiB".into());}
         let sample_positions=if self.reflected_diagnostic {
@@ -1098,7 +1098,7 @@ impl crate::world::World {
         }else{[0.;4]};
         let contour_candidate=if section.enabled(){
             let samples=self.configured_sample_count();let fill=fill_candidate.is_some();
-            Some(if let Some(old)=self.contour_pipeline.as_ref().filter(|p|p.samples==samples&&p.fill==fill){old.clone()}else{Arc::new(super::world_contour::Pipeline::new(metal,samples,fill,self.reflected_diagnostic)?)})
+            Some(if let Some(old)=self.contour_pipeline.as_ref().filter(|p|p.samples==samples&&p.fill==fill&&p.depth24==self.depth24_diagnostic){old.clone()}else{Arc::new(super::world_contour::Pipeline::new(metal,samples,fill,self.reflected_diagnostic,self.depth24_diagnostic)?)})
         }else{None};
         let mut frame = self.prepare_material_placements_with_section(
             metal,

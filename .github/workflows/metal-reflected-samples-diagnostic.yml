@@ -52,7 +52,7 @@ jobs:
           python3 - <<'PYTHON'
           import subprocess
           with open('reflected-sample-evidence/native.log','w') as log:
-              subprocess.run(['target/debug/examples/native_metal_section_resolve','reflected-sample-evidence/native','--reflected-diagnostic'],stdout=log,stderr=subprocess.STDOUT,timeout=150,check=True)
+              subprocess.run(['target/debug/examples/native_metal_section_resolve','reflected-sample-evidence/native','--reflected-diagnostic','--depth24-diagnostic'],stdout=log,stderr=subprocess.STDOUT,timeout=150,check=True)
           PYTHON
       - name: Retain strict frozen source image and sample/depth verdict
         if: ${{ !cancelled() && steps.native.outcome == 'success' }}

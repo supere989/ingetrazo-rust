@@ -162,6 +162,7 @@ pub struct World {
     source_tile:Option<Arc<super::world_resolve::Pipeline>>,
     diagnostic_native_resolve:bool,
     pub(crate) reflected_diagnostic:bool,
+    pub(crate) depth24_diagnostic:bool,
     samples: usize,
     diagnostic_samples: bool,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
@@ -237,6 +238,13 @@ impl World {
         let pipeline=super::world_resolve::Pipeline::reflected(metal)?;
         self.owner=Some(pipeline.owner.clone());self.resolve_prototype=Some(pipeline);
         self.reflected_diagnostic=true;self.stats.source_resolve_pipeline_builds+=1;Ok(())
+    }
+    /// Source-format experiment only; it cannot change an existing target/cache owner.
+    pub fn enable_depth24_diagnostic(&mut self,metal:&NativeMetal)->Result<(),String>{
+        self.validate_context_owner(metal)?;
+        if self.depth24_diagnostic||!self.reflected_diagnostic||!self.targets.is_empty()||self.pipeline.is_some()||self.section_pipeline.is_some()||self.contour_pipeline.is_some(){return Err("Depth24 diagnostic requires cold reflected World".into());}
+        if !metal.device.isDepth24Stencil8PixelFormatSupported(){return Err("Native Metal device does not support Depth24UnormStencil8".into());}
+        self.depth24_diagnostic=true;Ok(())
     }
     /// Probe-only cold opt-in. Ordinary targets retain their original usage/store policy.
     pub fn enable_sample_observation(&mut self)->Result<(),String>{
@@ -365,7 +373,7 @@ impl World {
         let pipeline = if let Some(p) = self.pipeline.as_ref().filter(|p|p.fill.is_none()) {
             p.clone()
         } else {
-            Arc::new(pipeline(metal,false,self.samples.max(1),false,self.reflected_diagnostic)?)
+            Arc::new(pipeline(metal,false,self.samples.max(1),false,self.reflected_diagnostic,self.depth24_diagnostic)?)
         };
         let allocated = cached.is_none();
         let target = if let Some(t) = cached {
@@ -382,7 +390,7 @@ impl World {
                     MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead | if self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()){MTLTextureUsage::ShaderWrite}else{MTLTextureUsage::empty()},
                     4,
                 )?,
-                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,4,self.samples.max(1))?,
+                depth: image_samples(metal,extent,depth_format(false,self.depth24_diagnostic),MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,4,self.samples.max(1))?,
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
@@ -615,7 +623,7 @@ impl World {
         };
         let needs_materials=placements.has_materials;
         let cached_pipeline=if fill.is_some(){&self.section_pipeline}else{&self.pipeline};
-        let pipeline=if let Some(p)=cached_pipeline{if (!needs_materials||p.material.is_some()) && p.fill.is_some()==fill.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1),fill.is_some(),self.reflected_diagnostic)? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1),fill.is_some(),self.reflected_diagnostic)?)};
+        let pipeline=if let Some(p)=cached_pipeline{if (!needs_materials||p.material.is_some()) && p.fill.is_some()==fill.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1),fill.is_some(),self.reflected_diagnostic,self.depth24_diagnostic)? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1),fill.is_some(),self.reflected_diagnostic,self.depth24_diagnostic)?)};
         let mut new_target = if idle.is_none() {
             Some(Arc::new(Target {
                 samples:self.samples.max(1),
@@ -628,7 +636,7 @@ impl World {
                     MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead | if self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()){MTLTextureUsage::ShaderWrite}else{MTLTextureUsage::empty()},
                     4,
                 )?,
-                depth: image_samples(metal,extent,if fill.is_some(){MTLPixelFormat::Depth32Float_Stencil8}else{MTLPixelFormat::Depth32Float},MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,if fill.is_some(){8}else{4},self.samples.max(1))?,
+                depth: image_samples(metal,extent,depth_format(fill.is_some(),self.depth24_diagnostic),MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,if fill.is_some()&&!self.depth24_diagnostic{8}else{4},self.samples.max(1))?,
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
@@ -1246,7 +1254,10 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     Ok(Some(Arc::new(Mesh{vertices,indices,count:data.indices.len(),plan,materials})))
 }
 
-fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool, reflected:bool) -> Result<Pipeline, String> {
+pub(crate) fn depth_format(stencil:bool,depth24:bool)->MTLPixelFormat{
+    if depth24{MTLPixelFormat::Depth24Unorm_Stencil8}else if stencil{MTLPixelFormat::Depth32Float_Stencil8}else{MTLPixelFormat::Depth32Float}
+}
+fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool, reflected:bool,depth24:bool) -> Result<Pipeline, String> {
     let lib = metal
         .device
         .newLibraryWithSource_options_error(
@@ -1263,7 +1274,7 @@ fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool, reflected:
     let d = MTLRenderPipelineDescriptor::new();
     d.setVertexFunction(Some(&vertex));
     d.setFragmentFunction(Some(&fragment));
-    d.setDepthAttachmentPixelFormat(if fill{MTLPixelFormat::Depth32Float_Stencil8}else{MTLPixelFormat::Depth32Float});if fill{d.setStencilAttachmentPixelFormat(MTLPixelFormat::Depth32Float_Stencil8);}d.setRasterSampleCount(samples);
+    d.setDepthAttachmentPixelFormat(depth_format(fill,depth24));if fill{d.setStencilAttachmentPixelFormat(depth_format(true,depth24));}d.setRasterSampleCount(samples);
     unsafe { d.colorAttachments().objectAtIndexedSubscript(0) }
         .setPixelFormat(MTLPixelFormat::RGBA8Unorm);
     let color = metal
@@ -1278,13 +1289,13 @@ fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool, reflected:
     disabled.setDepthWriteEnabled(false);
     let material=if rich{
         let alpha=MTLDepthStencilDescriptor::new();alpha.setDepthCompareFunction(MTLCompareFunction::LessEqual);alpha.setDepthWriteEnabled(false);
-        Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true,samples,fill)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples,fill)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples,fill)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
+        Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true,samples,fill,depth24)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples,fill,depth24)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples,fill,depth24)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
     }else{None};
     Ok(Pipeline {
-        fill:if fill{Some(fill_pipeline(metal,&lib,samples)?)}else{None},
-        background: material_pipeline(metal,&lib,"world_background_vertex","world_background_fragment",false,samples,fill)?,
-        lines: material_pipeline(metal,&lib,"world_line_vertex","world_ghost_fragment",false,samples,fill)?,
-        ghost: material_pipeline(metal,&lib,"world_ghost_vertex","world_ghost_fragment",false,samples,fill)?,
+        fill:if fill{Some(fill_pipeline(metal,&lib,samples,depth24)?)}else{None},
+        background: material_pipeline(metal,&lib,"world_background_vertex","world_background_fragment",false,samples,fill,depth24)?,
+        lines: material_pipeline(metal,&lib,"world_line_vertex","world_ghost_fragment",false,samples,fill,depth24)?,
+        ghost: material_pipeline(metal,&lib,"world_ghost_vertex","world_ghost_fragment",false,samples,fill,depth24)?,
         color,material,
         depth_disabled: metal
             .device
@@ -1296,8 +1307,8 @@ fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool, reflected:
             .ok_or("World depth state missing")?,
     })
 }
-fn material_pipeline(metal:&NativeMetal,lib:&ProtocolObject<dyn MTLLibrary>,vertex:&str,fragment:&str,alpha:bool,samples:usize,fill:bool)->Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>,String>{
- let vertex=lib.newFunctionWithName(&NSString::from_str(vertex)).ok_or("Metal material vertex function missing")?;let fragment=lib.newFunctionWithName(&NSString::from_str(fragment)).ok_or("Metal material fragment function missing")?;let d=MTLRenderPipelineDescriptor::new();d.setVertexFunction(Some(&vertex));d.setFragmentFunction(Some(&fragment));d.setDepthAttachmentPixelFormat(if fill{MTLPixelFormat::Depth32Float_Stencil8}else{MTLPixelFormat::Depth32Float});if fill{d.setStencilAttachmentPixelFormat(MTLPixelFormat::Depth32Float_Stencil8);}d.setRasterSampleCount(samples);let color=unsafe{d.colorAttachments().objectAtIndexedSubscript(0)};color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);color.setBlendingEnabled(alpha);
+fn material_pipeline(metal:&NativeMetal,lib:&ProtocolObject<dyn MTLLibrary>,vertex:&str,fragment:&str,alpha:bool,samples:usize,fill:bool,depth24:bool)->Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>,String>{
+ let vertex=lib.newFunctionWithName(&NSString::from_str(vertex)).ok_or("Metal material vertex function missing")?;let fragment=lib.newFunctionWithName(&NSString::from_str(fragment)).ok_or("Metal material fragment function missing")?;let d=MTLRenderPipelineDescriptor::new();d.setVertexFunction(Some(&vertex));d.setFragmentFunction(Some(&fragment));d.setDepthAttachmentPixelFormat(depth_format(fill,depth24));if fill{d.setStencilAttachmentPixelFormat(depth_format(true,depth24));}d.setRasterSampleCount(samples);let color=unsafe{d.colorAttachments().objectAtIndexedSubscript(0)};color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);color.setBlendingEnabled(alpha);
  if alpha{color.setSourceRGBBlendFactor(MTLBlendFactor::SourceAlpha);color.setDestinationRGBBlendFactor(MTLBlendFactor::OneMinusSourceAlpha);color.setRgbBlendOperation(MTLBlendOperation::Add);color.setSourceAlphaBlendFactor(MTLBlendFactor::Zero);color.setDestinationAlphaBlendFactor(MTLBlendFactor::One);color.setAlphaBlendOperation(MTLBlendOperation::Add);}
  metal.device.newRenderPipelineStateWithDescriptor_error(&d).map_err(|e|format!("Metal material pipeline:{e:?}"))
 }
@@ -1634,20 +1645,22 @@ fn fill_pipeline(
     metal: &NativeMetal,
     lib: &ProtocolObject<dyn MTLLibrary>,
     samples: usize,
+    depth24:bool,
 ) -> Result<FillPipeline, String> {
     fn mask(
         metal: &NativeMetal,
         lib: &ProtocolObject<dyn MTLLibrary>,
         name: &str,
         samples: usize,
+        depth24:bool,
     ) -> Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>, String> {
         let d = MTLRenderPipelineDescriptor::new();
         let vertex=lib.newFunctionWithName(&NSString::from_str(name)).ok_or("Metal stencil vertex missing")?;
         let fragment=lib.newFunctionWithName(&NSString::from_str("world_mask_fragment")).ok_or("Metal stencil fragment missing")?;
         d.setVertexFunction(Some(&vertex));
         d.setFragmentFunction(Some(&fragment));
-        d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float_Stencil8);
-        d.setStencilAttachmentPixelFormat(MTLPixelFormat::Depth32Float_Stencil8);
+        d.setDepthAttachmentPixelFormat(depth_format(true,depth24));
+        d.setStencilAttachmentPixelFormat(depth_format(true,depth24));
         d.setRasterSampleCount(samples);
         let color = unsafe { d.colorAttachments().objectAtIndexedSubscript(0) };
         color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);
@@ -1687,8 +1700,8 @@ fn fill_pipeline(
             .ok_or("Metal stencil depth state unavailable".into())
     }
     Ok(FillPipeline {
-        mask: mask(metal, lib, "world_vertex", samples)?,
-        texture_mask: mask(metal, lib, "world_texture_mask_vertex", samples)?,
+        mask: mask(metal, lib, "world_vertex", samples,depth24)?,
+        texture_mask: mask(metal, lib, "world_texture_mask_vertex", samples,depth24)?,
         mask_depth: state(metal, true)?,
         cap_depth: state(metal, false)?,
     })

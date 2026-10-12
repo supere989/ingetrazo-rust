@@ -29,6 +29,8 @@ fn run() -> Result<(), String> {
         let out = std::path::PathBuf::from(std::env::args().nth(1).ok_or("Output required")?);
         std::fs::create_dir_all(&out).map_err(|e| e.to_string())?;
         let reflected_mode=std::env::args().any(|a|a=="--reflected-diagnostic");
+        let depth24_mode=std::env::args().any(|a|a=="--depth24-diagnostic");
+        if depth24_mode&&!reflected_mode{return Err("Depth24 requires explicit reflected diagnostic".into());}
         let production_mode=std::env::args().any(|a|a=="--production");
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
@@ -196,7 +198,9 @@ fn run() -> Result<(), String> {
             if !production_mode && !reflected_mode {world.use_native_resolve_reference()?;}
             world.set_sample_count(&metal,4)?;
             if reflected_mode {
-                world.enable_reflected_sample_diagnostic(&metal)?;world.enable_sample_observation()?;
+                world.enable_reflected_sample_diagnostic(&metal)?;
+                if depth24_mode {world.enable_depth24_diagnostic(&metal)?;}
+                world.enable_sample_observation()?;
                 if world.set_sample_count(&metal,1).is_ok(){return Err("Reflected mode admitted incompatible sample count".into());}
             }
             else if !production_mode {world.enable_source_resolve_prototype(&metal)?;}
@@ -214,6 +218,7 @@ fn run() -> Result<(), String> {
             std::fs::write(out.join(format!("{name}-candidate.rgba")),&bytes).map_err(|e|e.to_string())?;
             let changed_pixels=reference.chunks_exact(4).zip(bytes.chunks_exact(4)).filter(|(a,b)|a!=b).count();
             drop(frame);
+            if depth24_mode && world.enable_depth24_diagnostic(&metal).is_ok(){return Err("Warm diagnostic depth-format replacement admitted".into());}
             if reflected_mode && world.enable_reflected_sample_diagnostic(&metal).is_ok(){return Err("Warm reflected mode replacement admitted".into());}
             let before = world.stats;
             let mut repeated = None;
@@ -303,7 +308,7 @@ fn run() -> Result<(), String> {
             drop(adapter);
             drop(world);
         }
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"production_mode":production_mode,"reflected_diagnostic":reflected_mode,"cases":rows,"sample_diagnostics":sample_diagnostics,"scope":"Diagnostic source-ordered resolve prototype against untouched native reference; ten retained recipes, warm reuse, no release acceptance"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"production_mode":production_mode,"reflected_diagnostic":reflected_mode,"depth24_diagnostic":depth24_mode,"depth24_capability":metal.device.isDepth24Stencil8PixelFormatSupported(),"cases":rows,"sample_diagnostics":sample_diagnostics,"scope":"Diagnostic source-ordered resolve prototype against untouched native reference; ten retained recipes, warm reuse, no release acceptance"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
