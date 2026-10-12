@@ -320,6 +320,7 @@ mod tests {
             replies
         });
         let until = Instant::now() + Duration::from_secs(5);
+        let mut retired_captures = 0;
         while !peer.is_finished() {
             assert!(Instant::now() < until);
             let _ = ctx.run(
@@ -336,6 +337,7 @@ mod tests {
             // an explicit backend refusal rather than waiting for a GPU hook
             // that this fixture does not own.
             if let Some(pending) = app.ai_bridge_capture.take() {
+                retired_captures += 1;
                 let id = pending.request().id;
                 assert!(app.finish_ai_bridge_capture(pending,
                     crate::ai_bridge_capture::CaptureResult {
@@ -350,6 +352,15 @@ mod tests {
         assert_eq!(replies[2]["result"], json!({"ok":true}));
         assert_eq!(replies[3]["ok"], false);
         assert_eq!(replies[4]["ok"], false);
+        assert_eq!(replies[4]["id"], 5);
+        if cfg!(any(target_os = "linux", target_os = "windows")) {
+            assert_eq!(retired_captures, 1);
+            assert_eq!(replies[4]["error"], "Test UI owner has no capture backend");
+        } else {
+            assert_eq!(retired_captures, 0);
+            assert_eq!(replies[4]["error"], "Native viewport capture is not yet supported on this backend");
+        }
+        assert!(app.ai_bridge_capture.is_none());
         assert_eq!(app.scene.mesh.edges.len(), 1);
         app.stop_ai_bridge();
     }
