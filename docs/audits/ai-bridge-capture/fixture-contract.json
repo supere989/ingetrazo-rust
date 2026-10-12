@@ -124,5 +124,6 @@
   ],
   "dimension_observer": "Pinned formats/igz.py355\u2013363 live a/b/offset/axis/layer/text fields, represented with explicit nullable optional fields; no invented Dimension.to_dict.",
   "interactive_scope": "Actual Select-or-None, no hovered GL edge, no moving-group/solid/depth-tested preview asserted. Broad interactive screenshot export quirks remain open, not normalized.",
-  "render_epoch_scope": "Only model Scene.version is immutable. Viewport._tick advances naturally during the genuine GPU render and is recorded diagnostically, never asserted invariant."
+  "render_epoch_scope": "Only model Scene.version is immutable. Viewport._tick advances naturally during the genuine GPU render and is recorded diagnostically, never asserted invariant.",
+  "camera_number_schema": "Observed camera fov is explicitly JSON float (physical angular metric); constructor input may be integer45. Exact finite value comparison remains mandatory; no int/float comparator tolerance."
 }

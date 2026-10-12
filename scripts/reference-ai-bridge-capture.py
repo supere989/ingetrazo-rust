@@ -49,7 +49,7 @@ def selection_record(s):
  return sorted(result)
 def observation(host):
  v=host.viewport;s=v.scene;c=v.camera
- return {'selection':selection_record(s),'scene':scene_state(s),'overlays':{k:[overlay_record(x)for x in getattr(s,k,[])]for k in ['dimensions','text_labels','guides','section_planes','geo_paths','geo_points']},'camera':{'target':list(c.target.toTuple()),'distance':c.distance,'yaw':c.yaw,'pitch':c.pitch,'perspective':c.perspective,'fov':c.fov_deg,'aspect':c.aspect,'up':list(c.up.toTuple()),'znear':c.znear,'zfar':c.zfar,'two_point':c.two_point},'undo':len(v.history.undo_stack),'redo':len(v.history.redo_stack),'edit_context':len(getattr(s,'_edit_stack',[])),'current_file':str(host._current_path)if host._current_path else None,'dirty':host._is_dirty(),'scene_version':s.version}
+ return {'selection':selection_record(s),'scene':scene_state(s),'overlays':{k:[overlay_record(x)for x in getattr(s,k,[])]for k in ['dimensions','text_labels','guides','section_planes','geo_paths','geo_points']},'camera':{'target':list(c.target.toTuple()),'distance':c.distance,'yaw':c.yaw,'pitch':c.pitch,'perspective':c.perspective,'fov':float(c.fov_deg),'aspect':c.aspect,'up':list(c.up.toTuple()),'znear':c.znear,'zfar':c.zfar,'two_point':c.two_point},'undo':len(v.history.undo_stack),'redo':len(v.history.redo_stack),'edit_context':len(getattr(s,'_edit_stack',[])),'current_file':str(host._current_path)if host._current_path else None,'dirty':host._is_dirty(),'scene_version':s.version}
 def flush(v):
  end=time.monotonic()+10;prior=getattr(v,'_tick',0)
  v.update()
