@@ -1,5 +1,22 @@
 name: Opt-in Intel Metal reflected sample diagnostic
 on:
+  push:
+    branches: [review/intel-metal-reflected-samples]
+    paths:
+      - .github/workflows/metal-reflected-samples-diagnostic.yml
+      - scripts/check-metal-reflected-samples.py
+      - docs/audits/intel-metal-reflected-samples/**
+      - crates/ingetrazo-gui/examples/native_metal_section_resolve.rs
+      - crates/ingetrazo-metal/src/annotation.rs
+      - crates/ingetrazo-metal/src/world.rs
+      - crates/ingetrazo-metal/src/world_scene.rs
+      - crates/ingetrazo-metal/src/world_resolve.rs
+      - crates/ingetrazo-metal/src/world_contour.rs
+      - crates/ingetrazo-metal/src/world_billboard.rs
+      - crates/ingetrazo-metal/src/shaders/world.metal
+      - crates/ingetrazo-metal/src/shaders/world_resolve.metal
+      - crates/ingetrazo-metal/src/shaders/contour.metal
+      - crates/ingetrazo-metal/src/shaders/annotation_visibility.metal
   workflow_dispatch:
 concurrency:
   group: metal-reflected-diagnostic-${{ github.ref }}
