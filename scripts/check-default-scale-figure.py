@@ -7,7 +7,7 @@ NAMES=['default','disabled-string','bool-false']
 FLAGS=['startup_clean','history_empty','owned_asset','raw_false_enabled','disabled_pristine_reconcile','new_document_preference','edited_startup_not_removed','loaded_document_marker_retired']
 def equal(a,b,path='$'):
  if type(a) in (int,float) and type(b) in (int,float):
-  assert math.isfinite(a) and math.isfinite(b) and a==b,path
+  assert type(a)is type(b) and math.isfinite(a) and math.isfinite(b) and a==b,path
   if a==0:assert math.copysign(1,a)==math.copysign(1,b),path
  elif isinstance(a,dict):
   assert type(b)is dict and a.keys()==b.keys(),path
@@ -16,7 +16,6 @@ def equal(a,b,path='$'):
   assert type(b)is list and len(a)==len(b),path
   for i,(x,y) in enumerate(zip(a,b)):equal(x,y,path+f'[{i}]')
  else:assert type(a)is type(b) and a==b,path
- def_unused=None
 def verify(s,n,reopens):
  assert s['source_pin']==n['source_pin']==PIN
  assert [c['name']for c in s['cases']]==[c['name']for c in n['cases']]==[c['name']for c in reopens['cases']]==NAMES
