@@ -4,11 +4,11 @@ fn callbacks(
     shape: &egui::Shape,
     ids: &[u64],
     out: &mut Vec<ingetrazo_render::cad_callback::Snapshot>,
-) {
+) -> Result<(), Error> {
     match shape {
         egui::Shape::Vec(v) => {
             for s in v {
-                callbacks(s, ids, out)
+                callbacks(s, ids, out)?
             }
         }
         egui::Shape::Callback(c) => {
@@ -16,7 +16,7 @@ fn callbacks(
                 .callback
                 .downcast_ref::<ingetrazo_render::cad_callback::Callback>()
             {
-                let s = c.snapshot();
+                let s = c.snapshot()?;
                 if ids.contains(&s.geometry.id()) {
                     out.push(s);
                 }
@@ -24,6 +24,7 @@ fn callbacks(
         }
         _ => {}
     }
+    Ok(())
 }
 fn mul(a: u8, b: u8) -> u8 {
     let v = u32::from(a) * u32::from(b) + 128;
@@ -39,7 +40,7 @@ fn capture(
         .unwrap_or_default();
     let mut submitted = vec![];
     for s in &output.shapes {
-        callbacks(&s.shape, &ids, &mut submitted);
+        callbacks(&s.shape, &ids, &mut submitted)?;
     }
     let transform = ctx
         .data(|d| d.get_temp::<[f32; 3]>(egui::Id::new("pdf-ui-paper-transform")))
