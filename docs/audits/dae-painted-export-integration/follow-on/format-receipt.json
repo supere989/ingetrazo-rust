@@ -1,0 +1,13 @@
+{
+  "revision": "bebf71f6ed11db6210f74d63debc8fc6cd53416a",
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "ingetrazo-formats",
+    "--lib",
+    "gltf::tests::"
+  ],
+  "seconds": 6.399511656956747,
+  "returncode": 0
+}

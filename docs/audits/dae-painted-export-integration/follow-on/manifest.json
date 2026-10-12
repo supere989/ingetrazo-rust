@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "path": "format-test.log",
+      "origin": "/tmp/ingetrazo-dae-affected-format-check/test.log",
+      "sha256": "8579dacd8a5ca140e17a35ffc3ebede1453cbfc29dd5a9cfeacf427cd848768d",
+      "size": 14918
+    },
+    {
+      "path": "format-receipt.json",
+      "origin": "/tmp/ingetrazo-dae-affected-format-check/receipt.json",
+      "sha256": "702271a10b70706be8ae926b389d7bbfb607a9c8e221c77ba3049e093d736687",
+      "size": 222
+    },
+    {
+      "path": "ci-preflight-result.json",
+      "origin": "/tmp/ingetrazo-dae-ci-metadata-preflight/result.json",
+      "sha256": "45e8c3db14888f2e901748bf106a58d60f15030120e1d5be4daf8ad915d7accb",
+      "size": 161
+    }
+  ],
+  "source_captures_added": 0,
+  "native_runs_added": 0,
+  "strict_reader_gate": "OPEN"
+}
