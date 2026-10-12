@@ -157,6 +157,15 @@ impl Textures{
   self.record_receiver(resources,command,serial,phase,mvp,plane,clip,height,xray,None)
  }
  pub(crate) fn record_receiver(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool,shadow:Option<(vk::PipelineLayout,&[vk::Pipeline;16])>)->Result<(),String>{
+  self.record_receiver_wash(resources,command,serial,phase,mvp,plane,clip,height,xray,shadow,None)
+ }
+ /// Source edit-context wash, after sampled lighting, using this owner's cached
+ /// geometry and immutable images. Ordinary receivers retain zero wash.
+ pub(crate) fn record_context(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool,background:[f32;3],fade:f32)->Result<(),String>{
+  if !background.iter().all(|v|v.is_finite())||!fade.is_finite()||!(0.0..=1.0).contains(&fade){return Err("Context texture wash must be finite and bounded".into());}
+  self.record_receiver_wash(resources,command,serial,phase,mvp,plane,clip,height,xray,None,Some((background,fade)))
+ }
+ fn record_receiver_wash(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool,shadow:Option<(vk::PipelineLayout,&[vk::Pipeline;16])>,wash:Option<([f32;3],f32)>)->Result<(),String>{
   let (layout,pipelines)=shadow.unwrap_or((self.layout,&self.pipelines));
   for draw in self.draws.iter().filter(|d|!d.shadow_only&&d.billboard==matches!(phase,Phase::Billboard)&&(!d.missing||matches!(phase,Phase::Mask|Phase::Depth))).filter(|d|match phase{Phase::Opaque=>d.opaque&&!d.back,Phase::BackOpaque=>d.opaque&&d.back,Phase::TransparentFront=>!d.opaque&&!d.back,Phase::TransparentBack=>!d.opaque&&d.back,Phase::Mask|Phase::Depth|Phase::Billboard=>true}){
    let buffer=resources.buffer(draw.buffer).ok_or("Cached texture buffer retired before draw")?;resources.mark_used(draw.buffer,serial)?;if draw.set!=vk::DescriptorSet::null(){self.cache.mark_used(draw.asset,serial)?;}
@@ -164,8 +173,9 @@ impl Textures{
    // texture phases retain their paint opacity. _xray_face_depth uses all
    // texture positions without sampling alpha or writing colour.
    let index=if phase==Phase::Depth{7}else if phase==Phase::Mask{5}else if phase==Phase::Opaque&&xray{6}else if draw.opaque{if draw.back{1}else{0}}else if draw.back{4}else if draw.cull{3}else{2};
-   let mut push=[0u8;112];push[..64].copy_from_slice(bytemuck::cast_slice(mvp));push[64..80].copy_from_slice(bytemuck::cast_slice(plane));push[80..84].copy_from_slice(bytemuck::bytes_of(&(clip|if matches!(phase,Phase::Mask|Phase::Depth){2}else{0})));push[84..88].copy_from_slice(bytemuck::bytes_of(&if phase==Phase::Opaque&&xray{0.6f32}else{draw.opacity}));push[88..92].copy_from_slice(bytemuck::bytes_of(&draw.shade));push[92..96].copy_from_slice(bytemuck::bytes_of(&(height<<1|u32::from(draw.cutout))));
+   let mut push=[0u8;128];push[..64].copy_from_slice(bytemuck::cast_slice(mvp));push[64..80].copy_from_slice(bytemuck::cast_slice(plane));push[80..84].copy_from_slice(bytemuck::bytes_of(&(clip|if matches!(phase,Phase::Mask|Phase::Depth){2}else{0})));push[84..88].copy_from_slice(bytemuck::bytes_of(&if phase==Phase::Opaque&&xray{0.6f32}else{draw.opacity}));push[88..92].copy_from_slice(bytemuck::bytes_of(&draw.shade));push[92..96].copy_from_slice(bytemuck::bytes_of(&(height<<1|u32::from(draw.cutout))));
    if let Some(mean)=draw.mean{push[96..108].copy_from_slice(bytemuck::cast_slice(&mean));}
+   if let Some((background,fade))=wash{push[112..124].copy_from_slice(bytemuck::cast_slice(&background));push[124..128].copy_from_slice(bytemuck::bytes_of(&fade));}
    unsafe{self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,if phase==Phase::Billboard{self.billboard_pipelines[usize::from(draw.mean.is_some()||draw.missing)]}else{pipelines[index+if draw.mean.is_some()||draw.missing{8}else{0}]});if draw.mean.is_none()&&!draw.missing{self.device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,layout,0,&[draw.set],&[]);}self.device.cmd_bind_vertex_buffers(command,0,&[buffer],&[0]);self.device.cmd_push_constants(command,layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);self.device.cmd_draw(command,draw.count,1,draw.first,0);}self.stats.draws+=1;
   }Ok(())
  }

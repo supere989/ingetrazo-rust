@@ -2,7 +2,7 @@
 layout(constant_id=0)const bool pre_raster_clip=false;
 layout(location=1)in vec3 world_position;
 layout(location=0)out vec4 color;
-layout(push_constant)uniform Params{mat4 mvp;vec4 plane;uint clip_enabled;float opacity;float shade;uint cutout_height;vec4 mean;}p;
+layout(push_constant)uniform Params{mat4 mvp;vec4 plane;uint clip_enabled;float opacity;float shade;uint cutout_height;vec4 mean;layout(offset=112)vec3 context_background;float context_fade;}p;
 // Source viewport/basic.frag shadow_light, kept in source operation order.
 layout(set=1,binding=0)uniform sampler2D shadow_map;
 layout(set=1,binding=1,std140)uniform Shadow{mat4 light_vp;vec4 sun_bias;vec4 parameters;}shadow;
@@ -66,4 +66,5 @@ void main(){
  // Source basic.frag applies u_shade only while sampling a texture.
  // Shaded _set_color uses the mean directly, despite the caller setting shade.
  color=vec4(p.mean.rgb,p.opacity);
-color.rgb=shadow_surface(color.rgb);}
+color.rgb=shadow_surface(color.rgb);if(p.context_fade>0.){color.rgb=mix(color.rgb,p.context_background,p.context_fade);}
+}
