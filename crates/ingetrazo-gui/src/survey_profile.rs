@@ -755,7 +755,7 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                 }
             }
             if let Some(c) = &app.survey_profile.chart {
-                ui.painter().add(egui::Shape::mesh(c.mesh.clone()));
+                ui.painter().add(egui::Shape::mesh(c.mesh.as_ref().clone()));
             }
             if !profile.complete {
                 ui.label(tr(
