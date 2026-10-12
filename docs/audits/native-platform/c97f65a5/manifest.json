@@ -2,8 +2,8 @@
   "head": "c97f65a519c12eaa01ae22eb1cefd5df3703f1ab",
   "full_run": 38222853412,
   "ordered_run": 38222853439,
-  "scope": "Terminal Mac/cross/Windows/ordered snapshot; Linux pending, not final publication acceptance.",
-  "archive_sha256": "4440f0408857647dbb0d47b5be8d03078d4beac7f29dc6049e646bc0e4978d02",
+  "scope": "Terminal exact-head publication. Linux four strict steps fail;30consumer/184stage summary passes. Annotation Linux detailed folder absent from uploaded artifact; no inferred CI pixel counts.",
+  "archive_sha256": "8022b43970e25611dc67aff3fc853f90bcbc7d24c5dfa9552eb6fff8fc73f578",
   "members": {
     "arm/metal-combined-gui-ci/apple-gl-depth-resolve.json": {
       "bytes": 37,
@@ -389,6 +389,10 @@
       "bytes": 80613,
       "sha256": "c3ae847311afdacf96e5d34b06e3856d284678ed8e0dd7646e1f2dd172d12c42"
     },
+    "c97-artifacts-final.json": {
+      "bytes": 4393,
+      "sha256": "17103d43c7233bc90cd6da6d55e4a36566ffb0be7fff12c2295babda1c11135f"
+    },
     "c97-artifacts.json": {
       "bytes": 3671,
       "sha256": "fc928e28631358dee6d13786931c17fbb66b4e895978f013ebaed73e786764d8"
@@ -396,6 +400,10 @@
     "c97-intel.log": {
       "bytes": 83521,
       "sha256": "ab17040055ccb0115c24eeef506d1c688447e9434ff5ca5d04735abf30b75ab7"
+    },
+    "c97-jobs-final.json": {
+      "bytes": 47800,
+      "sha256": "91cc99e915eaac527cbfc69c6fb9f2d1476437298535ad6545c023887a385658"
     },
     "c97-jobs.json": {
       "bytes": 45711,
@@ -776,6 +784,238 @@
     "intel-artifact.json": {
       "bytes": 147812,
       "sha256": "326bf4f0baa33a6289fdaf156b3ebb8789085b741afbe8ee9051384a0404b729"
+    },
+    "linux/dem-profile-ci/replay/checker.log": {
+      "bytes": 181,
+      "sha256": "92ad4d386670c640f695b36e28572a2c4ece3acb605ae86ffd5642128c840b6f"
+    },
+    "linux/dem-profile-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/dem-profile-ci/replay/comparison.json": {
+      "bytes": 195,
+      "sha256": "20d8243e9621e56a6ad8fa0ca0d94e4e7a4ce30c81cd62a5357a3169df147370"
+    },
+    "linux/dem-profile-ci/replay/result.json": {
+      "bytes": 2282,
+      "sha256": "b3c66009a7dc472f417d35126645493c7b31c1c25a027bbb0f59400e7cb28925"
+    },
+    "linux/dem-profile-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/dem-profile-ci/replay/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/dem-profile-ci/replay.log": {
+      "bytes": 2000,
+      "sha256": "0ab1878f703f9e24b5b68fae10ad94d3890e8b3b32ab397e9aeaa2cf2f087074"
+    },
+    "linux/document-axes-ci/result.json": {
+      "bytes": 169648,
+      "sha256": "634c732f22270972183329e2b10cbba81baf14d4a467f76f055d02aad0bec1e8"
+    },
+    "linux/document-axes-ci/stages.json": {
+      "bytes": 29421,
+      "sha256": "9497aa69d4a217f09bf1ad6c3f6490fcb53bfd2de564de34f71334b5c34a4047"
+    },
+    "linux/grid-default-ci/source-generation.json": {
+      "bytes": 89580,
+      "sha256": "4e0c6195ed78e50247b51d7ad810877eb614a306e60623b7dbf5337ab98e78d0"
+    },
+    "linux/grid-heldout-ci/source-generation.json": {
+      "bytes": 89587,
+      "sha256": "7964131759c19268733aadebcacd10dea5a723216a527cd4237580a681d2f633"
+    },
+    "linux/legend-authoring-ci/replay/checker.log": {
+      "bytes": 1000,
+      "sha256": "c72635d2981f0c211af38b255bbf7a57cf7b913cbbb4ace0f7cc0eadd7f34aec"
+    },
+    "linux/legend-authoring-ci/replay/comparison.json": {
+      "bytes": 1128,
+      "sha256": "6aa19359a29c608ef3a5fd2fd0f86e2a194adaba11df19f9a3dbe0e3a7c8fb15"
+    },
+    "linux/legend-authoring-ci/replay/result.json": {
+      "bytes": 2163,
+      "sha256": "231e4c05d716668ecfb83f18e4fb67ba7207beea2a3557f11c22ca4daad434f7"
+    },
+    "linux/legend-authoring-ci/replay.log": {
+      "bytes": 1921,
+      "sha256": "43d45e9f5cd0b8bbb632c6952be88dd13db440364c0c92d63f0de64db57542f4"
+    },
+    "linux/picture-authoring-ci/replay/checker.log": {
+      "bytes": 663,
+      "sha256": "693834818a1698fac75051beaa7d6d99f4c3b2597d2c14bbf2d473f1f2e11d9b"
+    },
+    "linux/picture-authoring-ci/replay/comparison.json": {
+      "bytes": 747,
+      "sha256": "2f6d045e7dc371eb9553d1b5251c4b283347103ac89c6368341d78e0ae701e40"
+    },
+    "linux/picture-authoring-ci/replay/result.json": {
+      "bytes": 2177,
+      "sha256": "045b23495f5f286aed8522fde3e676b42886e56d2280f9bb1e3f3702dd068174"
+    },
+    "linux/picture-authoring-ci/replay.log": {
+      "bytes": 1935,
+      "sha256": "5ed7140845d904cdb10befbfa4c77968ef6eb592cd50985d39d66193df3ee680"
+    },
+    "linux/picture-gestures-ci/replay/checker.log": {
+      "bytes": 600,
+      "sha256": "7321fa1f50fbdcc655782fca80138f5299ba603a6fcc377a462c140af3b38639"
+    },
+    "linux/picture-gestures-ci/replay/comparison.json": {
+      "bytes": 692,
+      "sha256": "31bfdbcaf76c2f494f7838dc8c242690fddc69662922a9d87511c30b0ebca102"
+    },
+    "linux/picture-gestures-ci/replay/result.json": {
+      "bytes": 2162,
+      "sha256": "c7b1d19ae8b862de9cb6ee8c2535c1b748c154180a8df5e7227c6506dd39d83c"
+    },
+    "linux/picture-gestures-ci/replay.log": {
+      "bytes": 1920,
+      "sha256": "2d2ccf46c16bdabb36a0e681cc858736510dd915814828aa30c979787d33af98"
+    },
+    "linux/range-receipt.json": {
+      "bytes": 29535,
+      "sha256": "8f07068c3bc8efdc1d74c0b4bd37b14a5bcacc4b21a98cc1643737557347716e"
+    },
+    "linux/saved-vector-view-ci/source-generation.json": {
+      "bytes": 89581,
+      "sha256": "2e97618fdf4435eeaac958a36343557812686519590f097304f5d8cd16531dbd"
+    },
+    "linux/section-heldout-hatch-ci/source-generation.json": {
+      "bytes": 89584,
+      "sha256": "12beac8ca84f9369aa8899a3fec3af14b27b9e1a6603b66b2edc6538fb7922c7"
+    },
+    "linux/section-solid-ci/source-generation.json": {
+      "bytes": 89580,
+      "sha256": "56095c8bb4cfd5372de20a5a55c86163f7e0054c19cd3b1623fa4443444a7558"
+    },
+    "linux/sheet-legends-ci/replay/checker.log": {
+      "bytes": 4748,
+      "sha256": "55684a2bd63891b170cedcd8eedfc3a96aaf4f118aa813079e66b2663c93d056"
+    },
+    "linux/sheet-legends-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/sheet-legends-ci/replay/comparison.json": {
+      "bytes": 4747,
+      "sha256": "f7f5c3268888a6a2ebd1a064df0a73f72e30539e1296690e86f5dad1501a3856"
+    },
+    "linux/sheet-legends-ci/replay/result.json": {
+      "bytes": 6794,
+      "sha256": "590edb9b15eb660a2738d9f2527758cf09126d5dc4519901b536a044e35f67f2"
+    },
+    "linux/sheet-legends-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/sheet-legends-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux/sheet-legends-ci/replay.log": {
+      "bytes": 5524,
+      "sha256": "60dbde82ae94a224fd3d36cf2d468a76705a2f6082450af3942f9fa4a5e2bb30"
+    },
+    "linux/sheet-pictures-ci/replay/checker.log": {
+      "bytes": 10047,
+      "sha256": "d330ee90a6ab8b161df03a684e183586a2900cb26c684feb72a7335f04c8b52b"
+    },
+    "linux/sheet-pictures-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/sheet-pictures-ci/replay/comparison.json": {
+      "bytes": 13203,
+      "sha256": "57e184af65c77ead24d8cdc3cb6e38c14d2729c275fcbd8713078d015e5a361c"
+    },
+    "linux/sheet-pictures-ci/replay/result.json": {
+      "bytes": 16041,
+      "sha256": "6bc9b701d3a7fffae389d32324ecb7d0600e1b4bfc854c26cbbf4e4378aa7331"
+    },
+    "linux/sheet-pictures-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/sheet-pictures-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux/sheet-pictures-ci/replay.log": {
+      "bytes": 11889,
+      "sha256": "d6875e0ff89d40e8b1b07da89cf02d23c15b1df577498b7f5185c5aff0a56ae6"
+    },
+    "linux/sheet-symbols-ci/replay/checker.log": {
+      "bytes": 7474,
+      "sha256": "7d38978904fde07ad1d87ab1412c362c8af9027c689937f6ec9291b0802e828c"
+    },
+    "linux/sheet-symbols-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/sheet-symbols-ci/replay/comparison.json": {
+      "bytes": 7473,
+      "sha256": "415213febfc4217cd47130acc91a18cf7f2ab4e658e971af5651d5090e327c76"
+    },
+    "linux/sheet-symbols-ci/replay/result.json": {
+      "bytes": 9651,
+      "sha256": "e00a8ccf22191d28dde1b02eecf46ff97fc087e925da96485ed0064361c29ae8"
+    },
+    "linux/sheet-symbols-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/sheet-symbols-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux/sheet-symbols-ci/replay.log": {
+      "bytes": 7749,
+      "sha256": "e2d91f4c56a773cb4ee24c721d129ebdc33737951e79fc6bc4338c1af74a621b"
+    },
+    "linux/vector-view-ci/source-generation.json": {
+      "bytes": 89579,
+      "sha256": "1e0a9655a77ca15d823dd48562274000972e592f17fa5981c8d0b2529a30bc42"
+    },
+    "linux/view-frame-captions-ci/replay/checker.log": {
+      "bytes": 8188,
+      "sha256": "46ce631826b0a124537206b138665abce3076c56e206e9a4b5b02ffe9089d4f3"
+    },
+    "linux/view-frame-captions-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/view-frame-captions-ci/replay/comparison.json": {
+      "bytes": 8187,
+      "sha256": "ec816111b86472d698ae70302ab32d766753deb9ca347c25f924360d3d21341f"
+    },
+    "linux/view-frame-captions-ci/replay/result.json": {
+      "bytes": 9955,
+      "sha256": "4ee6865745d9255ec6c81043505ee282e2959e56d0807922143cceba49e81705"
+    },
+    "linux/view-frame-captions-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux/view-frame-captions-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux/view-frame-captions-ci/replay.log": {
+      "bytes": 7905,
+      "sha256": "c4adc4ad2e1349e378b2b390ae6ffc204e48db3b31e9a443254e22208fadcec0"
+    },
+    "linux-failure-excerpts.log": {
+      "bytes": 3655,
+      "sha256": "8ef8f6ff1c168c034f431725d8f170803498f977cb2233cd55fd0146afb13b05"
+    },
+    "linux-full-log-binding.json": {
+      "bytes": 185,
+      "sha256": "43d5dad84f0269ea592885149f7c1a7d975be5b5c1710e38e6b8555f9f63af3a"
     }
   },
   "git_bindings": [
@@ -796,5 +1036,19 @@
       "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
     }
   ],
-  "raw_bytes": 3238918
+  "raw_bytes": 4223687,
+  "linux": {
+    "job": 114723073037,
+    "steps": 123,
+    "shared_consumers": 30,
+    "stages": 184,
+    "all_shared_stages": "pass",
+    "failed_steps": [
+      "symbols",
+      "legends",
+      "pictures",
+      "annotations"
+    ],
+    "annotation_artifact_missing": true
+  }
 }
