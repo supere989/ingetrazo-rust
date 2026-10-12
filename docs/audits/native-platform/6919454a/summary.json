@@ -1,0 +1,1932 @@
+{
+  "head": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+  "run": 38211976314,
+  "jobs": [
+    {
+      "id": 114687962386,
+      "run_id": 38211976314,
+      "workflow_name": "Rust and semantic acceptance",
+      "head_branch": "review/next-integration",
+      "run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/runs/38211976314",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVDJHJ88AAAAas-9tEg",
+      "head_sha": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+      "url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/jobs/114687962386",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38211976314/job/114687962386",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-12T06:19:38Z",
+      "started_at": "2026-10-12T06:19:46Z",
+      "completed_at": "2026-10-12T06:23:49Z",
+      "name": "Native Metal framework link (macos-15)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T06:19:46Z",
+          "completed_at": "2026-10-12T06:19:48Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T06:19:48Z",
+          "completed_at": "2026-10-12T06:20:06Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T06:20:06Z",
+          "completed_at": "2026-10-12T06:20:15Z"
+        },
+        {
+          "name": "Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T06:20:15Z",
+          "completed_at": "2026-10-12T06:20:35Z"
+        },
+        {
+          "name": "Native paper font dependency build and library tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T06:20:35Z",
+          "completed_at": "2026-10-12T06:21:05Z"
+        },
+        {
+          "name": "Build combined native macOS GUI with Apple SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T06:21:05Z",
+          "completed_at": "2026-10-12T06:22:08Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T06:22:08Z",
+          "completed_at": "2026-10-12T06:22:08Z"
+        },
+        {
+          "name": "Replay frozen figure exports on native macOS",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T06:22:08Z",
+          "completed_at": "2026-10-12T06:22:10Z"
+        },
+        {
+          "name": "Strict native Metal physical sheet geometry and codec diagnostic",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-12T06:22:10Z",
+          "completed_at": "2026-10-12T06:22:36Z"
+        },
+        {
+          "name": "Strict frozen picture drawing on native Metal",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-10-12T06:22:36Z",
+          "completed_at": "2026-10-12T06:23:08Z"
+        },
+        {
+          "name": "Frozen native picture authoring and original-reader comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-12T06:23:08Z",
+          "completed_at": "2026-10-12T06:23:10Z"
+        },
+        {
+          "name": "Frozen native picture canvas gestures and original-reader comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-12T06:23:10Z",
+          "completed_at": "2026-10-12T06:23:12Z"
+        },
+        {
+          "name": "Capture and compare original native macOS sheet text once",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-12T06:23:12Z",
+          "completed_at": "2026-10-12T06:23:12Z"
+        },
+        {
+          "name": "Native default sky profile cache refusal and ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-12T06:23:12Z",
+          "completed_at": "2026-10-12T06:23:13Z"
+        },
+        {
+          "name": "Original-document native billboard stage and camera cache",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T06:23:13Z",
+          "completed_at": "2026-10-12T06:23:14Z"
+        },
+        {
+          "name": "Native stencil section source scenes and exact pixel comparison",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-10-12T06:23:14Z",
+          "completed_at": "2026-10-12T06:23:24Z"
+        },
+        {
+          "name": "Observe actual Apple OpenGL multisample depth resolve",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 17,
+          "started_at": "2026-10-12T06:23:24Z",
+          "completed_at": "2026-10-12T06:23:25Z"
+        },
+        {
+          "name": "Native document dimensions depth and immutable frame ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-12T06:23:25Z",
+          "completed_at": "2026-10-12T06:23:29Z"
+        },
+        {
+          "name": "Actual packaged CLI native Metal world startup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-12T06:23:29Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Native isolated session lease crash and app recovery",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Native modifier ingress and missing-metadata refusal",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Inspect prebuilt native probe Apple framework linkage",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Execute native Metal device and allocation probe",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Execute native Metal GPU submission and retirement probe",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Execute strict source-ordered Metal compute rendering",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Execute Apple framebuffer-fetch rendering or explicit capability refusal",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Actual completed and pending Metal CAD Drop ownership",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Reject literal old GPU byte multiplication",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:33Z"
+        },
+        {
+          "name": "Replay frozen native macOS text and font identity",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 29,
+          "started_at": "2026-10-12T06:23:33Z",
+          "completed_at": "2026-10-12T06:23:39Z"
+        },
+        {
+          "name": "Retain native linking evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T06:23:39Z",
+          "completed_at": "2026-10-12T06:23:43Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 58,
+          "started_at": "2026-10-12T06:23:43Z",
+          "completed_at": "2026-10-12T06:23:43Z"
+        },
+        {
+          "name": "Post Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 59,
+          "started_at": "2026-10-12T06:23:43Z",
+          "completed_at": "2026-10-12T06:23:43Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 60,
+          "started_at": "2026-10-12T06:23:43Z",
+          "completed_at": "2026-10-12T06:23:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 61,
+          "started_at": "2026-10-12T06:23:44Z",
+          "completed_at": "2026-10-12T06:23:46Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/check-runs/114687962386",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": 1000002589,
+      "runner_name": "GitHub Actions 1000002589",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114687962504,
+      "run_id": 38211976314,
+      "workflow_name": "Rust and semantic acceptance",
+      "head_branch": "review/next-integration",
+      "run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/runs/38211976314",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVDJHJ88AAAAas-9tiA",
+      "head_sha": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+      "url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/jobs/114687962504",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38211976314/job/114687962504",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-12T06:19:38Z",
+      "started_at": "2026-10-12T06:19:41Z",
+      "completed_at": "2026-10-12T06:40:53Z",
+      "name": "compilation-and-tests",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T06:19:42Z",
+          "completed_at": "2026-10-12T06:19:43Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T06:19:43Z",
+          "completed_at": "2026-10-12T06:19:58Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T06:19:58Z",
+          "completed_at": "2026-10-12T06:19:59Z"
+        },
+        {
+          "name": "Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T06:19:59Z",
+          "completed_at": "2026-10-12T06:20:10Z"
+        },
+        {
+          "name": "Install native build dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T06:20:10Z",
+          "completed_at": "2026-10-12T06:20:41Z"
+        },
+        {
+          "name": "Check mandatory original fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T06:20:41Z",
+          "completed_at": "2026-10-12T06:20:41Z"
+        },
+        {
+          "name": "Workspace tests and example compile coverage",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T06:20:41Z",
+          "completed_at": "2026-10-12T06:23:07Z"
+        },
+        {
+          "name": "Native isolated X11 clipboard acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T06:23:07Z",
+          "completed_at": "2026-10-12T06:23:10Z"
+        },
+        {
+          "name": "Native rendered Offset viewport gestures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-12T06:23:10Z",
+          "completed_at": "2026-10-12T06:23:21Z"
+        },
+        {
+          "name": "Build native launcher and minimal render worker",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-12T06:23:21Z",
+          "completed_at": "2026-10-12T06:23:21Z"
+        },
+        {
+          "name": "Persistent shared-buffer HLR and worker deadline controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-12T06:23:21Z",
+          "completed_at": "2026-10-12T06:23:28Z"
+        },
+        {
+          "name": "Build direct Vulkan host and allocation probe",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-12T06:23:28Z",
+          "completed_at": "2026-10-12T06:23:30Z"
+        },
+        {
+          "name": "Packaged launcher native Vulkan world and document lifecycle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-12T06:23:30Z",
+          "completed_at": "2026-10-12T06:23:34Z"
+        },
+        {
+          "name": "Actual Vulkan image and staging denial rollback",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-12T06:23:34Z",
+          "completed_at": "2026-10-12T06:23:39Z"
+        },
+        {
+          "name": "Headless software Vulkan resource depth refusal and timeout controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T06:23:39Z",
+          "completed_at": "2026-10-12T06:23:45Z"
+        },
+        {
+          "name": "Headless contour chunk equality and allocation rollback",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-12T06:23:45Z",
+          "completed_at": "2026-10-12T06:23:45Z"
+        },
+        {
+          "name": "Batched transfer readback and transactional ownership controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-12T06:23:45Z",
+          "completed_at": "2026-10-12T06:23:48Z"
+        },
+        {
+          "name": "Native texture image mip staging and pressure controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-12T06:23:48Z",
+          "completed_at": "2026-10-12T06:23:51Z"
+        },
+        {
+          "name": "Software-rendered virtual-display startup",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-12T06:23:51Z",
+          "completed_at": "2026-10-12T06:23:53Z"
+        },
+        {
+          "name": "Semantic document acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-12T06:23:53Z",
+          "completed_at": "2026-10-12T06:24:12Z"
+        },
+        {
+          "name": "Independent export buffer acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-12T06:24:12Z",
+          "completed_at": "2026-10-12T06:24:21Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-10-12T06:24:21Z",
+          "completed_at": "2026-10-12T06:24:22Z"
+        },
+        {
+          "name": "Install pinned original runtime in CI environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-10-12T06:24:22Z",
+          "completed_at": "2026-10-12T06:24:36Z"
+        },
+        {
+          "name": "Original and native bridge query and history parity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24,
+          "started_at": "2026-10-12T06:24:36Z",
+          "completed_at": "2026-10-12T06:24:57Z"
+        },
+        {
+          "name": "Integrated document axes PushPull and nested Fillet workflows using retained source fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25,
+          "started_at": "2026-10-12T06:24:57Z",
+          "completed_at": "2026-10-12T06:27:34Z"
+        },
+        {
+          "name": "Pinned original and native legacy SKP primitive parity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-10-12T06:27:34Z",
+          "completed_at": "2026-10-12T06:27:41Z"
+        },
+        {
+          "name": "Build paper vector, text and UI consumers once",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-10-12T06:27:41Z",
+          "completed_at": "2026-10-12T06:27:44Z"
+        },
+        {
+          "name": "Original native Fontconfig request matching and ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-12T06:27:44Z",
+          "completed_at": "2026-10-12T06:27:48Z"
+        },
+        {
+          "name": "Actual original paragraph layout and direct PDF text",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29,
+          "started_at": "2026-10-12T06:27:48Z",
+          "completed_at": "2026-10-12T06:28:34Z"
+        },
+        {
+          "name": "Original and native strict vector View PDF pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T06:28:34Z",
+          "completed_at": "2026-10-12T06:29:08Z"
+        },
+        {
+          "name": "Original and native saved-view PDF state against opposed live state",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-12T06:29:08Z",
+          "completed_at": "2026-10-12T06:29:41Z"
+        },
+        {
+          "name": "Exact source section loops clipping and plane axes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-10-12T06:29:41Z",
+          "completed_at": "2026-10-12T06:29:41Z"
+        },
+        {
+          "name": "Original and native strict solid section PDF pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-10-12T06:29:41Z",
+          "completed_at": "2026-10-12T06:30:15Z"
+        },
+        {
+          "name": "Original and native saved tilted cropped colored hatch PDF pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 34,
+          "started_at": "2026-10-12T06:30:15Z",
+          "completed_at": "2026-10-12T06:30:50Z"
+        },
+        {
+          "name": "Actual source grid cutoff spacing and perspective suppression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 35,
+          "started_at": "2026-10-12T06:30:50Z",
+          "completed_at": "2026-10-12T06:30:51Z"
+        },
+        {
+          "name": "Original and native strict physical grid and hatch pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 36,
+          "started_at": "2026-10-12T06:30:51Z",
+          "completed_at": "2026-10-12T06:31:25Z"
+        },
+        {
+          "name": "Original and native noninteger grid saved tilted solid pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37,
+          "started_at": "2026-10-12T06:31:25Z",
+          "completed_at": "2026-10-12T06:31:59Z"
+        },
+        {
+          "name": "Actual composer PDF save dialogs and refusal preservation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38,
+          "started_at": "2026-10-12T06:31:59Z",
+          "completed_at": "2026-10-12T06:32:19Z"
+        },
+        {
+          "name": "Actual Text composer export source pages and save dialogs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39,
+          "started_at": "2026-10-12T06:32:19Z",
+          "completed_at": "2026-10-12T06:33:23Z"
+        },
+        {
+          "name": "Original punctuation and discretionary Text boundaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 40,
+          "started_at": "2026-10-12T06:33:23Z",
+          "completed_at": "2026-10-12T06:33:45Z"
+        },
+        {
+          "name": "Actual Text background export and save dialogs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 41,
+          "started_at": "2026-10-12T06:33:45Z",
+          "completed_at": "2026-10-12T06:34:15Z"
+        },
+        {
+          "name": "Exact original Qt and production CAD color protocol",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-10-12T06:34:15Z",
+          "completed_at": "2026-10-12T06:34:16Z"
+        },
+        {
+          "name": "Build production native composer cache fixture",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43,
+          "started_at": "2026-10-12T06:34:16Z",
+          "completed_at": "2026-10-12T06:34:17Z"
+        },
+        {
+          "name": "Native Vulkan composer cache edit history context and recovery",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-10-12T06:34:17Z",
+          "completed_at": "2026-10-12T06:34:21Z"
+        },
+        {
+          "name": "Classified composer view DXF and transactional writer acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-10-12T06:34:21Z",
+          "completed_at": "2026-10-12T06:34:24Z"
+        },
+        {
+          "name": "Original Move policy and short rendered drag controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 46,
+          "started_at": "2026-10-12T06:34:24Z",
+          "completed_at": "2026-10-12T06:34:44Z"
+        },
+        {
+          "name": "Original orthographic screen snapping controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 47,
+          "started_at": "2026-10-12T06:34:44Z",
+          "completed_at": "2026-10-12T06:34:45Z"
+        },
+        {
+          "name": "Original perspective snapping and eye boundary controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 48,
+          "started_at": "2026-10-12T06:34:45Z",
+          "completed_at": "2026-10-12T06:34:46Z"
+        },
+        {
+          "name": "Independently calibrated center glyph positive and negative controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 49,
+          "started_at": "2026-10-12T06:34:46Z",
+          "completed_at": "2026-10-12T06:34:46Z"
+        },
+        {
+          "name": "Actual original and native center hint and Move UI controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 50,
+          "started_at": "2026-10-12T06:34:46Z",
+          "completed_at": "2026-10-12T06:35:05Z"
+        },
+        {
+          "name": "Rendered software OpenGL drawing reference gestures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 51,
+          "started_at": "2026-10-12T06:35:05Z",
+          "completed_at": "2026-10-12T06:35:15Z"
+        },
+        {
+          "name": "Rendered software OpenGL temporary Shift inference gestures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 52,
+          "started_at": "2026-10-12T06:35:15Z",
+          "completed_at": "2026-10-12T06:35:19Z"
+        },
+        {
+          "name": "Original OpenGL section stencil controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 53,
+          "started_at": "2026-10-12T06:35:19Z",
+          "completed_at": "2026-10-12T06:35:42Z"
+        },
+        {
+          "name": "Build native Vulkan section fixture",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 54,
+          "started_at": "2026-10-12T06:35:42Z",
+          "completed_at": "2026-10-12T06:35:43Z"
+        },
+        {
+          "name": "Native Vulkan ten-case stencil comparison and lifecycle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 55,
+          "started_at": "2026-10-12T06:35:43Z",
+          "completed_at": "2026-10-12T06:36:28Z"
+        },
+        {
+          "name": "Native rendered section stencil comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 56,
+          "started_at": "2026-10-12T06:36:28Z",
+          "completed_at": "2026-10-12T06:36:55Z"
+        },
+        {
+          "name": "Original Python runtime document reopen",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 57,
+          "started_at": "2026-10-12T06:36:55Z",
+          "completed_at": "2026-10-12T06:37:21Z"
+        },
+        {
+          "name": "Original Python runtime fresh and edited Rust interpretation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 58,
+          "started_at": "2026-10-12T06:37:21Z",
+          "completed_at": "2026-10-12T06:37:22Z"
+        },
+        {
+          "name": "Original Python versus Rust boolean shape acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 59,
+          "started_at": "2026-10-12T06:37:22Z",
+          "completed_at": "2026-10-12T06:37:23Z"
+        },
+        {
+          "name": "Original Python PushPull reference regressions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 60,
+          "started_at": "2026-10-12T06:37:23Z",
+          "completed_at": "2026-10-12T06:37:26Z"
+        },
+        {
+          "name": "Original Python versus Rust PushPull shape acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 61,
+          "started_at": "2026-10-12T06:37:26Z",
+          "completed_at": "2026-10-12T06:37:26Z"
+        },
+        {
+          "name": "Original Python versus Rust connected sweep geometry",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 62,
+          "started_at": "2026-10-12T06:37:26Z",
+          "completed_at": "2026-10-12T06:37:35Z"
+        },
+        {
+          "name": "Original Python shared component definition acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 63,
+          "started_at": "2026-10-12T06:37:35Z",
+          "completed_at": "2026-10-12T06:37:37Z"
+        },
+        {
+          "name": "Independent COLLADA export geometry and original reopening",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 64,
+          "started_at": "2026-10-12T06:37:37Z",
+          "completed_at": "2026-10-12T06:37:37Z"
+        },
+        {
+          "name": "Original runtime physical pieces geometry",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 65,
+          "started_at": "2026-10-12T06:37:37Z",
+          "completed_at": "2026-10-12T06:37:38Z"
+        },
+        {
+          "name": "Original runtime nested world dimension measurement",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 66,
+          "started_at": "2026-10-12T06:37:38Z",
+          "completed_at": "2026-10-12T06:37:39Z"
+        },
+        {
+          "name": "Original terrain runtime visibility and owned command footprint",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 67,
+          "started_at": "2026-10-12T06:37:39Z",
+          "completed_at": "2026-10-12T06:37:41Z"
+        },
+        {
+          "name": "Original saved-view command membership and object lifetime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 68,
+          "started_at": "2026-10-12T06:37:41Z",
+          "completed_at": "2026-10-12T06:37:41Z"
+        },
+        {
+          "name": "Original parked-context layer deletion ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 69,
+          "started_at": "2026-10-12T06:37:41Z",
+          "completed_at": "2026-10-12T06:37:42Z"
+        },
+        {
+          "name": "Original layer panel and command ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 70,
+          "started_at": "2026-10-12T06:37:42Z",
+          "completed_at": "2026-10-12T06:37:43Z"
+        },
+        {
+          "name": "Original global entities survive nested edit history",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 71,
+          "started_at": "2026-10-12T06:37:43Z",
+          "completed_at": "2026-10-12T06:37:44Z"
+        },
+        {
+          "name": "Original referenced textures survive nested context history",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 72,
+          "started_at": "2026-10-12T06:37:44Z",
+          "completed_at": "2026-10-12T06:37:46Z"
+        },
+        {
+          "name": "Original command-specific annotation shareback Undo and anchor lifetimes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 73,
+          "started_at": "2026-10-12T06:37:46Z",
+          "completed_at": "2026-10-12T06:37:47Z"
+        },
+        {
+          "name": "Original runtime dimension anchors and nested outliner",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 74,
+          "started_at": "2026-10-12T06:37:47Z",
+          "completed_at": "2026-10-12T06:37:47Z"
+        },
+        {
+          "name": "Original runtime planar healing",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 75,
+          "started_at": "2026-10-12T06:37:47Z",
+          "completed_at": "2026-10-12T06:37:48Z"
+        },
+        {
+          "name": "Original COLLADA editable geometry materials and resource import",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 76,
+          "started_at": "2026-10-12T06:37:48Z",
+          "completed_at": "2026-10-12T06:37:49Z"
+        },
+        {
+          "name": "Original COLLADA nonaffine UV fitting and editable station topology",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 77,
+          "started_at": "2026-10-12T06:37:49Z",
+          "completed_at": "2026-10-12T06:37:50Z"
+        },
+        {
+          "name": "Original COLLADA reference threshold shared prototypes and transformed textures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 78,
+          "started_at": "2026-10-12T06:37:50Z",
+          "completed_at": "2026-10-12T06:37:51Z"
+        },
+        {
+          "name": "Frozen original COLLADA optional materials and shared resources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 79,
+          "started_at": "2026-10-12T06:37:51Z",
+          "completed_at": "2026-10-12T06:37:52Z"
+        },
+        {
+          "name": "Original paper HLR endpoints classes and even-odd section coverage",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 80,
+          "started_at": "2026-10-12T06:37:52Z",
+          "completed_at": "2026-10-12T06:37:53Z"
+        },
+        {
+          "name": "Original and native production composer pen and dash pixels",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 81,
+          "started_at": "2026-10-12T06:37:53Z",
+          "completed_at": "2026-10-12T06:38:02Z"
+        },
+        {
+          "name": "Original Line Rectangle Freehand drafting semantics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 82,
+          "started_at": "2026-10-12T06:38:02Z",
+          "completed_at": "2026-10-12T06:38:03Z"
+        },
+        {
+          "name": "Original image Move and context lifetime semantics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 83,
+          "started_at": "2026-10-12T06:38:03Z",
+          "completed_at": "2026-10-12T06:38:06Z"
+        },
+        {
+          "name": "Original mixed Move contexts and reliable image membership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 84,
+          "started_at": "2026-10-12T06:38:06Z",
+          "completed_at": "2026-10-12T06:38:09Z"
+        },
+        {
+          "name": "Original image Rotate gestures and Finish ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 85,
+          "started_at": "2026-10-12T06:38:09Z",
+          "completed_at": "2026-10-12T06:38:12Z"
+        },
+        {
+          "name": "Original map metadata codec and actual source reopens",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 86,
+          "started_at": "2026-10-12T06:38:12Z",
+          "completed_at": "2026-10-12T06:38:13Z"
+        },
+        {
+          "name": "Original geographic path conversion topology",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 87,
+          "started_at": "2026-10-12T06:38:13Z",
+          "completed_at": "2026-10-12T06:38:13Z"
+        },
+        {
+          "name": "Ctrl PushPull literal success and intentional safety boundaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 88,
+          "started_at": "2026-10-12T06:38:13Z",
+          "completed_at": "2026-10-12T06:38:14Z"
+        },
+        {
+          "name": "Original simplification geometry and protected attributes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 89,
+          "started_at": "2026-10-12T06:38:14Z",
+          "completed_at": "2026-10-12T06:38:15Z"
+        },
+        {
+          "name": "Original interior partition orientation oracle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 90,
+          "started_at": "2026-10-12T06:38:15Z",
+          "completed_at": "2026-10-12T06:38:16Z"
+        },
+        {
+          "name": "Original offset regions and chains",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 91,
+          "started_at": "2026-10-12T06:38:16Z",
+          "completed_at": "2026-10-12T06:38:16Z"
+        },
+        {
+          "name": "Original Offset hard-edge display semantics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 92,
+          "started_at": "2026-10-12T06:38:16Z",
+          "completed_at": "2026-10-12T06:38:16Z"
+        },
+        {
+          "name": "Original and native presentation controllers contexts and IGZ adapters",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 93,
+          "started_at": "2026-10-12T06:38:16Z",
+          "completed_at": "2026-10-12T06:38:20Z"
+        },
+        {
+          "name": "Original image plane ownership and native archive reopening",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 94,
+          "started_at": "2026-10-12T06:38:20Z",
+          "completed_at": "2026-10-12T06:38:22Z"
+        },
+        {
+          "name": "Original image layer command ownership and branch lifetime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 95,
+          "started_at": "2026-10-12T06:38:22Z",
+          "completed_at": "2026-10-12T06:38:24Z"
+        },
+        {
+          "name": "Original command-held image frame semantics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 96,
+          "started_at": "2026-10-12T06:38:24Z",
+          "completed_at": "2026-10-12T06:38:25Z"
+        },
+        {
+          "name": "Original image picking and reference work planes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 97,
+          "started_at": "2026-10-12T06:38:25Z",
+          "completed_at": "2026-10-12T06:38:26Z"
+        },
+        {
+          "name": "Original runtime saved view recall",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 98,
+          "started_at": "2026-10-12T06:38:26Z",
+          "completed_at": "2026-10-12T06:38:27Z"
+        },
+        {
+          "name": "Original runtime polygon intersection segments and mutation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 99,
+          "started_at": "2026-10-12T06:38:27Z",
+          "completed_at": "2026-10-12T06:38:28Z"
+        },
+        {
+          "name": "Original runtime dimension schema and placement",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 100,
+          "started_at": "2026-10-12T06:38:28Z",
+          "completed_at": "2026-10-12T06:38:29Z"
+        },
+        {
+          "name": "Original runtime authored glTF reference imports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 101,
+          "started_at": "2026-10-12T06:38:29Z",
+          "completed_at": "2026-10-12T06:38:29Z"
+        },
+        {
+          "name": "Original runtime mixed clipboard geometry",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 102,
+          "started_at": "2026-10-12T06:38:29Z",
+          "completed_at": "2026-10-12T06:38:30Z"
+        },
+        {
+          "name": "Clipboard context and resource boundary oracle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 103,
+          "started_at": "2026-10-12T06:38:30Z",
+          "completed_at": "2026-10-12T06:38:31Z"
+        },
+        {
+          "name": "Original painted overlap paste oracle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 104,
+          "started_at": "2026-10-12T06:38:31Z",
+          "completed_at": "2026-10-12T06:38:32Z"
+        },
+        {
+          "name": "Original Python versus Rust fillet geometry",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 105,
+          "started_at": "2026-10-12T06:38:32Z",
+          "completed_at": "2026-10-12T06:38:33Z"
+        },
+        {
+          "name": "Independent nested mesh exchange geometry",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 106,
+          "started_at": "2026-10-12T06:38:33Z",
+          "completed_at": "2026-10-12T06:38:34Z"
+        },
+        {
+          "name": "Original runtime exchange import semantics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 107,
+          "started_at": "2026-10-12T06:38:34Z",
+          "completed_at": "2026-10-12T06:38:34Z"
+        },
+        {
+          "name": "Independent DXF curve and refusal boundaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 108,
+          "started_at": "2026-10-12T06:38:34Z",
+          "completed_at": "2026-10-12T06:38:35Z"
+        },
+        {
+          "name": "Strict frozen physical sheet symbol exports",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 109,
+          "started_at": "2026-10-12T06:38:35Z",
+          "completed_at": "2026-10-12T06:39:08Z"
+        },
+        {
+          "name": "Strict frozen physical ViewFrame captions and placeholders",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 110,
+          "started_at": "2026-10-12T06:39:08Z",
+          "completed_at": "2026-10-12T06:39:42Z"
+        },
+        {
+          "name": "Strict frozen physical sheet legend snapshots",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 111,
+          "started_at": "2026-10-12T06:39:42Z",
+          "completed_at": "2026-10-12T06:40:01Z"
+        },
+        {
+          "name": "Strict frozen physical sheet pictures",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 112,
+          "started_at": "2026-10-12T06:40:01Z",
+          "completed_at": "2026-10-12T06:40:29Z"
+        },
+        {
+          "name": "Frozen picture authoring and original-reader comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 113,
+          "started_at": "2026-10-12T06:40:29Z",
+          "completed_at": "2026-10-12T06:40:30Z"
+        },
+        {
+          "name": "Frozen picture canvas gestures and original-reader comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 114,
+          "started_at": "2026-10-12T06:40:30Z",
+          "completed_at": "2026-10-12T06:40:32Z"
+        },
+        {
+          "name": "Strict frozen offline PhotoMesh profile workflow",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 115,
+          "started_at": "2026-10-12T06:40:32Z",
+          "completed_at": "2026-10-12T06:40:33Z"
+        },
+        {
+          "name": "Strict frozen asynchronous DEM profile workflow",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 116,
+          "started_at": "2026-10-12T06:40:33Z",
+          "completed_at": "2026-10-12T06:40:41Z"
+        },
+        {
+          "name": "Retain semantic evidence even on failure",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 117,
+          "started_at": "2026-10-12T06:40:41Z",
+          "completed_at": "2026-10-12T06:40:50Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 232,
+          "started_at": "2026-10-12T06:40:50Z",
+          "completed_at": "2026-10-12T06:40:50Z"
+        },
+        {
+          "name": "Post Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 233,
+          "started_at": "2026-10-12T06:40:50Z",
+          "completed_at": "2026-10-12T06:40:50Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 234,
+          "started_at": "2026-10-12T06:40:50Z",
+          "completed_at": "2026-10-12T06:40:50Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 235,
+          "started_at": "2026-10-12T06:40:50Z",
+          "completed_at": "2026-10-12T06:40:50Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/check-runs/114687962504",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000002594,
+      "runner_name": "GitHub Actions 1000002594",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114687962538,
+      "run_id": 38211976314,
+      "workflow_name": "Rust and semantic acceptance",
+      "head_branch": "review/next-integration",
+      "run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/runs/38211976314",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVDJHJ88AAAAas-9tqg",
+      "head_sha": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+      "url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/jobs/114687962538",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38211976314/job/114687962538",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-12T06:19:38Z",
+      "started_at": "2026-10-12T06:19:40Z",
+      "completed_at": "2026-10-12T06:22:15Z",
+      "name": "Native Windows compile and isolated recovery",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T06:19:41Z",
+          "completed_at": "2026-10-12T06:19:43Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T06:19:43Z",
+          "completed_at": "2026-10-12T06:20:14Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T06:20:14Z",
+          "completed_at": "2026-10-12T06:20:20Z"
+        },
+        {
+          "name": "Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T06:20:20Z",
+          "completed_at": "2026-10-12T06:20:41Z"
+        },
+        {
+          "name": "Build packaged CLI and recovery consumer together on MSVC",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T06:20:41Z",
+          "completed_at": "2026-10-12T06:22:08Z"
+        },
+        {
+          "name": "Execute packaged headless checks and isolated recovery",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T06:22:08Z",
+          "completed_at": "2026-10-12T06:22:10Z"
+        },
+        {
+          "name": "Retain Windows compile and process evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T06:22:10Z",
+          "completed_at": "2026-10-12T06:22:11Z"
+        },
+        {
+          "name": "Post Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-12T06:22:11Z",
+          "completed_at": "2026-10-12T06:22:11Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-12T06:22:11Z",
+          "completed_at": "2026-10-12T06:22:14Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T06:22:14Z",
+          "completed_at": "2026-10-12T06:22:14Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/check-runs/114687962538",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000002592,
+      "runner_name": "GitHub Actions 1000002592",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114687962544,
+      "run_id": 38211976314,
+      "workflow_name": "Rust and semantic acceptance",
+      "head_branch": "review/next-integration",
+      "run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/runs/38211976314",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVDJHJ88AAAAas-9tsA",
+      "head_sha": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+      "url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/jobs/114687962544",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38211976314/job/114687962544",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-12T06:19:38Z",
+      "started_at": "2026-10-12T06:19:40Z",
+      "completed_at": "2026-10-12T06:20:26Z",
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T06:19:41Z",
+          "completed_at": "2026-10-12T06:19:42Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T06:19:42Z",
+          "completed_at": "2026-10-12T06:19:55Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T06:19:55Z",
+          "completed_at": "2026-10-12T06:19:58Z"
+        },
+        {
+          "name": "Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T06:19:58Z",
+          "completed_at": "2026-10-12T06:20:04Z"
+        },
+        {
+          "name": "Check native Metal library and device probe",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T06:20:04Z",
+          "completed_at": "2026-10-12T06:20:24Z"
+        },
+        {
+          "name": "Retain compile evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T06:20:24Z",
+          "completed_at": "2026-10-12T06:20:25Z"
+        },
+        {
+          "name": "Post Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-12T06:20:25Z",
+          "completed_at": "2026-10-12T06:20:25Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-12T06:20:25Z",
+          "completed_at": "2026-10-12T06:20:25Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-12T06:20:25Z",
+          "completed_at": "2026-10-12T06:20:25Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/check-runs/114687962544",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000002591,
+      "runner_name": "GitHub Actions 1000002591",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114687962553,
+      "run_id": 38211976314,
+      "workflow_name": "Rust and semantic acceptance",
+      "head_branch": "review/next-integration",
+      "run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/runs/38211976314",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVDJHJ88AAAAas-9tuQ",
+      "head_sha": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+      "url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/jobs/114687962553",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38211976314/job/114687962553",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-12T06:19:38Z",
+      "started_at": "2026-10-12T06:19:41Z",
+      "completed_at": "2026-10-12T06:29:23Z",
+      "name": "Native Metal framework link (macos-15-intel)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T06:19:32Z",
+          "completed_at": "2026-10-12T06:19:35Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T06:19:35Z",
+          "completed_at": "2026-10-12T06:20:21Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T06:20:21Z",
+          "completed_at": "2026-10-12T06:20:37Z"
+        },
+        {
+          "name": "Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T06:20:37Z",
+          "completed_at": "2026-10-12T06:21:26Z"
+        },
+        {
+          "name": "Native paper font dependency build and library tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T06:21:26Z",
+          "completed_at": "2026-10-12T06:22:43Z"
+        },
+        {
+          "name": "Build combined native macOS GUI with Apple SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T06:22:43Z",
+          "completed_at": "2026-10-12T06:25:05Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-12T06:25:05Z",
+          "completed_at": "2026-10-12T06:25:06Z"
+        },
+        {
+          "name": "Replay frozen figure exports on native macOS",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-12T06:25:06Z",
+          "completed_at": "2026-10-12T06:25:08Z"
+        },
+        {
+          "name": "Strict native Metal physical sheet geometry and codec diagnostic",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-12T06:25:08Z",
+          "completed_at": "2026-10-12T06:25:59Z"
+        },
+        {
+          "name": "Strict frozen picture drawing on native Metal",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-10-12T06:25:59Z",
+          "completed_at": "2026-10-12T06:27:12Z"
+        },
+        {
+          "name": "Frozen native picture authoring and original-reader comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-12T06:27:12Z",
+          "completed_at": "2026-10-12T06:27:17Z"
+        },
+        {
+          "name": "Frozen native picture canvas gestures and original-reader comparison",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-12T06:27:17Z",
+          "completed_at": "2026-10-12T06:27:23Z"
+        },
+        {
+          "name": "Capture and compare original native macOS sheet text once",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-12T06:27:23Z",
+          "completed_at": "2026-10-12T06:27:23Z"
+        },
+        {
+          "name": "Native default sky profile cache refusal and ownership",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-12T06:27:23Z",
+          "completed_at": "2026-10-12T06:27:24Z"
+        },
+        {
+          "name": "Original-document native billboard stage and camera cache",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-12T06:27:24Z",
+          "completed_at": "2026-10-12T06:27:26Z"
+        },
+        {
+          "name": "Native stencil section source scenes and exact pixel comparison",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-10-12T06:27:26Z",
+          "completed_at": "2026-10-12T06:27:59Z"
+        },
+        {
+          "name": "Observe actual Apple OpenGL multisample depth resolve",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 17,
+          "started_at": "2026-10-12T06:27:59Z",
+          "completed_at": "2026-10-12T06:28:00Z"
+        },
+        {
+          "name": "Native document dimensions depth and immutable frame ownership",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 18,
+          "started_at": "2026-10-12T06:28:00Z",
+          "completed_at": "2026-10-12T06:28:01Z"
+        },
+        {
+          "name": "Actual packaged CLI native Metal world startup",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 19,
+          "started_at": "2026-10-12T06:28:01Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Native isolated session lease crash and app recovery",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Native modifier ingress and missing-metadata refusal",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Inspect prebuilt native probe Apple framework linkage",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Execute native Metal device and allocation probe",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Execute native Metal GPU submission and retirement probe",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Execute strict source-ordered Metal compute rendering",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Execute Apple framebuffer-fetch rendering or explicit capability refusal",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Actual completed and pending Metal CAD Drop ownership",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Reject literal old GPU byte multiplication",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:47Z"
+        },
+        {
+          "name": "Replay frozen native macOS text and font identity",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 29,
+          "started_at": "2026-10-12T06:28:47Z",
+          "completed_at": "2026-10-12T06:28:58Z"
+        },
+        {
+          "name": "Retain native linking evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-12T06:28:58Z",
+          "completed_at": "2026-10-12T06:29:04Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 58,
+          "started_at": "2026-10-12T06:29:04Z",
+          "completed_at": "2026-10-12T06:29:04Z"
+        },
+        {
+          "name": "Post Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 59,
+          "started_at": "2026-10-12T06:29:04Z",
+          "completed_at": "2026-10-12T06:29:04Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 60,
+          "started_at": "2026-10-12T06:29:04Z",
+          "completed_at": "2026-10-12T06:29:08Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 61,
+          "started_at": "2026-10-12T06:29:08Z",
+          "completed_at": "2026-10-12T06:29:10Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/check-runs/114687962553",
+      "labels": [
+        "macos-15-intel"
+      ],
+      "runner_id": 1000002593,
+      "runner_name": "GitHub Actions 1000002593",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114687962557,
+      "run_id": 38211976314,
+      "workflow_name": "Rust and semantic acceptance",
+      "head_branch": "review/next-integration",
+      "run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/runs/38211976314",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVDJHJ88AAAAas-9tvQ",
+      "head_sha": "6919454a7eaf5a2d028968d5e321517bf97088e2",
+      "url": "https://api.github.com/repos/supere989/ingetrazo-rust/actions/jobs/114687962557",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38211976314/job/114687962557",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-12T06:19:38Z",
+      "started_at": "2026-10-12T06:19:40Z",
+      "completed_at": "2026-10-12T06:20:28Z",
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-12T06:19:41Z",
+          "completed_at": "2026-10-12T06:19:42Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-12T06:19:42Z",
+          "completed_at": "2026-10-12T06:19:55Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-12T06:19:55Z",
+          "completed_at": "2026-10-12T06:19:58Z"
+        },
+        {
+          "name": "Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-12T06:19:58Z",
+          "completed_at": "2026-10-12T06:20:04Z"
+        },
+        {
+          "name": "Check native Metal library and device probe",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-12T06:20:04Z",
+          "completed_at": "2026-10-12T06:20:26Z"
+        },
+        {
+          "name": "Retain compile evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-12T06:20:26Z",
+          "completed_at": "2026-10-12T06:20:27Z"
+        },
+        {
+          "name": "Post Reuse compiled Cargo dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-12T06:20:27Z",
+          "completed_at": "2026-10-12T06:20:27Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-12T06:20:27Z",
+          "completed_at": "2026-10-12T06:20:27Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-12T06:20:27Z",
+          "completed_at": "2026-10-12T06:20:27Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/supere989/ingetrazo-rust/check-runs/114687962557",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000002590,
+      "runner_name": "GitHub Actions 1000002590",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ],
+  "linux": {
+    "steps": 121,
+    "shared_consumers": 30,
+    "shared_stages": 184,
+    "all_shared_pass": true,
+    "dem": "5/30/21/5/91PASS",
+    "authoring": "44/15/3/16PASS",
+    "gestures": "21cases167states21readers18controlsPASS",
+    "strict_failed": [
+      "symbols",
+      "legends",
+      "pictures"
+    ]
+  },
+  "mac": "Both native font84, authoring44 and gestures21/167/21/18 PASS. Actual Mac QtPdf picture comparator now runs8PNG/8JPEG/9PDF exact; strict residuals remain failures. Existingsection/CGL/text and Intel annotation/CLI limits remain open.",
+  "cross": "Both actual metadata jobsPASS after pinned ring override; notCABI/link/GPU proof.",
+  "windows": "PASS",
+  "ordered_workflow": "No run admitted: GUI/parity-only diff has no watched ordered push paths. Priorfb9 orderedPASS retained separately; no dispatch.",
+  "main_sha": "c73fe993cdd4ab6e9e820f25e72613982afaa904",
+  "classification": "15Verified/4Implemented/18Partial; all5releasegatesOPEN",
+  "dispatches": 0,
+  "retries": 0
+}
