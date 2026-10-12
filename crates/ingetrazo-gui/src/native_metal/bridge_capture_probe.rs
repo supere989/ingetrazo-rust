@@ -24,12 +24,16 @@ pub(super) struct Probe {
     rows: Vec<Value>,
 }
 fn observation(app: &IngeTrazoApp) -> Value {
+    let r = app.native_render_revisions;
     json!({"document":ingetrazo_formats::igz::scene_to_igz_document(&app.scene),
         "undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"dirty":app.document_dirty(),
-        "file":app.current_file,"camera":[app.camera.target.x,app.camera.target.y,app.camera.target.z,
-        app.camera.distance,app.camera.yaw,app.camera.pitch,app.camera.fov_deg,app.camera.aspect],
-        "perspective":app.camera.perspective,"edit_depth":app.component_edit_stack.len()})
+        "file":app.current_file,"camera":app.camera,"edit_depth":app.component_edit_stack.len(),
+        "scene_version":app.scene.version,"view_version":app.scene.view_version,
+        "model_revision":app.model_revision,"native_geometry_revision":app.native_geometry_revision,
+        "render_epochs":[r.static_domains.geometry,r.static_domains.paint,r.static_domains.style,
+            r.static_domains.layers,r.static_domains.topology,r.poses]})
 }
+
 impl Probe {
     pub fn new(source: PathBuf, output: PathBuf) -> Result<Self, String> {
         let source = source.canonicalize().map_err(|e| e.to_string())?;
@@ -157,6 +161,9 @@ impl Probe {
                         }
                         let reply: Value =
                             serde_json::from_str(&line).map_err(|e| e.to_string())?;
+                        if reply["id"] != index {
+                            return Err("Actual capture wire id mismatch".into());
+                        }
                         let name = format!("capture-{index}.png");
                         if reply["ok"] == true {
                             let file = PathBuf::from(
@@ -261,18 +268,40 @@ impl Probe {
                 }
                 self.rows.extend(rows);
                 let events = state.capture.diagnostics().to_vec();
-                let timeout = events
-                    .iter()
-                    .any(|e| e["blocked_gate"] == true && e["retirement"] == "Quarantined");
-                let poison = self.rows.last().is_some_and(|r| {
-                    r["reply"]["ok"] == false && r["seconds"].as_f64().is_some_and(|s| s < 2.)
+                let expected_extents = [[64u32, 64], [120, 180], [640, 96], [64, 64]];
+                let inventory = events.len() == 4
+                    && events.iter().zip(expected_extents).enumerate().all(
+                        |(i, (event, extent))| {
+                            event["id"].as_u64() == Some(i as u64 + 1)
+                                && event["requested"] == json!(extent)
+                                && event["live_depth_extent"].as_array().is_some_and(|v| {
+                                    v.len() == 2
+                                        && v.iter().all(|n| n.as_u64().is_some_and(|n| n > 0))
+                                })
+                                && event["live_depth_samples"].as_u64() == Some(4)
+                        },
+                    );
+                let timeout = inventory
+                    && events[3]["blocked_gate"] == true
+                    && events[3]["retirement"] == "Quarantined"
+                    && self.rows[3]["reply"]["id"] == "blocked-deadline"
+                    && self.rows[3]["reply"]["ok"] == false
+                    && self.rows[3]["reply"]["error"]
+                        .as_str()
+                        .is_some_and(|e| e.contains("timed out"));
+                let poison = self.rows.last().is_some_and(|row| {
+                    row["reply"]["id"] == "poisoned-backend"
+                        && row["reply"]["ok"] == false
+                        && row["reply"]["error"]
+                            == "Native viewport capture requires an admitted live backend"
+                        && row["seconds"].as_f64().is_some_and(|s| s < 2.)
                 });
-                let live_depth = events
-                    .iter()
-                    .filter(|e| e["blocked_gate"] == false)
-                    .all(|e| {
-                        e["source_frame"] != e["target_frame"]
-                            && e["live_depth_extent"] != e["requested"]
+                let live_depth = inventory
+                    && events[..3].iter().all(|event| {
+                        event["blocked_gate"] == false
+                            && event["retirement"] == "Completed"
+                            && event["source_frame"] != event["target_frame"]
+                            && event["live_depth_extent"] != event["requested"]
                     });
                 state.capture.release_gate_for_probe();
                 app.stop_ai_bridge();
