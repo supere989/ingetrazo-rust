@@ -1587,7 +1587,7 @@ fn prepare_app_world(app:&crate::IngeTrazoApp,world:&mut world::World,context:&V
  let result=if sun.is_some()||world.has_shadow_owner(){
   let ground=world::World::solar_ground_receiver_for_scene(&app.scene);
   world.set_scene_with_sun(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision,sun,app.scene.shadows.darkness as f32,ground)
- }else if app.active_tool.face_sweep_preview().is_some(){world.set_scene_with_source_camera(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision)}else{world.set_scene(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision)};
+ }else if app.active_tool.face_sweep_preview().is_some(){world.set_scene_with_source_camera(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision)}else{world.set_scene_with_source_camera(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision)};
  if let Err(error)=result{world.abort_face_sweep(sweep,fence,serial)?;return Err(error);}
  world.publish_face_sweep(sweep,&app.scene,serial);Ok(())
 }
