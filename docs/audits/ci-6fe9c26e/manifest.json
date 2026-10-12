@@ -49803,6 +49803,11 @@
       "path": "crates/ingetrazo-formats/src/skp/textures.rs",
       "revision": "6fe9c26ebfcccf77b6f396076d23e3a2540a52c1",
       "sha256": "40411c3fe1b3e82f651bc3d9854b3e412062c6068ec0d87b5a0bf98fd07670a3"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/containers.rs",
+      "revision": "6fe9c26ebfcccf77b6f396076d23e3a2540a52c1",
+      "sha256": "b2ca4f256b31fc60efc4377bb0775c88f3e988cf1f34c7832df6d98a462ec0eb"
     }
   ],
   "jobs": {
