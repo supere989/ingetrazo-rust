@@ -30,6 +30,14 @@ impl Default for Preferences {
         recent_files:vec![],extra:BTreeMap::new()}}
 }
 impl Preferences {
+    pub fn scale_figure_enabled(&self)->bool {
+        // Python str(QSettings.value(...,"1")) == "0" is the only disable law.
+        match self.extra.get("new_document/scale_figure") {
+            Some(serde_json::Value::String(value))=>value!="0",
+            Some(serde_json::Value::Number(value))=>value.to_string()!="0",
+            _=>true,
+        }
+    }
     pub fn new_document_units(&self)->serde_json::Value {
         let fallback=||serde_json::json!({"length":"m","precision":2});
         let Some(v)=self.extra.get("units/new_document").and_then(|v|v.as_str()).and_then(|s|serde_json::from_str::<serde_json::Value>(s).ok()) else{return fallback();};

@@ -257,7 +257,7 @@ pub mod editable_mesh {
         common::lock::PyRwLock,
         function::{OptionalArg, PosArgs},
         pyclass,
-        types::Constructor,
+        types::{Constructor,Representable},
     };
     // Cold engineering-only collection under the existing script fuel; never resets poison.
     #[pyfunction]
@@ -579,7 +579,13 @@ pub mod editable_mesh {
         pub(super) hole_loops: PyRwLock<PyListRef>,
         pub(super) attrs: PyRwLock<PyObjectRef>,
     }
-    #[pyclass]
+    impl rustpython_vm::types::Representable for Face {
+        fn repr_str(zelf:&Py<Self>,vm:&VirtualMachine)->PyResult<String> {
+            vm.host_budget_tick()?;
+            Ok(format!("Face({} verts, {} holes)",zelf.r#loop.read().len(),zelf.hole_loops.read().len()))
+        }
+    }
+    #[pyclass(with(Representable))]
     impl Face {
         #[pygetset(name = "loop")]
         fn face_loop(zelf: &Py<Self>) -> PyListRef {

@@ -97,6 +97,7 @@ pub struct IngeTrazoApp {
     pub clipboard: Option<GeometryClipboard>,
     pub(crate) sheet_clipboard: crate::composer::clipboard::State,
     pub system_clipboard: Option<arboard::Clipboard>,
+    pub(crate) startup_scale_figure:Option<crate::default_scale_figure::StartupFigure>,
     pub clipboard_document: uuid::Uuid,
     pub(crate) clipboard_mesh_share_imports: crate::clipboard::MeshShareImports,
     pub selected_dimension: Option<usize>,
@@ -223,6 +224,7 @@ impl IngeTrazoApp {
             clipboard: None,
             sheet_clipboard: Default::default(),
             system_clipboard: None,
+            startup_scale_figure:None,
             clipboard_document: uuid::Uuid::new_v4(),
             clipboard_mesh_share_imports: Default::default(),
             paste_preview: None,section_name_prompt:None,
@@ -275,6 +277,7 @@ impl IngeTrazoApp {
         }
 
         app.apply_document_presentation();
+        if let Err(error)=app.insert_default_scale_figure(){app.status_message=error;}
         app.mark_document_clean();
         app
     }
@@ -337,6 +340,7 @@ impl IngeTrazoApp {
             return;
         }
         self.retire_current_recovery();
+        self.startup_scale_figure=None;
         self.scene = Scene::new();self.bim_active_tag_mode=false;self.apply_document_presentation();self.bump_model_revision();
         self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
@@ -344,9 +348,10 @@ impl IngeTrazoApp {
         self.initialize_document_units(self.document_session.preferences.new_document_units());
         self.undo_stack.clear();self.redo_stack.clear();
         self.current_file = None;
+        let figure_error=self.insert_default_scale_figure().err();
         self.mark_document_clean();
         self.textures.clear();
-        self.status_message.clear();
+        self.status_message=figure_error.unwrap_or_default();
     }
 
     pub fn open_document(&mut self, path: &Path) {self.request_document_action(crate::document_session::DocumentAction::Open(path.to_path_buf()));}
@@ -382,6 +387,7 @@ impl IngeTrazoApp {
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
+                self.startup_scale_figure=None;
                 self.scene = loaded_scene;self.bim_active_tag_mode=false;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());

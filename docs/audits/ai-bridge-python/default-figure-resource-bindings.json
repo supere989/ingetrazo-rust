@@ -1,0 +1,21 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "assets": [
+    {
+      "original_path": "resources/components/ingeniero.png",
+      "native_path": "crates/ingetrazo-gui/resources/components/ingeniero.png",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "size": 372245,
+      "verification": "Post bridge source capture pinned Git/current/native byte identity; no assertion these assets were explicitly pre-hashed for original bridge capture"
+    },
+    {
+      "original_path": "resources/components/person_billboard.png",
+      "native_path": "crates/ingetrazo-gui/resources/components/person_billboard.png",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ff8bb7835734149c0b6f71ec6fb5c607583ba2b8940be42c458ce3c6eaa0b49d",
+      "size": 33171,
+      "verification": "Post bridge source capture pinned Git/current/native byte identity; no assertion these assets were explicitly pre-hashed for original bridge capture"
+    }
+  ]
+}

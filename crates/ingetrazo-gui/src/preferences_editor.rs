@@ -235,6 +235,10 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
             });
         ui.add(egui::Slider::new(&mut draft.precision, 0..=6).text("Decimals"));
         ui.checkbox(&mut draft.units_for_new, "Also use for new documents");
+        let mut scale_figure=draft.preferences.scale_figure_enabled();
+        if ui.checkbox(&mut scale_figure,"Include scale figure in new documents").changed() {
+            draft.preferences.extra.insert("new_document/scale_figure".into(),serde_json::json!(if scale_figure{"1"}else{"0"}));
+        }
         ui.collapsing("Model display", |ui| {
             egui::ComboBox::from_id_salt("pref_style_combo")
                 .selected_text(format!("{:?}", draft.visual_style))

@@ -58,6 +58,7 @@ impl IngeTrazoApp {
         match store.load_preferences() {Ok(p)=>self.document_session.preferences=p,Err(e)=>self.status_message=e}
         let p=&self.document_session.preferences;
         if let Some(lang)=p.language.clone() {self.set_language(&lang);}
+        self.reconcile_startup_scale_figure();
         let p=&self.document_session.preferences;
         self.navigation.eye_height=p.walk_eye_height;
         let chosen=p.new_document_units();self.recent_files=p.recent_files.clone();self.document_session.recent_menu.frame=None;self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;

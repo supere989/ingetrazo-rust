@@ -9,6 +9,9 @@ license.workspace = true
 name = "ingetrazo"
 path = "src/main.rs"
 
+[features]
+engineering-python = ["ingetrazo-gui/engineering-python"]
+
 [dependencies]
 ingetrazo-core = { path = "../ingetrazo-core" }
 ingetrazo-tools = { path = "../ingetrazo-tools" }

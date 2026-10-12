@@ -235,3 +235,5 @@ pub mod exchange_import;
 mod skp_import;
 mod image_import;
 mod dae_export;
+
+mod default_scale_figure;
