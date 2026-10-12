@@ -1,0 +1,5 @@
+The final frozen corpus passes all 20 PNGs, 20 JPEGs and 20 PDFs, all 20 actual original-reader pairs and 25 rejecting controls. The final three radial-fit PDF pixels are closed by emitting radial arrow polygons through the existing device-coordinate PDF path, retaining Qt's fill rule and explicit closure. No raster changes, tolerance or source replacement were introduced.
+
+Executed runtime `bdddec51be6b0038d000a1f49a0bd0bda45a7b8b`: native 18.701 seconds, original reader 0.130 seconds, checker 1.351 seconds, all exit zero. Zero source recaptures; the authenticated frozen dashed-stroke source corpus is reused.
+
+The packet retains changed outputs, complete reports/logs/receipts and executed code. Unchanged payloads reference exact authenticated prior archive members; the prior strict failures remain retained. This finite software Vulkan/Linux result does not automatically promote P29, establish native Mac/hardware parity, or close broader PDF/overlay workflows. No disposable state was purged.

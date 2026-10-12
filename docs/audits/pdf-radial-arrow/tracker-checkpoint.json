@@ -1,0 +1,10 @@
+{
+  "classification": "P29 Partial; all classifications and gates unchanged",
+  "png_exact": 20,
+  "jpeg_exact": 20,
+  "pdf_exact": 20,
+  "original_reader_pairs": 20,
+  "negative_controls": 25,
+  "platform": "software Vulkan/Linux",
+  "fresh_source_captures": 0
+}

@@ -1,0 +1,1080 @@
+{
+  "scope": "Finite frozen physical six-family annotations acceptance on software Vulkan/Linux",
+  "runtime_revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+  "binary_sha256": "e9d98bcdf3d58953e485e1b3b6dec088cfadba0c8d24b25ce916d3ce52f8d1d7",
+  "archive_sha256": "f02573410dc68de509bd55f2c03702c4f812854cfddbc5db6a7af5428b718c2a",
+  "members": [
+    {
+      "path": "replay/checker.log",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/checker.log",
+      "size": 17303,
+      "sha256": "7f0f3680fa347fbd948c467e3967e790c56d6c9f8bc60139b03adf817958cef7"
+    },
+    {
+      "path": "replay/comparison.json",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/comparison.json",
+      "size": 23389,
+      "sha256": "e70ab543283b4a8a76eea664f62213eb8b100ec6e940ea28a525c54c7c5ffec2"
+    },
+    {
+      "path": "replay/native/all-six-defaults.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-defaults.pdf",
+      "size": 49270,
+      "sha256": "72efb38e0e4ea7a4fe86a55a063206f1c7b3ca71d8b0e182e3ae456e619c3b16"
+    },
+    {
+      "path": "replay/native/cotas_rad-default.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_rad-default.pdf",
+      "size": 20768,
+      "sha256": "93d4e43c04e1ef13cbd1cf0277a95de644cdf4ba33c229dcf69c2a324107ce5c"
+    },
+    {
+      "path": "replay/native/mixed-high-z.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-high-z.pdf",
+      "size": 49066,
+      "sha256": "9bb27d3179f0505d62d16d867947c1ea9bffcdaa591c6981fe78216783b922e9"
+    },
+    {
+      "path": "replay/native/mixed-same-z.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-same-z.pdf",
+      "size": 49174,
+      "sha256": "13d858c28b42422df93211e45d2d420271ba6c671a7f85c5228f98e7531acbed"
+    },
+    {
+      "path": "replay/native/radial-fit.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/radial-fit.pdf",
+      "size": 31697,
+      "sha256": "e2720e57a570fb20ecd2f670eff5b83dae522d3f3cf021a52a271bb492c47726"
+    },
+    {
+      "path": "replay/result.json",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/result.json",
+      "size": 1374,
+      "sha256": "8949ad31756245e266d5a224bce86abbd786dec8f15505ebe9a717d63127de68"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/composer_annotations.rs",
+      "git_path": "crates/ingetrazo-gui/src/composer_annotations.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 30335,
+      "sha256": "3cef2eba2d20c37af07cfd63fa68542fe60c5f53cee5d88d589ca5468fd6fe70"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/composer_annotations_symbols.rs",
+      "git_path": "crates/ingetrazo-gui/src/composer_annotations_symbols.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 14042,
+      "sha256": "421ad8d0d986238d9a74495a2b9a918ac1efa44cfc8126c8c726689f513ebe5e"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-formats/src/paper_text_painter.rs",
+      "git_path": "crates/ingetrazo-formats/src/paper_text_painter.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 16988,
+      "sha256": "161aa5eef1be4977c57e0ca7b598e1d60def23f850b2951e70cb64866cb58ad2"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-formats/src/sheet_pdf.rs",
+      "git_path": "crates/ingetrazo-formats/src/sheet_pdf.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 41180,
+      "sha256": "24e8f908c282ef8633a3b16e832ca5e13abe79e7404ef37d020391beee2013b1"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/examples/sheet_annotation_workflows.rs",
+      "git_path": "crates/ingetrazo-gui/examples/sheet_annotation_workflows.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 11077,
+      "sha256": "f6c3eaf7e3518af5a4925d29d732df9789cd5a33d4f2e62841147189ea896821"
+    },
+    {
+      "path": "executed-code/scripts/check-sheet-annotations.py",
+      "git_path": "scripts/check-sheet-annotations.py",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 9260,
+      "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
+    },
+    {
+      "path": "executed-code/scripts/reference-sheet-annotation-reopens.py",
+      "git_path": "scripts/reference-sheet-annotation-reopens.py",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 1368,
+      "sha256": "ac5f09303d54ad9ba6aab27da74d271cbab447d4e4b72ded88ff8ab55cf89c60"
+    }
+  ],
+  "unchanged_artifact_references": [
+    {
+      "path": "replay/native/all-six-defaults-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-defaults-warm.png",
+      "size": 15393,
+      "sha256": "f986a58ef248d04de75ffdc5c3157ab4d4f66bc31e7679e407d85028687f2e2d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-defaults.png"
+    },
+    {
+      "path": "replay/native/all-six-defaults.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-defaults.igz",
+      "size": 6362,
+      "sha256": "e29b98542e468d94dc71b0190cc2455898de62c032b67761adbd11a49c518e85",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-defaults.igz"
+    },
+    {
+      "path": "replay/native/all-six-defaults.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-defaults.jpg",
+      "size": 36821,
+      "sha256": "6daebac12beafa7ef93b892d8e20c5f02ff7f4ed2026132261c21ecc45d3ee4b",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-defaults.jpg"
+    },
+    {
+      "path": "replay/native/all-six-defaults.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-defaults.png",
+      "size": 15393,
+      "sha256": "f986a58ef248d04de75ffdc5c3157ab4d4f66bc31e7679e407d85028687f2e2d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-defaults.png"
+    },
+    {
+      "path": "replay/native/all-six-hidden-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-hidden-warm.png",
+      "size": 4683,
+      "sha256": "110b765565d1f10a0f8418975230073afff254c59baaf9f2ee9a37d3e1681edb",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-hidden.png"
+    },
+    {
+      "path": "replay/native/all-six-hidden.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-hidden.igz",
+      "size": 5624,
+      "sha256": "b5b29a8c3ace3df21079cc49d86db6c20fe67782a52733de94554c4c91e054be",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-hidden.igz"
+    },
+    {
+      "path": "replay/native/all-six-hidden.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-hidden.jpg",
+      "size": 27381,
+      "sha256": "ebefdf05ca2c1bd38515776e56969d5520501769debaa23675b8b618be95607a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-hidden.jpg"
+    },
+    {
+      "path": "replay/native/all-six-hidden.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-hidden.pdf",
+      "size": 521,
+      "sha256": "7c3702b0f6ea9c8706f6d90f2d18866e12ccafd81f27fc90d0f78080c156cdfa",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-hidden.pdf"
+    },
+    {
+      "path": "replay/native/all-six-hidden.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/all-six-hidden.png",
+      "size": 4683,
+      "sha256": "110b765565d1f10a0f8418975230073afff254c59baaf9f2ee9a37d3e1681edb",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/all-six-hidden.png"
+    },
+    {
+      "path": "replay/native/angular-sweep-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/angular-sweep-warm.png",
+      "size": 15739,
+      "sha256": "f2eca91ec61290c1497ec31a0b6e58f9387daf7feb6b85833af6c2c0baab0c12",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/angular-sweep.png"
+    },
+    {
+      "path": "replay/native/angular-sweep.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/angular-sweep.igz",
+      "size": 3895,
+      "sha256": "f357e4c44918e2645d0cefeba3a7a2faa0cb2186f8a314c7a2f10d31696bf38b",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/angular-sweep.igz"
+    },
+    {
+      "path": "replay/native/angular-sweep.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/angular-sweep.jpg",
+      "size": 37024,
+      "sha256": "c15671d639e31b4111a58a6794da78264bfb9a879bf820e5a11563d737a93d9c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/angular-sweep.jpg"
+    },
+    {
+      "path": "replay/native/angular-sweep.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/angular-sweep.pdf",
+      "size": 28703,
+      "sha256": "32b53af25a315c49a22d7b161165908edf6965f0b25f65ec20cfcbfdc32a1b68",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/angular-sweep.pdf"
+    },
+    {
+      "path": "replay/native/angular-sweep.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/angular-sweep.png",
+      "size": 15739,
+      "sha256": "f2eca91ec61290c1497ec31a0b6e58f9387daf7feb6b85833af6c2c0baab0c12",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/angular-sweep.png"
+    },
+    {
+      "path": "replay/native/callouts-leaders-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/callouts-leaders-warm.png",
+      "size": 28111,
+      "sha256": "7e981ca4b225262d7ca42a6c48df9a0627f5139e2ee4408df4511d7a1b59e52d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/callouts-leaders.png"
+    },
+    {
+      "path": "replay/native/callouts-leaders.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/callouts-leaders.igz",
+      "size": 3991,
+      "sha256": "772f7ba1d5d5789b701ab01bf86d1310375c69f8653a5f583203500e1e371d75",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/callouts-leaders.igz"
+    },
+    {
+      "path": "replay/native/callouts-leaders.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/callouts-leaders.jpg",
+      "size": 47883,
+      "sha256": "7e07ec8beba4f6452ff6d340998b7b338cb2ff8e0fab5b0716779501d311e8c2",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/callouts-leaders.jpg"
+    },
+    {
+      "path": "replay/native/callouts-leaders.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/callouts-leaders.pdf",
+      "size": 50510,
+      "sha256": "f937ea8ac426f1d51355e6fe76d9a0f76bd9e5caed3016aac03140663dbb1180",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/callouts-leaders.pdf"
+    },
+    {
+      "path": "replay/native/callouts-leaders.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/callouts-leaders.png",
+      "size": 28111,
+      "sha256": "7e981ca4b225262d7ca42a6c48df9a0627f5139e2ee4408df4511d7a1b59e52d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/callouts-leaders.png"
+    },
+    {
+      "path": "replay/native/cotas-default-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-default-warm.png",
+      "size": 5546,
+      "sha256": "ca4a6aeb81014b9944ed206d89825299bf14a937d8280926e0ef2f02553dfdcb",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-default.png"
+    },
+    {
+      "path": "replay/native/cotas-default.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-default.igz",
+      "size": 1453,
+      "sha256": "7a83923a103eb6a97990154181876ecfa3278ac8bfe18f3ccf24eb1a20e9672b",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-default.igz"
+    },
+    {
+      "path": "replay/native/cotas-default.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-default.jpg",
+      "size": 28406,
+      "sha256": "625a01d9b8d11e7de45fa9e9f49e9c8375727febd48e2d48726475a5fe0eee7f",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-default.jpg"
+    },
+    {
+      "path": "replay/native/cotas-default.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-default.pdf",
+      "size": 19673,
+      "sha256": "90a638fd1ffee7b6576b7c6b719ea65465966cbb9a9053320265abafe034035e",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-default.pdf"
+    },
+    {
+      "path": "replay/native/cotas-default.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-default.png",
+      "size": 5546,
+      "sha256": "ca4a6aeb81014b9944ed206d89825299bf14a937d8280926e0ef2f02553dfdcb",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-default.png"
+    },
+    {
+      "path": "replay/native/cotas-placement-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-placement-warm.png",
+      "size": 10519,
+      "sha256": "9e5088f8d4b614547cacdb0b5c01ceae4a6dd6453a4b7484730f1a6f4c655c42",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-placement.png"
+    },
+    {
+      "path": "replay/native/cotas-placement.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-placement.igz",
+      "size": 6096,
+      "sha256": "044161cfe49742114a48fe5d1118e41cf31e999becffb402bdde6262b2e0d42f",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-placement.igz"
+    },
+    {
+      "path": "replay/native/cotas-placement.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-placement.jpg",
+      "size": 33257,
+      "sha256": "4964041bd9aa91e8ef314070b6ced8b7648785f139bae38a1b7e3a878d38f3c9",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-placement.jpg"
+    },
+    {
+      "path": "replay/native/cotas-placement.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-placement.pdf",
+      "size": 29485,
+      "sha256": "f303de0e961fa1ac581679edb599bf1d852b1856521f23e0ab4ce1fb8e5e24fd",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-placement.pdf"
+    },
+    {
+      "path": "replay/native/cotas-placement.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-placement.png",
+      "size": 10519,
+      "sha256": "9e5088f8d4b614547cacdb0b5c01ceae4a6dd6453a4b7484730f1a6f4c655c42",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-placement.png"
+    },
+    {
+      "path": "replay/native/cotas-positions-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-positions-warm.png",
+      "size": 15410,
+      "sha256": "0a5f355798dbddaadc15e18a6b798a6604556d575033f2d6166a86591f871f87",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-positions.png"
+    },
+    {
+      "path": "replay/native/cotas-positions.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-positions.igz",
+      "size": 6121,
+      "sha256": "22cc90bbf6ee610c4ac8b6491dc8b031035c3f1c94ab8f3a6829c2e15521f62d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-positions.igz"
+    },
+    {
+      "path": "replay/native/cotas-positions.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-positions.jpg",
+      "size": 37795,
+      "sha256": "b794c972f73b9b3757820ba073752aa5209a02b2bd2f3610b1078469f286b49a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-positions.jpg"
+    },
+    {
+      "path": "replay/native/cotas-positions.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-positions.pdf",
+      "size": 29804,
+      "sha256": "0a78ef82c84fc0232b91bd3a62fe73a6d9ca61ff102243275e3649105e22781c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-positions.pdf"
+    },
+    {
+      "path": "replay/native/cotas-positions.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-positions.png",
+      "size": 15410,
+      "sha256": "0a5f355798dbddaadc15e18a6b798a6604556d575033f2d6166a86591f871f87",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-positions.png"
+    },
+    {
+      "path": "replay/native/cotas-units-scale-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-units-scale-warm.png",
+      "size": 17424,
+      "sha256": "5da6635bd06c7b5842563e257ccf8c3d1b70ca7bbd76314037d8146b424d343a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-units-scale.png"
+    },
+    {
+      "path": "replay/native/cotas-units-scale.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-units-scale.igz",
+      "size": 8933,
+      "sha256": "67fb94e21bf56169695e0757b3e402c4aaa7551d610396392815d3a3f14bdd7b",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-units-scale.igz"
+    },
+    {
+      "path": "replay/native/cotas-units-scale.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-units-scale.jpg",
+      "size": 42179,
+      "sha256": "600de1c8ca4bf6afbf3125db41246b05eef524e8107ffd0fa15edeb1370123f6",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-units-scale.jpg"
+    },
+    {
+      "path": "replay/native/cotas-units-scale.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-units-scale.pdf",
+      "size": 35738,
+      "sha256": "79b3b8bb9e7bb8ad34f8071874a7c0c4af88a4596f4cd3ffc2110f2dc0e37a6a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-units-scale.pdf"
+    },
+    {
+      "path": "replay/native/cotas-units-scale.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas-units-scale.png",
+      "size": 17424,
+      "sha256": "5da6635bd06c7b5842563e257ccf8c3d1b70ca7bbd76314037d8146b424d343a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas-units-scale.png"
+    },
+    {
+      "path": "replay/native/cotas_ang-default-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_ang-default-warm.png",
+      "size": 6407,
+      "sha256": "03d7763c5bab39cdac5c0dd025bbf3695a5b68aa5d84648be62e4209dbaf6439",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_ang-default.png"
+    },
+    {
+      "path": "replay/native/cotas_ang-default.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_ang-default.igz",
+      "size": 1207,
+      "sha256": "168f7ba6efbb3e96c8ccf7cef9fd3d6642748a54f0980c6857a579326ac90978",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_ang-default.igz"
+    },
+    {
+      "path": "replay/native/cotas_ang-default.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_ang-default.jpg",
+      "size": 28984,
+      "sha256": "b5dacf5a20abbb15236e97de5871312dc61389ad3e98f721f12053da5521558b",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_ang-default.jpg"
+    },
+    {
+      "path": "replay/native/cotas_ang-default.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_ang-default.pdf",
+      "size": 20236,
+      "sha256": "b6ab41296e351f818f82f18e31db17751177d65f1028bd64f302d6db8a57ffc7",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_ang-default.pdf"
+    },
+    {
+      "path": "replay/native/cotas_ang-default.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_ang-default.png",
+      "size": 6407,
+      "sha256": "03d7763c5bab39cdac5c0dd025bbf3695a5b68aa5d84648be62e4209dbaf6439",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_ang-default.png"
+    },
+    {
+      "path": "replay/native/cotas_rad-default-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_rad-default-warm.png",
+      "size": 7016,
+      "sha256": "311053804dcb3afaa9ae01e0567ac70a4027a15f64404dd732f0d01ddf61d06c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_rad-default.png"
+    },
+    {
+      "path": "replay/native/cotas_rad-default.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_rad-default.igz",
+      "size": 1284,
+      "sha256": "93a2c71d8b34874f6efd02b136655828d41724db45ca50058b629fb9cb45726e",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_rad-default.igz"
+    },
+    {
+      "path": "replay/native/cotas_rad-default.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_rad-default.jpg",
+      "size": 28731,
+      "sha256": "c5811f0e04b374f88b783bc951152db469917a0d99275edb422195b5570ef1f9",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_rad-default.jpg"
+    },
+    {
+      "path": "replay/native/cotas_rad-default.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/cotas_rad-default.png",
+      "size": 7016,
+      "sha256": "311053804dcb3afaa9ae01e0567ac70a4027a15f64404dd732f0d01ddf61d06c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/cotas_rad-default.png"
+    },
+    {
+      "path": "replay/native/etiquetas-default-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/etiquetas-default-warm.png",
+      "size": 6609,
+      "sha256": "ef4311949303f344c5f85080dd97ea4cd3d22ed2662a818e82230f0fb91dfb5a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/etiquetas-default.png"
+    },
+    {
+      "path": "replay/native/etiquetas-default.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/etiquetas-default.igz",
+      "size": 1262,
+      "sha256": "3909907ce45a299d1695830a9b1d21c97a6e6d7dd495597b06715ec40259c792",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/etiquetas-default.igz"
+    },
+    {
+      "path": "replay/native/etiquetas-default.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/etiquetas-default.jpg",
+      "size": 28489,
+      "sha256": "6cc2541e8480518807f9a22b3c18ec4c1977c944612f460584e8dd511b03cd77",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/etiquetas-default.jpg"
+    },
+    {
+      "path": "replay/native/etiquetas-default.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/etiquetas-default.pdf",
+      "size": 19994,
+      "sha256": "05614a41b5952c78577f8139d82857f90d68272c63f870f8975a5879e433dca6",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/etiquetas-default.pdf"
+    },
+    {
+      "path": "replay/native/etiquetas-default.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/etiquetas-default.png",
+      "size": 6609,
+      "sha256": "ef4311949303f344c5f85080dd97ea4cd3d22ed2662a818e82230f0fb91dfb5a",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/etiquetas-default.png"
+    },
+    {
+      "path": "replay/native/field-context-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/field-context-warm.png",
+      "size": 14908,
+      "sha256": "de45a014a75c5f0510103f58acd73122f278fd37d857dd4c7feaabb1df4b768c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/field-context.png"
+    },
+    {
+      "path": "replay/native/field-context.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/field-context.igz",
+      "size": 5567,
+      "sha256": "b8925b9e1aebce55862cfcdcc2a2f1e914f63578912a051c305c298272844e52",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/field-context.igz"
+    },
+    {
+      "path": "replay/native/field-context.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/field-context.jpg",
+      "size": 35257,
+      "sha256": "00423a6a1e87f9e4e57661bea2023040694e23156ca54912ae3857a04b3c0c83",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/field-context.jpg"
+    },
+    {
+      "path": "replay/native/field-context.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/field-context.pdf",
+      "size": 45564,
+      "sha256": "387986bb07d1635207f0440ac546b989b20839b065aa16466f7d469fb55b6404",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/field-context.pdf"
+    },
+    {
+      "path": "replay/native/field-context.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/field-context.png",
+      "size": 14908,
+      "sha256": "de45a014a75c5f0510103f58acd73122f278fd37d857dd4c7feaabb1df4b768c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/field-context.png"
+    },
+    {
+      "path": "replay/native/labels-leaders-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-leaders-warm.png",
+      "size": 13708,
+      "sha256": "b643a8e138af514ac8fa7644b12aa4e20f0acd352b75ea8208b58547c8cef733",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-leaders.png"
+    },
+    {
+      "path": "replay/native/labels-leaders.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-leaders.igz",
+      "size": 4352,
+      "sha256": "b56c26a54b490204cd766b1df9a883d298d672903c71141b96e2640917dc27b8",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-leaders.igz"
+    },
+    {
+      "path": "replay/native/labels-leaders.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-leaders.jpg",
+      "size": 33715,
+      "sha256": "55c12f10be58fe2b3e12f548287c39dc3353be45f6797b917ab73692f9eb7beb",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-leaders.jpg"
+    },
+    {
+      "path": "replay/native/labels-leaders.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-leaders.pdf",
+      "size": 27178,
+      "sha256": "bc7bae0dc9e68643cbcda32532d4baaefa30bfd7ac251ec703f91f0d880d5e54",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-leaders.pdf"
+    },
+    {
+      "path": "replay/native/labels-leaders.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-leaders.png",
+      "size": 13708,
+      "sha256": "b643a8e138af514ac8fa7644b12aa4e20f0acd352b75ea8208b58547c8cef733",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-leaders.png"
+    },
+    {
+      "path": "replay/native/labels-wrapped-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-wrapped-warm.png",
+      "size": 19127,
+      "sha256": "ce712bc77533639576a9ee8ef91c4316ed399843ac7526c0b0cd25edc62ac60e",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-wrapped.png"
+    },
+    {
+      "path": "replay/native/labels-wrapped.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-wrapped.igz",
+      "size": 2765,
+      "sha256": "caa81bf5b14a66c07d9dce63ac60b11e71bfb2786df58638502b7357355cd227",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-wrapped.igz"
+    },
+    {
+      "path": "replay/native/labels-wrapped.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-wrapped.jpg",
+      "size": 38017,
+      "sha256": "9964db74716f524b3e10113d6860683078b4b2c2d16159744b0e1c0c947b85ee",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-wrapped.jpg"
+    },
+    {
+      "path": "replay/native/labels-wrapped.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-wrapped.pdf",
+      "size": 46847,
+      "sha256": "dcf734d1762b4eb8db2bd5cb31c7787521af2c2f33886bd6de43104131fd535f",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-wrapped.pdf"
+    },
+    {
+      "path": "replay/native/labels-wrapped.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/labels-wrapped.png",
+      "size": 19127,
+      "sha256": "ce712bc77533639576a9ee8ef91c4316ed399843ac7526c0b0cd25edc62ac60e",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/labels-wrapped.png"
+    },
+    {
+      "path": "replay/native/levels-symbols-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/levels-symbols-warm.png",
+      "size": 12161,
+      "sha256": "6820a021693315996d3d500f8e15f8db6b09618c0b847de97cd55bfdc0cdba7f",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/levels-symbols.png"
+    },
+    {
+      "path": "replay/native/levels-symbols.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/levels-symbols.igz",
+      "size": 4483,
+      "sha256": "1676530736e58db3e17e226aeef42c1b4e33477057b97e947edd8c25c378c176",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/levels-symbols.igz"
+    },
+    {
+      "path": "replay/native/levels-symbols.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/levels-symbols.jpg",
+      "size": 33410,
+      "sha256": "d18b468c90819c22280381286bc732f2251524bb1ccf3626bcb36e7ad2260703",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/levels-symbols.jpg"
+    },
+    {
+      "path": "replay/native/levels-symbols.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/levels-symbols.pdf",
+      "size": 30583,
+      "sha256": "69c11bec006e2c61415b865957c91df2307fcc2a96bc051714983a5f7f27eb64",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/levels-symbols.pdf"
+    },
+    {
+      "path": "replay/native/levels-symbols.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/levels-symbols.png",
+      "size": 12161,
+      "sha256": "6820a021693315996d3d500f8e15f8db6b09618c0b847de97cd55bfdc0cdba7f",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/levels-symbols.png"
+    },
+    {
+      "path": "replay/native/llamadas-default-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/llamadas-default-warm.png",
+      "size": 8190,
+      "sha256": "ae300d003482d1bf33c640c403607a60de203d5277c476b47adfde0b2a152be2",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/llamadas-default.png"
+    },
+    {
+      "path": "replay/native/llamadas-default.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/llamadas-default.igz",
+      "size": 1115,
+      "sha256": "1dd97a794c99170d5440dea67064dad0b7cbd2bce056a014c5ef29bc291bd639",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/llamadas-default.igz"
+    },
+    {
+      "path": "replay/native/llamadas-default.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/llamadas-default.jpg",
+      "size": 30629,
+      "sha256": "bb065ebb3f745b139aec7f14da3b31e55ce55248c36c352b35e1b5bf5a963388",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/llamadas-default.jpg"
+    },
+    {
+      "path": "replay/native/llamadas-default.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/llamadas-default.pdf",
+      "size": 39824,
+      "sha256": "4e1249cfeb4845581c3ae17264700d21f57e155f1f5ba0a3b4b936a565f52fe8",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/llamadas-default.pdf"
+    },
+    {
+      "path": "replay/native/llamadas-default.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/llamadas-default.png",
+      "size": 8190,
+      "sha256": "ae300d003482d1bf33c640c403607a60de203d5277c476b47adfde0b2a152be2",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/llamadas-default.png"
+    },
+    {
+      "path": "replay/native/mixed-high-z-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-high-z-warm.png",
+      "size": 15090,
+      "sha256": "bc760a6035e637cbcaf8984baaebf8dc6dc27af15e216a7586d3ea0665c4f037",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-high-z.png"
+    },
+    {
+      "path": "replay/native/mixed-high-z.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-high-z.igz",
+      "size": 5630,
+      "sha256": "cc4976643767d32ac98f2ccee98a40098232c647332e7b7d0cc465279cebab7c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-high-z.igz"
+    },
+    {
+      "path": "replay/native/mixed-high-z.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-high-z.jpg",
+      "size": 40169,
+      "sha256": "e2a07cac241f9593e5f8593b3d65e553ed5b562c8b263538fbc67edbd95b569c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-high-z.jpg"
+    },
+    {
+      "path": "replay/native/mixed-high-z.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-high-z.png",
+      "size": 15090,
+      "sha256": "bc760a6035e637cbcaf8984baaebf8dc6dc27af15e216a7586d3ea0665c4f037",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-high-z.png"
+    },
+    {
+      "path": "replay/native/mixed-same-z-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-same-z-warm.png",
+      "size": 15086,
+      "sha256": "7d5f7a4c6e3f989ab849113e71a9fdbe60752258e56b95768bd45ad57833b12d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-same-z.png"
+    },
+    {
+      "path": "replay/native/mixed-same-z.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-same-z.igz",
+      "size": 5629,
+      "sha256": "0b614bdd04ad88102499c62aaa36c39c776eeb0010acccbcefaf9636ab036593",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-same-z.igz"
+    },
+    {
+      "path": "replay/native/mixed-same-z.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-same-z.jpg",
+      "size": 40172,
+      "sha256": "a34ee6687e8102f9a7fd082ac212756e0aad0d08e4db66209772c61f0ba1dc1f",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-same-z.jpg"
+    },
+    {
+      "path": "replay/native/mixed-same-z.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/mixed-same-z.png",
+      "size": 15086,
+      "sha256": "7d5f7a4c6e3f989ab849113e71a9fdbe60752258e56b95768bd45ad57833b12d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/mixed-same-z.png"
+    },
+    {
+      "path": "replay/native/native-reopens.json",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/native-reopens.json",
+      "size": 74853,
+      "sha256": "861faa6f86fe4c2b6faf08c8ee3894795c6d43edf84f1bfa6132f11c0a082c39",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/native-reopens.json"
+    },
+    {
+      "path": "replay/native/native.json",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/native.json",
+      "size": 10494,
+      "sha256": "5779cba5faf0407fcb007d54723d402bafeb086848aa9fe1bc745178bef8e550",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/native.json"
+    },
+    {
+      "path": "replay/native/native.partial.json",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/native.partial.json",
+      "size": 9368,
+      "sha256": "8965254e33046325ce87bc7cda59d2a8b3178f43422d3f90320ee24302539462",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/native.partial.json"
+    },
+    {
+      "path": "replay/native/niveles-default-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/niveles-default-warm.png",
+      "size": 5743,
+      "sha256": "a922942212689a5cdde764e302e98c8ee5c5a9b649467b95afb79a28a7625e96",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/niveles-default.png"
+    },
+    {
+      "path": "replay/native/niveles-default.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/niveles-default.igz",
+      "size": 1178,
+      "sha256": "bfaeed5fc41cd038969c857ce39170f72c22ef713df506d7b015d48eae18c866",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/niveles-default.igz"
+    },
+    {
+      "path": "replay/native/niveles-default.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/niveles-default.jpg",
+      "size": 28012,
+      "sha256": "e5abe3264c7202c3e1df9705e9e2a46aa1e0f5a71cecd473b8b8fe99caf19634",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/niveles-default.jpg"
+    },
+    {
+      "path": "replay/native/niveles-default.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/niveles-default.pdf",
+      "size": 19680,
+      "sha256": "a99ded74b02b52f0f7a607d63546d78cc6bc9be2fa124f54c83e5ce9083cc52d",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/niveles-default.pdf"
+    },
+    {
+      "path": "replay/native/niveles-default.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/niveles-default.png",
+      "size": 5743,
+      "sha256": "a922942212689a5cdde764e302e98c8ee5c5a9b649467b95afb79a28a7625e96",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/niveles-default.png"
+    },
+    {
+      "path": "replay/native/radial-fit-warm.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/radial-fit-warm.png",
+      "size": 16915,
+      "sha256": "773a93a04f8baab2eec62eb0ec405ff6688d27b190f152ad54e9aa37831ef14e",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/radial-fit.png"
+    },
+    {
+      "path": "replay/native/radial-fit.igz",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/radial-fit.igz",
+      "size": 5033,
+      "sha256": "74a726cb517971b8c36814aeee4e2dbc20dc42579c565dac0ce592e7a8b700af",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/radial-fit.igz"
+    },
+    {
+      "path": "replay/native/radial-fit.jpg",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/radial-fit.jpg",
+      "size": 35057,
+      "sha256": "2d90906f5013e8e9f08ec615983d4c0fd354d751ec639d7241caf39b251d493c",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/radial-fit.jpg"
+    },
+    {
+      "path": "replay/native/radial-fit.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/radial-fit.png",
+      "size": 16915,
+      "sha256": "773a93a04f8baab2eec62eb0ec405ff6688d27b190f152ad54e9aa37831ef14e",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/radial-fit.png"
+    },
+    {
+      "path": "replay/native/refusal-cotas.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-cotas.pdf",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-cotas.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-cotas.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-cotas_ang.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-cotas_ang.pdf",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-cotas_ang.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-cotas_ang.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-cotas_rad.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-cotas_rad.pdf",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-cotas_rad.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-cotas_rad.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-etiquetas.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-etiquetas.pdf",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-etiquetas.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-etiquetas.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-llamadas.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-llamadas.pdf",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-llamadas.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-llamadas.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-niveles.pdf",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-niveles.pdf",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native/refusal-niveles.png",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native/refusal-niveles.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native/refusal-niveles.png"
+    },
+    {
+      "path": "replay/native.log",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/native.log"
+    },
+    {
+      "path": "replay/reader.log",
+      "origin": "/tmp/ingetrazo-pdf-arrow-replay-r1/reader.log",
+      "size": 79,
+      "sha256": "3fa0e9cb0fef0ce517445e54803009eb793d0e51a7b73219bb98c8c13a84a3ce",
+      "archive": "docs/audits/pdf-annotation-alpha/records.zip",
+      "member": "replay/reader.log"
+    }
+  ],
+  "parent_archives": [
+    {
+      "path": "docs/audits/pdf-annotation-alpha/records.zip",
+      "sha256": "777f88df05d42ea4da9db5bfd7f1f36aedc8f4238c62590b676ea28f7367e6ef",
+      "manifest_sha256": "56e5f54c22ea294bc8e18acb9cce2bb7ce4cf2d2b16bb0f43d014879d16a53a6"
+    },
+    {
+      "path": "docs/audits/pdf-radial-text-clip/records.zip",
+      "sha256": "c1a966cd8efb36db43454ee5c62b88c5162095ef95994a7c75e37e29d2df252b",
+      "manifest_sha256": "f3765b6df2eff0162020211961126c503a55dcab9c673859bc5469c668b057e7"
+    }
+  ],
+  "git_bindings": [
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/composer_annotations.rs",
+      "git_path": "crates/ingetrazo-gui/src/composer_annotations.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 30335,
+      "sha256": "3cef2eba2d20c37af07cfd63fa68542fe60c5f53cee5d88d589ca5468fd6fe70"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/composer_annotations_symbols.rs",
+      "git_path": "crates/ingetrazo-gui/src/composer_annotations_symbols.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 14042,
+      "sha256": "421ad8d0d986238d9a74495a2b9a918ac1efa44cfc8126c8c726689f513ebe5e"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-formats/src/paper_text_painter.rs",
+      "git_path": "crates/ingetrazo-formats/src/paper_text_painter.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 16988,
+      "sha256": "161aa5eef1be4977c57e0ca7b598e1d60def23f850b2951e70cb64866cb58ad2"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-formats/src/sheet_pdf.rs",
+      "git_path": "crates/ingetrazo-formats/src/sheet_pdf.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 41180,
+      "sha256": "24e8f908c282ef8633a3b16e832ca5e13abe79e7404ef37d020391beee2013b1"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/examples/sheet_annotation_workflows.rs",
+      "git_path": "crates/ingetrazo-gui/examples/sheet_annotation_workflows.rs",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 11077,
+      "sha256": "f6c3eaf7e3518af5a4925d29d732df9789cd5a33d4f2e62841147189ea896821"
+    },
+    {
+      "path": "executed-code/scripts/check-sheet-annotations.py",
+      "git_path": "scripts/check-sheet-annotations.py",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 9260,
+      "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
+    },
+    {
+      "path": "executed-code/scripts/reference-sheet-annotation-reopens.py",
+      "git_path": "scripts/reference-sheet-annotation-reopens.py",
+      "revision": "bdddec51be6b0038d000a1f49a0bd0bda45a7b8b",
+      "size": 1368,
+      "sha256": "ac5f09303d54ad9ba6aab27da74d271cbab447d4e4b72ded88ff8ab55cf89c60"
+    }
+  ],
+  "source_reference": {
+    "path": "docs/audits/dashed-callout-stroke",
+    "archive_sha256": "7ac5b6d3f1667915895fd7219cd917d1fa7d1fcdc415babcd0966167306dc6f7",
+    "manifest_sha256": "e1bb53ef87dee43f9a7769ac70752d8a77c53049ba018fb8ae7b3fc25fbf8ddf"
+  },
+  "fresh_source_captures": 0,
+  "acceptance": {
+    "png_exact": 20,
+    "jpeg_exact": 20,
+    "pdf_exact": 20,
+    "original_reader_pairs": 20,
+    "rejected_controls": 25,
+    "strict_ok": true
+  }
+}
