@@ -84,7 +84,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("Orthomosaic (GeoTIFF)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.begin_geotiff_import_dialog();
                     ui.close_menu();
                 }
                 if ui.button(tr("AutoCAD DWG (.dwg)…")).clicked() {
