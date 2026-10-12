@@ -592,7 +592,16 @@ impl IngeTrazoApp {
                     self.model_revision,
                 ));
             }
-            Err(e) => self.status_message = e,
+            Err(e) => {
+                // A source scene-change signal occurs once; repaint does not retry
+                // rejected immutable input. Explicit Profile still retries directly.
+                self.survey_profile.last_version = Some((
+                    self.clipboard_document,
+                    self.scene.version,
+                    self.model_revision,
+                ));
+                self.status_message = e;
+            }
         }
     }
     pub fn export_survey_profile(&mut self, path: &Path) -> Result<bool, String> {
@@ -979,6 +988,25 @@ mod tests {
         assert_eq!(a.survey_profile.decode_count, 1);
         let count = a.survey_profile.decode_count;
         a.scene.geo_paths[0].points[1].x += 1.;
+        a.scene.bump_version();
+        a.refresh_survey_profile();
+        assert_eq!(a.survey_profile.decode_count, count);
+        let accepted_before_failure = a.survey_profile.profile.clone().unwrap();
+        let finite = a.scene.geo_paths[0].points[1].x;
+        a.scene.geo_paths[0].points[1].x = f64::NAN;
+        a.scene.bump_version();
+        a.refresh_survey_profile();
+        assert!(a.status_message.contains("not finite"));
+        assert!(Arc::ptr_eq(
+            &accepted_before_failure,
+            a.survey_profile.profile.as_ref().unwrap()
+        ));
+        a.status_message = "unchanged repaint sentinel".into();
+        a.refresh_survey_profile();
+        assert_eq!(a.status_message, "unchanged repaint sentinel");
+        // Explicit user action still retries a failed revision.
+        assert!(a.compute_survey_profile().is_err());
+        a.scene.geo_paths[0].points[1].x = finite;
         a.scene.bump_version();
         a.refresh_survey_profile();
         assert_eq!(a.survey_profile.decode_count, count);
