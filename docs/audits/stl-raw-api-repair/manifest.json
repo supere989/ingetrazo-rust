@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "base_revision": "4dc386573276eecb181b55f6e98512326afa119e",
+  "runtime_patch": "focused/runtime.patch",
+  "source_captures": 0,
+  "files": [
+    {
+      "path": "app/build.log",
+      "bytes": 27385,
+      "sha256": "8b097169257237baf455d763d99ff1fc5a29a0728f58114bcaf8da04eb7ce36d"
+    },
+    {
+      "path": "app/result.json",
+      "bytes": 716,
+      "sha256": "d622330c5364d71a588fa72716ef1514cc903b2b65f8458bca6e370246028161"
+    },
+    {
+      "path": "app/stl.log",
+      "bytes": 1165,
+      "sha256": "e35ef5ee462e11b7b0db4ae0261d8512b4595c30ec678d2ea4e7234f32136d81"
+    },
+    {
+      "path": "app/stl/checker.log",
+      "bytes": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57"
+    },
+    {
+      "path": "app/stl/comparison.json",
+      "bytes": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1"
+    },
+    {
+      "path": "app/stl/native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "app/stl/native/default-cube-saved.igz",
+      "bytes": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    {
+      "path": "app/stl/native/flat-large-editable-saved.igz",
+      "bytes": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    {
+      "path": "app/stl/native/large-nested-saved.igz",
+      "bytes": 397302,
+      "sha256": "7e9cb1d9b5593d2f443fc18d5eeef22a0bddc51d6c9d4bfe7f200a55a4306313"
+    },
+    {
+      "path": "app/stl/native/large-root-saved.igz",
+      "bytes": 397028,
+      "sha256": "7c9d169db8cffea897b00a167f42bc976f7ebf51df2d087d662bbf9f9dd86f77"
+    },
+    {
+      "path": "app/stl/native/native-stl.json",
+      "bytes": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc"
+    },
+    {
+      "path": "app/stl/native/native-stl.partial.json",
+      "bytes": 3057468,
+      "sha256": "81c9b8f1dd2b98214020a6e3db905c7d661fca82dcda83e928a74659a05b7775"
+    },
+    {
+      "path": "app/stl/native/none-cube-saved.igz",
+      "bytes": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    {
+      "path": "app/stl/native/phase-timings.jsonl",
+      "bytes": 26078,
+      "sha256": "b07ece826316b6867416e496294a649847ec79451a1d20cc3dc564c5ec432f53"
+    },
+    {
+      "path": "app/stl/native/picker/kdialog",
+      "bytes": 82506272,
+      "sha256": "9fc4e2be1d8a5220037c0fc488524856bea2dcea4c66bafa0bd786b530c5232a"
+    },
+    {
+      "path": "app/stl/native/reopens-stl.json",
+      "bytes": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57"
+    },
+    {
+      "path": "app/stl/native/shared-config/settings.json",
+      "bytes": 1247,
+      "sha256": "80705ba8bfa041da199fc3cfc3d7eba6a6693fbf4023ede6973d3a1b87112bb7"
+    },
+    {
+      "path": "app/stl/native/small-nested-saved.igz",
+      "bytes": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    {
+      "path": "app/stl/native/tilted-all-saved.igz",
+      "bytes": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    {
+      "path": "app/stl/native/tilted-principal-saved.igz",
+      "bytes": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    {
+      "path": "app/stl/reader.log",
+      "bytes": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc"
+    },
+    {
+      "path": "app/stl/result.json",
+      "bytes": 1389,
+      "sha256": "50d4ce940c94310b9bc155078e67f09c41f237412567bf8373bf15b3a07b839d"
+    },
+    {
+      "path": "focused/admission.log",
+      "bytes": 14527,
+      "sha256": "b6f5f113b9cbc3cd2a112149f5db8ea03ae1a298733ddb78d73ea7198f761f30"
+    },
+    {
+      "path": "focused/precision.log",
+      "bytes": 14303,
+      "sha256": "548cd22798f85e150b4c73f286f4fc20e89dff91d307f3ae3eb2a0dbb5df1833"
+    },
+    {
+      "path": "focused/published-linux-failure.log",
+      "bytes": 377052,
+      "sha256": "5817a229092d4c11fed2bfab9060e5bda61e76d7a4493a3714b8ec6bc5324a40"
+    },
+    {
+      "path": "focused/roundtrips.log",
+      "bytes": 14309,
+      "sha256": "b3d2f09397e33c2b8bc9a79614d4c642580aa154e9bf74ae271c42d533872967"
+    },
+    {
+      "path": "focused/runtime.patch",
+      "bytes": 6399,
+      "sha256": "cee228e49e98f1e087ba6709601f602053ef90b27c2684ce70df61867c0d1711"
+    },
+    {
+      "path": "focused/runtime.sha256",
+      "bytes": 212,
+      "sha256": "6e1d4a63b3abb4fbd3536384e0198409d208587af51d2d6b3e81eb28de5a9027"
+    }
+  ],
+  "archive": {
+    "bytes": 22099150,
+    "sha256": "7b27c59f253308fc475fabd3de05f1c5f24097284853a226167be3e39e09b99b"
+  }
+}

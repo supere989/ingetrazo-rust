@@ -175,17 +175,25 @@ fn read_bounded(reader: &mut impl Read) -> Result<Vec<u8>, StlError> {
     }
     Ok(bytes)
 }
-fn scaled(values: [f64; 3], scale: f64) -> Result<DVec3, StlError> {
+#[derive(Clone, Copy)]
+enum Materialization {
+    Native,
+    Qt,
+}
+fn scaled(values: [f64; 3], scale: f64, policy: Materialization) -> Result<DVec3, StlError> {
     let values = values.map(|v| v * scale);
-    if values
-        .iter()
-        .any(|v| !v.is_finite() || v.abs() > f32::MAX as f64)
-    {
+    if values.iter().any(|v| {
+        !v.is_finite() || matches!(policy, Materialization::Qt) && v.abs() > f32::MAX as f64
+    }) {
         return Err(invalid("invalid scaled coordinate"));
     }
     Ok(DVec3::from_array(values))
 }
-fn triangle(mesh: &mut ingetrazo_core::mesh::Mesh, points: [DVec3; 3]) -> Result<(), StlError> {
+fn triangle(
+    mesh: &mut ingetrazo_core::mesh::Mesh,
+    points: [DVec3; 3],
+    policy: Materialization,
+) -> Result<(), StlError> {
     let a = points[1] - points[0];
     let b = points[2] - points[0];
     let c = a.cross(b);
@@ -197,7 +205,12 @@ fn triangle(mesh: &mut ingetrazo_core::mesh::Mesh, points: [DVec3; 3]) -> Result
     }
     // Mesh.add_faces_bulk in the original materializes QVector3D after the
     // double-precision scale/degeneracy test.
-    let indices = points.map(|p| mesh.add_vertex(p.as_vec3().as_dvec3()));
+    let indices = points.map(|p| {
+        mesh.add_vertex(match policy {
+            Materialization::Qt => p.as_vec3().as_dvec3(),
+            Materialization::Native => p,
+        })
+    });
     mesh.add_face(indices.to_vec(), vec![])
         .ok_or_else(|| invalid("collapsed materialized triangle"))?;
     Ok(())
@@ -234,13 +247,21 @@ fn parse_binary(bytes: &[u8], scale: f64) -> Result<(ingetrazo_core::mesh::Mesh,
                     ) as f64
                 }),
                 scale,
+                Materialization::Qt,
             )?;
         }
-        triangle(&mut mesh, points)?;
+        triangle(&mut mesh, points, Materialization::Qt)?;
     }
     Ok((mesh, count))
 }
 fn parse_ascii(bytes: &[u8], scale: f64) -> Result<(ingetrazo_core::mesh::Mesh, usize), StlError> {
+    parse_ascii_with_policy(bytes, scale, Materialization::Qt)
+}
+fn parse_ascii_with_policy(
+    bytes: &[u8],
+    scale: f64,
+    policy: Materialization,
+) -> Result<(ingetrazo_core::mesh::Mesh, usize), StlError> {
     let text = String::from_utf8_lossy(bytes);
     let text = text.strip_prefix('\u{feff}').unwrap_or(&text);
     let mut state = 0;
@@ -292,7 +313,7 @@ fn parse_ascii(bytes: &[u8], scale: f64) -> Result<(ingetrazo_core::mesh::Mesh, 
                         .parse()
                         .map_err(|_| invalid("invalid vertex"))?;
                 }
-                points[vertices] = scaled(values, scale)?;
+                points[vertices] = scaled(values, scale, policy)?;
                 vertices += 1;
                 if vertices == 3 {
                     state = 3;
@@ -312,7 +333,7 @@ fn parse_ascii(bytes: &[u8], scale: f64) -> Result<(ingetrazo_core::mesh::Mesh, 
                 if count > MAX_TRIANGLES {
                     return Err(invalid("triangle inventory exceeds native admission"));
                 }
-                triangle(&mut mesh, points)?;
+                triangle(&mut mesh, points, policy)?;
                 state = 0;
             }
             _ => unreachable!(),
@@ -382,18 +403,47 @@ pub fn parse_stl(
 pub fn parse_stl_path(path: &Path, scale: f64, mode: Simplification) -> Result<StlPlan, StlError> {
     parse_stl(&mut File::open(path)?, scale, mode)
 }
+/// Raw facet APIs preserve authored triangles; GUI source cleanup belongs to parse_stl_path.
+fn append_raw_facets(scene: &mut Scene, mesh: ingetrazo_core::mesh::Mesh) -> Result<(), StlError> {
+    for face in &mesh.faces {
+        let indices = face
+            .vertices
+            .iter()
+            .map(|&v| scene.mesh.add_vertex(mesh.vertices[v].position))
+            .collect();
+        scene
+            .mesh
+            .add_face(indices, vec![])
+            .ok_or_else(|| invalid("invalid raw facet"))?;
+    }
+    Ok(())
+}
 pub fn import_stl_binary(reader: &mut impl Read, scene: &mut Scene) -> Result<(), StlError> {
     let bytes = read_bounded(reader)?;
-    let (mesh, count) = parse_binary(&bytes, 1.)?;
-    finish_mesh(mesh, count, Simplification::Principal)?.emit(scene, "STL")
+    let (mesh, _) = parse_binary(&bytes, 1.)?;
+    append_raw_facets(scene, mesh)
 }
 pub fn import_stl_ascii(reader: &mut impl Read, scene: &mut Scene) -> Result<(), StlError> {
     let bytes = read_bounded(reader)?;
-    let (mesh, count) = parse_ascii(&bytes, 1.)?;
-    finish_mesh(mesh, count, Simplification::Principal)?.emit(scene, "STL")
+    let (mesh, _) = parse_ascii_with_policy(&bytes, 1., Materialization::Native)?;
+    append_raw_facets(scene, mesh)
 }
 pub fn import_stl(reader: &mut impl Read, scene: &mut Scene) -> Result<(), StlError> {
-    parse_stl(reader, 1., Simplification::Principal)?.emit(scene, "STL")
+    let bytes = read_bounded(reader)?;
+    let binary = if bytes.len() >= 84 {
+        let count = u32::from_le_bytes(bytes[80..84].try_into().unwrap()) as u64;
+        let expected = 84 + count * 50;
+        bytes.len() as u64 >= expected
+            && (bytes.len() as u64 == expected || !bytes[..5].eq_ignore_ascii_case(b"solid"))
+    } else {
+        false
+    };
+    let (mesh, _) = if binary {
+        parse_binary(&bytes, 1.)?
+    } else {
+        parse_ascii_with_policy(&bytes, 1., Materialization::Native)?
+    };
+    append_raw_facets(scene, mesh)
 }
 
 pub fn save_stl(scene: &Scene, path: &Path) -> Result<(), StlError> {
@@ -402,12 +452,8 @@ pub fn save_stl(scene: &Scene, path: &Path) -> Result<(), StlError> {
 }
 
 pub fn load_stl(path: &Path) -> Result<Scene, StlError> {
-    let mut file = File::open(path)?;
     let mut scene = Scene::new();
-    parse_stl(&mut file, 1., Simplification::Principal)?.emit(
-        &mut scene,
-        path.file_stem().and_then(|s| s.to_str()).unwrap_or("STL"),
-    )?;
+    import_stl(&mut File::open(path)?, &mut scene)?;
     Ok(scene)
 }
 
@@ -443,6 +489,18 @@ mod import_tests {
             assert!(plan.mesh.vertices.iter().all(|v| v.position.is_finite()));
             assert_eq!(plan.read_triangles, 1);
         }
+    }
+    #[test]
+    fn stl_raw_ascii_preserves_authored_precision_and_appends() {
+        let bytes = b"solid t\nfacet normal 0 0 1\nouter loop\nvertex 16777217 0 0\nvertex 16777221 0 0\nvertex 16777217 4 0\nendloop\nendfacet\nendsolid t";
+        let mut scene = Scene::new();
+        scene.mesh.add_vertex(DVec3::Z);
+        import_stl_ascii(&mut &bytes[..], &mut scene).unwrap();
+        assert_eq!(scene.mesh.vertices[0].position, DVec3::Z);
+        assert_eq!(scene.mesh.faces.len(), 1);
+        assert!(scene.mesh.vertices.iter().any(|v| v.position.x == 16777217.));
+        let qt = parse_stl(&mut &bytes[..], 1., Simplification::None).unwrap();
+        assert!(qt.mesh.vertices.iter().all(|v| v.position.x != 16777217.));
     }
     #[test]
     fn stl_malformed_import_preserves_existing_mesh() {
