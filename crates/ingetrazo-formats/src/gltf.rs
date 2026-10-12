@@ -18,9 +18,10 @@ pub enum GltfError {
     Json(#[from] serde_json::Error),
 }
 
+mod figures;
 mod rich;
 fn build_document(scene: &Scene) -> Result<(serde_json::Value, Vec<u8>), GltfError> {
-    rich::build(scene)
+    rich::build(scene, None)
 }
 
 /// Export textual glTF with an embedded buffer, so the document is portable.
@@ -56,7 +57,23 @@ pub fn export_gltf(scene: &Scene, writer: &mut impl Write) -> Result<(), GltfErr
 }
 
 pub fn export_glb(scene: &Scene, writer: &mut impl Write) -> Result<(), GltfError> {
-    let (gltf_json, bin_data) = build_document(scene)?;
+    write_glb(build_document(scene)?, writer)
+}
+
+/// Render export: camera-facing figures travel as independent nodes carrying
+/// the source worker's Z-up feet/yaw extras. Default export remains unchanged.
+pub fn export_glb_with_camera(
+    scene: &Scene,
+    camera: &ingetrazo_core::camera::OrbitCamera,
+    writer: &mut impl Write,
+) -> Result<(), GltfError> {
+    let view = figures::View::from_camera(camera)?;
+    write_glb(rich::build(scene, Some(&view))?, writer)
+}
+fn write_glb(
+    (gltf_json, bin_data): (serde_json::Value, Vec<u8>),
+    writer: &mut impl Write,
+) -> Result<(), GltfError> {
     let mut json_bytes = serde_json::to_vec(&gltf_json)?;
     // Pad JSON chunk to 4 bytes with spaces (0x20)
     while json_bytes.len() % 4 != 0 {

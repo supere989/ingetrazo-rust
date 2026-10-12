@@ -12,6 +12,7 @@ use std::{
 };
 
 struct Primitive {
+    key: String,
     info: Value,
     positions: Vec<[f64; 3]>,
     normals: Vec<[f64; 3]>,
@@ -61,7 +62,7 @@ fn qt_normal(points: &[DVec3]) -> DVec3 {
     if length < 1e-9 {
         DVec3::Z
     } else {
-        (n * (1. / length)).as_dvec3()
+        (n / length).as_dvec3()
     }
 }
 fn uv_axes(normal: DVec3, rotation: f64) -> (Vec3, Vec3) {
@@ -205,6 +206,7 @@ fn add_mesh(
             let i = prims.len();
             lookup.insert(key.clone(), i);
             prims.push(Primitive {
+                key: key.clone(),
                 info: json!({"color":color,"texture":texture,"map":image_name,"opacity":opacity}),
                 positions: Vec::new(),
                 normals: Vec::new(),
@@ -283,20 +285,39 @@ fn add_mesh(
     }
     Ok(())
 }
-fn collect(scene: &Scene) -> Result<Vec<Primitive>, GltfError> {
+struct Part {
+    range: std::ops::Range<usize>,
+    figure: Option<Value>,
+}
+struct Collection {
+    primitives: Vec<Primitive>,
+    parts: Vec<Part>,
+}
+fn has_figure(g: &Group) -> bool {
+    g.billboard || g.children.iter().any(has_figure)
+}
+fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Collection, GltfError> {
     fn group(
         scene: &Scene,
         g: &Group,
         parent: Mat4,
         bulk: bool,
+        skip_figures: bool,
         prims: &mut Vec<Primitive>,
         lookup: &mut HashMap<String, usize>,
     ) -> Result<(), GltfError> {
         let world = parent * Mat4::from_cols_array(&g.transform.to_cols_array().map(|v| v as f32));
-        add_mesh(scene, &g.mesh, world, false, bulk, prims, lookup)?;
+        let own_bulk = if skip_figures {
+            g.mesh.edges.len() * 2 + g.mesh.faces.len() * 4 >= 1024
+        } else {
+            bulk
+        };
+        if !skip_figures || !g.billboard {
+            add_mesh(scene, &g.mesh, world, false, own_bulk, prims, lookup)?;
+        }
         // Source world_mesh merges descendants regardless child visibility.
         for child in &g.children {
-            group(scene, child, world, bulk, prims, lookup)?;
+            group(scene, child, world, bulk, skip_figures, prims, lookup)?;
         }
         Ok(())
     }
@@ -312,18 +333,80 @@ fn collect(scene: &Scene) -> Result<Vec<Primitive>, GltfError> {
         &mut lookup,
     )?;
     for g in &scene.groups {
-        if !g.hidden && !g.billboard && visible(scene, g.layer.as_deref()) {
+        if !g.hidden && (camera.is_some() || !g.billboard) && visible(scene, g.layer.as_deref()) {
             group(
                 scene,
                 g,
                 Mat4::IDENTITY,
                 !g.children.is_empty() || g.mesh.edges.len() * 2 + g.mesh.faces.len() * 4 >= 1024,
+                camera.is_some() && has_figure(g),
                 &mut prims,
                 &mut lookup,
             )?;
         }
     }
-    Ok(prims)
+    let mut parts = vec![Part {
+        range: 0..prims.len(),
+        figure: None,
+    }];
+    if let Some(camera) = camera {
+        fn figures(
+            scene: &Scene,
+            g: &Group,
+            parent: Mat4,
+            parent_placed: bool,
+            camera: &super::figures::View,
+            prims: &mut Vec<Primitive>,
+            parts: &mut Vec<Part>,
+        ) -> Result<(), GltfError> {
+            let world =
+                parent * Mat4::from_cols_array(&g.transform.to_cols_array().map(|v| v as f32));
+            let placed = parent_placed
+                || g.transform != glam::DMat4::IDENTITY
+                || g.component_definition.is_some()
+                || g.native_document.get("xform").is_some_and(Value::is_array);
+            if g.billboard {
+                if let Some(figure) = super::figures::prepare(scene, g, world, placed, camera)? {
+                    let start = prims.len();
+                    let mut lookup = HashMap::new();
+                    add_mesh(
+                        scene,
+                        &figure.mesh,
+                        Mat4::IDENTITY,
+                        false,
+                        false,
+                        prims,
+                        &mut lookup,
+                    )?;
+                    parts.push(Part {
+                        range: start..prims.len(),
+                        figure: Some(figure.extra),
+                    });
+                }
+            }
+            for child in &g.children {
+                figures(scene, child, world, placed, camera, prims, parts)?;
+            }
+            Ok(())
+        }
+        for g in &scene.groups {
+            if !g.hidden && visible(scene, g.layer.as_deref()) {
+                figures(
+                    scene,
+                    g,
+                    Mat4::IDENTITY,
+                    false,
+                    camera,
+                    &mut prims,
+                    &mut parts,
+                )?;
+            }
+        }
+    }
+    Ok(Collection {
+        primitives: prims,
+        parts,
+    })
 }
 fn finish(scene: &Scene, info: &Value) -> &'static str {
     let name = info.get("mat").and_then(Value::as_str);
@@ -492,8 +575,30 @@ fn floats<const N: usize>(rows: &[[f64; N]]) -> Vec<u8> {
         .flat_map(|x| (*x as f32).to_le_bytes())
         .collect()
 }
-pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
-    let primitives = collect(scene)?;
+pub(super) fn build(
+    scene: &Scene,
+    camera: Option<&super::figures::View>,
+) -> Result<(Value, Vec<u8>), GltfError> {
+    let Collection { primitives, parts } = collect(scene, camera)?;
+    let mut infos = Vec::<Value>::new();
+    let mut material_lookup = HashMap::<String, usize>::new();
+    let mut material_ids = Vec::with_capacity(primitives.len());
+    for p in &primitives {
+        let index = if let Some(&i) = material_lookup.get(&p.key) {
+            if infos[i].get("mat").is_none() {
+                if let Some(name) = p.info.get("mat") {
+                    infos[i]["mat"] = name.clone();
+                }
+            }
+            i
+        } else {
+            let i = infos.len();
+            material_lookup.insert(p.key.clone(), i);
+            infos.push(p.info.clone());
+            i
+        };
+        material_ids.push(index);
+    }
     let mut buffer = Buffer {
         data: Vec::new(),
         views: Vec::new(),
@@ -505,13 +610,8 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
     let mut image_cache = HashMap::new();
     let mut extensions = HashSet::new();
     let mut names = HashSet::new();
-    for (i, p) in primitives.iter().enumerate() {
-        let raw = p
-            .info
-            .get("mat")
-            .and_then(Value::as_str)
-            .unwrap_or("")
-            .trim();
+    for (i, info) in infos.iter().enumerate() {
+        let raw = info.get("mat").and_then(Value::as_str).unwrap_or("").trim();
         let mut base = raw
             .chars()
             .map(|c| {
@@ -537,7 +637,7 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
             suffix += 1;
         }
         let mut material = json!({"name":name,"doubleSided":true,"pbrMetallicRoughness":{"metallicFactor":0.,"roughnessFactor":1.}});
-        if let Some(tex) = p.info.get("texture").filter(|v| !v.is_null()) {
+        if let Some(tex) = info.get("texture").filter(|v| !v.is_null()) {
             let source = tex
                 .get("path")
                 .or_else(|| tex.get("embed"))
@@ -545,7 +645,7 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
                 .unwrap_or("");
             let prepared = image_cache.get(source).copied().or_else(|| {
                 let (source, bytes) = source_texture(scene, tex)?;
-                let name = p.info["map"].as_str().unwrap_or("texture.png");
+                let name = info["map"].as_str().unwrap_or("texture.png");
                 let view = buffer.view(&bytes, None);
                 let jpeg = Path::new(name)
                     .extension()
@@ -580,7 +680,7 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
                 material["pbrMetallicRoughness"]["baseColorFactor"] = json!([1, 1, 1, 1]);
             }
         } else {
-            let color = p.info["color"]
+            let color = info["color"]
                 .as_array()
                 .ok_or_else(|| GltfError::Invalid("Non-array face color".into()))?;
             if color.len() != 3 {
@@ -591,7 +691,7 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
             material["pbrMetallicRoughness"]["baseColorFactor"] =
                 json!([color[0], color[1], color[2], 1.]);
         }
-        let finish = finish(scene, &p.info);
+        let finish = finish(scene, info);
         let (rough, metal, trans, ior) = match finish {
             "satin" => (0.45, 0., 0., 1.5),
             "gloss" => (0.12, 0., 0., 1.5),
@@ -612,7 +712,7 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
             material["extensions"]["KHR_materials_ior"] = json!({"ior":ior});
             extensions.insert("KHR_materials_ior");
         }
-        if let Some(op) = p.info["opacity"].as_f64() {
+        if let Some(op) = info["opacity"].as_f64() {
             if material["pbrMetallicRoughness"]
                 .get("baseColorFactor")
                 .is_none()
@@ -626,8 +726,10 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
         materials.push(material);
     }
     let mut output = Vec::new();
-    for (material, p) in primitives.iter().enumerate() {
+    for (index, p) in primitives.iter().enumerate() {
+        let material = material_ids[index];
         if p.positions.is_empty() {
+            output.push(None);
             continue;
         }
         let mut min = [f64::INFINITY; 3];
@@ -665,16 +767,42 @@ pub(super) fn build(scene: &Scene) -> Result<(Value, Vec<u8>), GltfError> {
             .flat_map(|n| n.to_le_bytes())
             .collect::<Vec<_>>();
         let index = buffer.accessor(&indices, 5125, p.indices.len(), "SCALAR", 34963, None);
-        output.push(json!({"attributes":attrs,"indices":index,"material":material,"mode":4}));
+        output.push(Some(
+            json!({"attributes":attrs,"indices":index,"material":material,"mode":4}),
+        ));
     }
     let mut extras = json!({"generator":"IngeTrazo"});
     if let Some(geo) = &scene.geo_datum {
         extras["ingetrazo_geolocation"] = json!({"lat":geo.lat,"lon":geo.lon,"alt":geo.alt});
     }
-    let mut document = json!({"asset":{"version":"2.0","generator":"IngeTrazo","extras":extras},"scene":0,"scenes":[{"nodes":if output.is_empty(){vec![]}else{vec![0]}}]});
-    if !output.is_empty() {
-        document["meshes"] = json!([{"name":"IngeTrazo","primitives":output}]);
-        document["nodes"] = json!([{"mesh":0,"name":"IngeTrazo"}]);
+    let mut meshes = Vec::new();
+    let mut nodes = Vec::new();
+    let mut figure_count = 0;
+    for part in parts {
+        let primitives = output[part.range]
+            .iter()
+            .filter_map(|p| p.clone())
+            .collect::<Vec<_>>();
+        if primitives.is_empty() {
+            continue;
+        }
+        let name = if part.figure.is_some() {
+            figure_count += 1;
+            format!("Figure {figure_count}")
+        } else {
+            "IngeTrazo".into()
+        };
+        let mut node = json!({"mesh":meshes.len(),"name":name});
+        if let Some(extra) = part.figure {
+            node["extras"] = json!({"ingetrazo_faceme":extra});
+        }
+        meshes.push(json!({"name":name,"primitives":primitives}));
+        nodes.push(node);
+    }
+    let mut document = json!({"asset":{"version":"2.0","generator":"IngeTrazo","extras":extras},"scene":0,"scenes":[{"nodes":(0..nodes.len()).collect::<Vec<_>>() }]});
+    if !meshes.is_empty() {
+        document["meshes"] = json!(meshes);
+        document["nodes"] = json!(nodes);
     }
     if !buffer.accessors.is_empty() {
         document["accessors"] = json!(buffer.accessors);

@@ -19,7 +19,7 @@ use ingetrazo_core::render_blender::{
     MIN_KELVIN,
 };
 use ingetrazo_core::scene::Scene;
-use ingetrazo_formats::gltf::export_glb;
+use ingetrazo_formats::gltf::export_glb_with_camera;
 
 use crate::app::IngeTrazoApp;
 
@@ -404,7 +404,7 @@ impl BlenderRenderState {
         let job_path = work_dir.join("job.json");
         let blend = keep_blend.then(|| work_dir.join("render.blend"));
         let mut file = fs::File::create(&glb).map_err(|e| e.to_string())?;
-        export_glb(scene, &mut file).map_err(|e| e.to_string())?;
+        export_glb_with_camera(scene, camera, &mut file).map_err(|e| e.to_string())?;
         drop(file);
         self.model_exports += 1;
         fs::write(&script, BLENDER_RENDER_SCRIPT).map_err(|e| e.to_string())?;
