@@ -74,7 +74,7 @@ fn action(app: &mut IngeTrazoApp, row: &Value, out: &Path, name: &str) -> Result
         "redo" => app.redo_composer_edit(),
         "save" => {
             let path = out.join(format!("{name}-native.igz"));
-            app.save_document(&path);
+            app.save_to_path(&path);
             if !path.is_file() {
                 return Err(format!("Native App save failed: {}", app.status_message).into());
             }

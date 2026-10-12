@@ -77,7 +77,7 @@ def documents(native, root):
         path=root/row['saved'];path.resolve().relative_to(root.resolve())
         if zipfile.is_zipfile(path):
             with zipfile.ZipFile(path)as z:
-                data=json.loads(z.read('scene.json'))
+                data=json.loads(z.read('document.json'))
         else:data=json.loads(path.read_text())
         result[row['name']]=data if 'scene' in data else {'scene':data}
     return result
