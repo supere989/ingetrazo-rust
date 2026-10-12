@@ -209,19 +209,22 @@
       "path": "scripts/reference-dwg-import.py",
       "commit": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
       "sha256": "f0040ce9e1d6e971645dfc74c4007008202b976d387dd2b7f4c191a5662f7d70",
-      "role": "actual accepted capture producer"
+      "role": "actual accepted capture producer",
+      "retained_path": "scripts/reference-dwg-import.py"
     },
     {
       "path": "scripts/reference-dwg-import.py",
       "commit": "5102e8530c66daa29054c2df628aaaf3c2a95324",
       "sha256": "ea0207237c88e5fde7d65166a9a686654a5ad36d7f6e58d2de42f80b55cd8eac",
-      "role": "first failed setup producer"
+      "role": "first failed setup producer",
+      "retained_path": "docs/audits/dwg-import/historical-producers/attempt-1.py"
     },
     {
       "path": "scripts/reference-dwg-import.py",
       "commit": "f6235ba6952b0cf01a7a14ced42eb2588beb53dc",
       "sha256": "b9ae84f45f7df20467ee014c97305c3c8fbf5f2e5334922daca378eac3f35e81",
-      "role": "second failed setup producer"
+      "role": "second failed setup producer",
+      "retained_path": "docs/audits/dwg-import/historical-producers/attempt-2.py"
     }
   ],
   "original_sources": [
