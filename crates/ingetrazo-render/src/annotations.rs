@@ -448,7 +448,7 @@ fn linear_frame(a: Vec3, b: Vec3, axis: Option<&str>) -> Option<(Vec3, Vec3)> {
 pub fn dimension_line_points(input: DimensionInput<'_>) -> (Vec3,Vec3) {
     let(a,b,_)=dimension_geometry(input);(a,b)
 }
-fn dimension_geometry(input: DimensionInput<'_>) -> (Vec3, Vec3, f32) {
+pub fn dimension_geometry(input: DimensionInput<'_>) -> (Vec3, Vec3, f32) {
     let a = input.a;
     let b = input.b;
     let ab = b - a;

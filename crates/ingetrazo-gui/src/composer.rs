@@ -26,6 +26,7 @@ use crate::app::IngeTrazoApp;
 #[path="composer_legend_authoring.rs"] mod legend_authoring;
 #[path="composer_annotation_authoring.rs"] mod annotation_authoring;
 #[path="composer_annotation_canvas.rs"] mod annotation_canvas;
+#[path="composer_frame_annotations.rs"] pub(crate) mod frame_annotations;
 #[path="composer_frame_anchors.rs"] mod frame_anchors;
 
 /// Interactive state for the Sheet Composer view.
@@ -37,6 +38,7 @@ pub struct ComposerState {
     picture_authoring:picture_authoring::State,
     legend_authoring:legend_authoring::State,
     annotation_authoring:annotation_authoring::State,
+    frame_overlays: frame_annotations::State,
     pub pdf_export_error: Option<String>,
     pub text_tool:bool,
     pub(super) tool_switch_rects:[egui::Rect;8],
@@ -67,7 +69,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            frame_anchors:Default::default(),picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),legend_authoring:Default::default(),annotation_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            frame_anchors:Default::default(),frame_overlays:Default::default(),picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),legend_authoring:Default::default(),annotation_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -337,6 +339,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     }
                 }else{None};
                 render_model_projection_with_ink(&app.scene,&painter,fr,frame,&app.style,&app.textures.iter().map(|(k,v)|(k.clone(),v.id())).collect(),ink.as_deref().map(Vec::as_slice),Some(&app.camera));
+
+                if let Err(error)=frame_annotations::paint(app,&painter,sheet_idx,idx,frame,zoom,paper_rect.min){app.status_message=error;}
 
                 // View Frame border
                 if frame.border {

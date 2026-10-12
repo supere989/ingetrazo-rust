@@ -13,6 +13,9 @@ mod qt_arc;
 #[path = "composer_annotations_symbols.rs"]
 mod symbols;
 use symbols::{callout, label, level};
+#[path = "composer_frame_overlay_paint.rs"]
+mod frame_overlay;
+pub(crate) use frame_overlay::draws as frame_overlay_draws;
 const PI: f64 = std::f64::consts::PI;
 pub(crate) struct Draws {
     pub draws: Vec<Draw>,

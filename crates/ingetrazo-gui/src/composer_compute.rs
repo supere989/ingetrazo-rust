@@ -35,6 +35,7 @@ struct Key {
     paper_state: String,
 }
 pub struct PaperDrawing {
+    pub source_bounds: Option<(glam::DVec3, glam::DVec3)>,
     pub segments: Arc<Vec<VectorSegment>>,
     pub section_material: Vec<[glam::DVec3; 3]>,
     pub section_loops: Vec<Vec<glam::DVec3>>,
@@ -67,6 +68,7 @@ impl PaperDrawing {
     }
 }
 pub struct ComposerCompute {
+    pub(crate) frame_ground: crate::composer::frame_annotations::Ground,
     pool: Option<HlrProcessPool>,
     failure: Option<String>,
     cache: VecDeque<(Key, Arc<PaperDrawing>)>,
@@ -77,6 +79,7 @@ pub struct ComposerCompute {
 impl Default for ComposerCompute {
     fn default() -> Self {
         Self {
+            frame_ground: Default::default(),
             pool: None,
             failure: None,
             cache: VecDeque::new(),
@@ -287,6 +290,7 @@ impl ComposerCompute {
                 self.pool.as_mut().unwrap(),
             )
             .map(|segments| PaperDrawing {
+                source_bounds: None,
                 segments: Arc::new(segments),
                 section_material: Vec::new(),
                 section_loops: Vec::new(),
@@ -299,6 +303,7 @@ impl ComposerCompute {
                 self.pool.as_mut().unwrap(),
             )
             .map(|drawing| PaperDrawing {
+                source_bounds: drawing.source_bounds,
                 segments: Arc::new(drawing.segments),
                 section_material: drawing.section_material,
                 section_loops: drawing.section_loops,

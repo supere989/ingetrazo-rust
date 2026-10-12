@@ -705,6 +705,7 @@ pub fn parallel_original_qt_paper_with_pool(scene:&Scene,camera:&OrbitCamera,pro
 /// Completed paper ink and the closed section material computed by the same cold
 /// geometry pass. Callers can cache admission/fill data without rebuilding contours.
 pub struct OriginalQtPaperDrawing {
+    pub source_bounds: Option<(DVec3, DVec3)>,
     pub segments: Vec<VectorSegment>,
     pub section_material: Vec<[DVec3; 3]>,
     pub section_loops: Vec<Vec<DVec3>>,
@@ -722,11 +723,14 @@ pub fn original_qt_paper_drawing_for_view_with_pool(
 ) -> std::io::Result<OriginalQtPaperDrawing> {
     let basis = OriginalQtPaperBasis::from_camera(camera);
     let (surfaces, edges, triangles) = original_qt_paper_geometry(scene, &basis);
+    let source_bounds = triangles.iter().flatten().copied().fold(None, |bounds, p| {
+        Some(bounds.map_or((p, p), |(lo, hi): (DVec3, DVec3)| (lo.min(p), hi.max(p))))
+    });
     let mut section_material = Vec::new();
     let mut section_loops = Vec::new();
     let segments = segments_projected(scene, &basis, profiles, hidden, Some(pool),
         surfaces, edges, triangles, true, Some(&mut section_material), Some(&mut section_loops))?;
-    Ok(OriginalQtPaperDrawing { segments, section_material, section_loops })
+    Ok(OriginalQtPaperDrawing { segments, section_material, section_loops, source_bounds })
 }
 fn segments_impl(scene:&Scene,camera:&OrbitCamera,profiles:bool,hidden:bool,pool:Option<&mut crate::process_hlr::HlrProcessPool>,original_qt:bool)->std::io::Result<Vec<VectorSegment>> {
     let view = crate::paper_scene::PaperSceneView::new(scene, None);
