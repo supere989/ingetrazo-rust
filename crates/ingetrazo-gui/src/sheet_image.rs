@@ -13,16 +13,6 @@ pub struct Plan {
 /// together, before native submission or opening a destination temporary file.
 pub fn unsupported(sheet: &Sheet) -> Vec<String> {
     let mut out = Vec::new();
-    for index in sheet.visible_item_indices() {
-        let item = &sheet.items[index];
-        let kind = match item {
-            SheetItem::Shape(_) | SheetItem::Text(_) | SheetItem::ViewFrame(_) => continue,
-            SheetItem::TitleBlock(_) => "title block",
-            SheetItem::NorthArrow(_) => "north arrow",
-            SheetItem::GraphicScale(_) => "graphic scale",
-        };
-        out.push(format!("{kind}: {}", item.id()));
-    }
     for key in [
         "images",
         "leyendas",
@@ -125,7 +115,22 @@ impl PainterCache {
                         append(part)?;
                     }
                 }
-                _ => unreachable!("unsupported painter admitted"),
+                SheetItem::TitleBlock(_) | SheetItem::NorthArrow(_) | SheetItem::GraphicScale(_) => {
+                    let draws=crate::composer_symbols::raster_draws(sheet,&sheet.items[index],&mut self.fonts,context,density)?;
+                    for mut draw in draws {
+                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(&draw),density)?{append(part)?;}}
+                        else {
+                            // Source graphic cells use QRasterPaintEngine::drawRects, whose fill
+                            // uses the16.16 axis rectangle rasterizer instead of gray path mapping.
+                            if matches!(sheet.items[index],SheetItem::GraphicScale(_))&&draw.fill.is_some()&&crate::sheet_image_paths::axis_rectangle(&draw.path).is_some(){
+                                let mut fill=draw.clone();fill.stroke=None;fill.stroke_options=None;
+                                for part in self.text.physical_rectangle(&fill,density)?{append(part)?;}
+                                draw.fill=None;
+                            }
+                            for part in crate::sheet_image_paths::records(std::slice::from_ref(&draw),density,metrics.pixels())?{append(part)?;}
+                        }
+                    }
+                }
             }
         }
         if sheet.effective_source_border().on {

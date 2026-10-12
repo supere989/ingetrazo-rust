@@ -408,11 +408,15 @@ impl PaperFont {
     /// Render an existing pixel100 glyph at the actual canvas device transform.
     /// Phases are 1/64 device pixel; this does not modify shaping/outline caches.
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic_shear:f64)->Result<RasterGlyph,String>{
-        if !scale.is_finite()||scale<=0.||scale>40.||phase.iter().any(|&p|p>=64)||!italic_shear.is_finite()||italic_shear.abs()>1.{return Err("Canvas glyph transform outside domain".into());}
+        self.rasterize_rotated_glyph(glyph,scale,phase,italic_shear,0.)
+    }
+    pub fn rasterize_rotated_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic_shear:f64,angle:f64)->Result<RasterGlyph,String>{
+        if !scale.is_finite()||scale<=0.||scale>40.||phase.iter().any(|&p|p>=64)||!italic_shear.is_finite()||italic_shear.abs()>1.||!angle.is_finite(){return Err("Canvas glyph transform outside domain".into());}
         unsafe{
             let geometry=self.data.as_ref().geometry.as_ref().ok_or("Canvas glyph requires native font geometry")?;
             let face=geometry.face.raw();if glyph>=(*face).num_glyphs as u32{return Err("Canvas glyph index outside font".into());}
-            let mut matrix=ft::FT_Matrix{xx:(scale*65536.)as _,xy:(scale*italic_shear*65536.)as _,yx:0,yy:(scale*65536.)as _};
+            let (sin,cos)=angle.to_radians().sin_cos();
+            let mut matrix=ft::FT_Matrix{xx:(scale*cos*65536.)as _,xy:(scale*(sin+cos*italic_shear)*65536.)as _,yx:(-scale*sin*65536.)as _,yy:(scale*(cos-sin*italic_shear)*65536.)as _};
             let mut delta=ft::FT_Vector{x:phase[0]as _,y:-(phase[1]as ft::FT_Pos)};
             ft::FT_Set_Transform(face,&mut matrix,&mut delta);let _restore=RestoreFaceTransform(face);
             // Qt 6.12 loadGlyphFor disables hinting for scaled nonrotation glyphs.
@@ -436,6 +440,11 @@ impl PaperFont {
             }
             Ok(RasterGlyph{left:(*slot).bitmap_left,top:(*slot).bitmap_top,width,height,coverage})
         }
+    }
+    pub fn right_bearing_26_6(&self,glyph:u32)->Result<i32,String>{
+        unsafe {let geometry=self.data.as_ref().geometry.as_ref().ok_or("Glyph bearing requires native geometry")?;let face=geometry.face.raw();
+        if glyph>=(*face).num_glyphs as u32||ft::FT_Load_Glyph(face,glyph,geometry.flags|ft::FT_LOAD_NO_BITMAP)!=0||(*face).glyph.is_null(){return Err("Glyph bearing load refused".into());}
+        let metrics=&(*(*face).glyph).metrics;i32::try_from(metrics.horiAdvance-metrics.horiBearingX-metrics.width).map_err(|_|"Glyph bearing outside fixed domain".into())}
     }
     /// Source OpenGL RGB-horizontal A32 glyph coverage. This opt-in path
     /// preserves the existing grayscale renderer and admits the full RGB bytes.

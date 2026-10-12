@@ -421,6 +421,13 @@ impl NativeFont {
         }
         Ok(a.width)
     }
+    pub(crate) fn right_bearing_26_6(&self,id:u32)->Result<i32,String>{
+        let g=u16::try_from(id).map_err(|_|"Native glyph ID invalid")?;if g>=self.count{return Err("Native glyph ID invalid".into());}
+        let rect=unsafe{CTFontGetBoundingRectsForGlyphs(self.owner.0,0,&g,std::ptr::null_mut(),1)};
+        let value=(self.advance(id)?-rect.origin.x-rect.size.width)*64.;
+        if !value.is_finite()||value<i32::MIN as f64||value>i32::MAX as f64{return Err("Native glyph bearing outside fixed domain".into());}
+        Ok(value as i32)
+    }
     /// Source getUnscaledGlyph quantizes at pixel size and again at the native
     /// em size before QFontSubset rounds into its 2048-unit metric domain.
     pub(crate) fn subset_horizontal_metrics(&self, id: u32) -> Result<[f64; 2], String> {
@@ -481,19 +488,23 @@ impl NativeFont {
     pub(crate) fn raster(
         &self, id:u32, scale:f64, phase:[u8;2], shear:f64, bold_offset:f64,
     ) -> Result<crate::paper_text::RasterGlyph,String> {
-        let image = self.raster_coverage(id,scale,phase,shear,bold_offset,false)?;
+        let image = self.raster_coverage(id,scale,phase,shear,bold_offset,false,0.)?;
         Ok(crate::paper_text::RasterGlyph{left:image.left,top:image.top,
             width:image.width,height:image.height,coverage:image.coverage})
     }
     pub(crate) fn raster_lcd(
         &self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,
     )->Result<crate::paper_text::RasterLcdGlyph,String>{
-        self.raster_coverage(id,scale,phase,shear,bold_offset,true)
+        self.raster_coverage(id,scale,phase,shear,bold_offset,true,0.)
+    }
+    pub(crate) fn raster_rotation(&self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,angle:f64)->Result<crate::paper_text::RasterGlyph,String>{
+        let image=self.raster_coverage(id,scale,phase,shear,bold_offset,false,angle)?;
+        Ok(crate::paper_text::RasterGlyph{left:image.left,top:image.top,width:image.width,height:image.height,coverage:image.coverage})
     }
     fn raster_coverage(
-        &self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,lcd:bool,
+        &self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,lcd:bool,angle:f64,
     )->Result<crate::paper_text::RasterLcdGlyph,String>{
-        if !scale.is_finite()
+        if !angle.is_finite() || !scale.is_finite()
             || scale <= 0.
             || scale > 32.
             || phase.iter().any(|p| *p >= 64)
@@ -536,10 +547,18 @@ impl NativeFont {
         }
         // QCoreTextFontEngine alphaMapBoundingBox: QFixed metrics, x-1,width+3,y-1,height+2.
         let fixed = |x: f64| ((x * 64.) as i32) as f64 / 64.;
-        let x = fixed(fixed(rect.origin.x) * scale) - 1.;
-        let y = fixed((-fixed(rect.origin.y) - fixed(rect.size.height)) * scale) - 1.;
-        let w = raster_width(rect.size.width, rect.size.height, shear, scale);
-        let h = fixed(fixed(rect.size.height) * scale) + 2.;
+        let mut x = fixed(fixed(rect.origin.x) * scale) - 1.;
+        let mut y = fixed((-fixed(rect.origin.y) - fixed(rect.size.height)) * scale) - 1.;
+        let mut w = raster_width(rect.size.width, rect.size.height, shear, scale);
+        let mut h = fixed(fixed(rect.size.height) * scale) + 2.;
+        let(sin,cos)=angle.to_radians().sin_cos();
+        if angle!=0.{
+            let mut bounds=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];
+            for xx in [fixed(rect.origin.x),fixed(rect.origin.x+rect.size.width)]{for yy in [-fixed(rect.origin.y),-fixed(rect.origin.y+rect.size.height)]{
+                let xx=xx-yy*shear;let q=[scale*(xx*cos-yy*sin),scale*(xx*sin+yy*cos)];for i in 0..2{bounds[i]=bounds[i].min(q[i]);bounds[i+2]=bounds[i+2].max(q[i]);}
+            }}
+            x=fixed(bounds[0])-1.;y=fixed(bounds[1])-1.;w=fixed(bounds[2]-bounds[0])+3.;h=fixed(bounds[3]-bounds[1])+2.;
+        }
         if [x, y, w, h].iter().any(|v| !v.is_finite() || v.abs() > 1e6) || w < 0. || h < 0. {
             return Err("Native raster bounds refused".into());
         }
@@ -585,10 +604,10 @@ impl NativeFont {
             CGContextSetTextMatrix(
                 ctx,
                 Matrix {
-                    a: scale,
-                    b: 0.,
-                    c: scale * shear,
-                    d: scale,
+                    a: scale*cos,
+                    b: -scale*sin,
+                    c: scale*(sin+cos*shear),
+                    d: scale*(cos-sin*shear),
                     tx: 0.,
                     ty: 0.,
                 },

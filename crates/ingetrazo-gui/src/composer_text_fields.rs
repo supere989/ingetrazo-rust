@@ -8,6 +8,14 @@ fn source_scale(n: f64) -> String {
         return String::new();
     }
     let v = if n < 1. { 1. / n } else { n };
+    let number = source_general(v);
+    if n < 1. {
+        format!("{number}:1")
+    } else {
+        format!("1:{number}")
+    }
+}
+pub(crate) fn source_general(v:f64)->String {
     let number = if v.is_nan() {
         "nan".into()
     } else if v.is_infinite() {
@@ -32,11 +40,7 @@ fn source_scale(n: f64) -> String {
             }
         }
     };
-    if n < 1. {
-        format!("{number}:1")
-    } else {
-        format!("1:{number}")
-    }
+    number
 }
 /// Sample the native local calendar once for a canvas frame, without formatting.
 #[derive(Debug,Clone,Copy,PartialEq,Eq)]

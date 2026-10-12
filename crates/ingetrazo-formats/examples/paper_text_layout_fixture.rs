@@ -119,9 +119,10 @@ fn main() {
             size_mm: [210., 297.],
             media_box_points: Some([595., 842.]),
             origin_mm: [10.08 / (72. / 25.4); 2],
-            draws: vec![Draw {
+            draws: vec![Draw { rotation_deg:0.,
                 origin_mm: [20., 30.],
                 text: Some(TextDraw {
+                        rotation_deg: 0.,
                     font: font.clone(),
                     scale_mm: 14. * 25.4 / 72. / 100. * 0.75,
                     italic: f["italic"].as_bool().unwrap(),

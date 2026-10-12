@@ -293,9 +293,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Unsupported visible painter refuses before publication; hidden does not.
     let mut unsupported = Sheet::new("Refusal", PaperSize::A4, Orientation::Portrait);
     unsupported.items.clear();
-    unsupported
-        .items
-        .push(SheetItem::TitleBlock(Default::default()));
+    unsupported.native_document=serde_json::json!({"leyendas":[{"hidden":false,"title":"Unsupported legend"}]});
     app.scene.sheets = vec![unsupported];
     app.begin_sheet_image_export(0);
     app.choose_sheet_image_path(0, Some(&sentinel), Format::Jpeg);

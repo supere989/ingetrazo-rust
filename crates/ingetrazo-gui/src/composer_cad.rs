@@ -17,12 +17,15 @@ pub fn convex_bevel_outline(points:&[DVec2],radius:f64)->Result<Vec<Vec<DVec2>>,
  let area=points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|a.perp_dot(*b)).sum::<f64>();
  if !convex_outline(points)||!radius.is_finite()||radius<=0.{return Err("Invalid convex bevel stroke".into());}
  let reversed;let points=if area<0.{reversed=points.iter().rev().copied().collect::<Vec<_>>();&reversed[..]}else{points};
- let normals=points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|{let d=(*b-*a).normalize();DVec2::new(d.y,-d.x)*radius}).collect::<Vec<_>>();
+ // QStroker line.normalVector().setLength(radius), then line.translate(normal.dx,dy).
+ // QLineF retains endpoint-rooted cancellation; reverse-side offsets are computed independently.
+ let normal=|a:DVec2,b:DVec2|{let d=b-a;let tip=a+DVec2::new(d.y,-d.x);let d=tip-a;let length=d.x.hypot(d.y);let tip=a+radius*(d/length);tip-a};
+ let normals=points.iter().zip(points.iter().cycle().skip(1)).map(|(a,b)|normal(*a,*b)).collect::<Vec<_>>();
  let mut outer=Vec::with_capacity(points.len()*2);let mut inner=Vec::with_capacity(points.len()*3);
  for i in 0..points.len(){outer.push(points[i]+normals[i]);outer.push(points[(i+1)%points.len()]+normals[i]);}
  // Literal Qt inside-turn outline retains the original join vertex. Its
  // self-overlapping winding area must not be replaced by a healed polygon.
- for i in (0..points.len()).rev(){inner.push(points[(i+1)%points.len()]-normals[i]);inner.push(points[i]-normals[i]);inner.push(points[i]);}
+ for i in (0..points.len()).rev(){let n=normal(points[(i+1)%points.len()],points[i]);inner.push(points[(i+1)%points.len()]+n);inner.push(points[i]+n);inner.push(points[i]);}
  Ok(vec![outer,inner])
 }
 

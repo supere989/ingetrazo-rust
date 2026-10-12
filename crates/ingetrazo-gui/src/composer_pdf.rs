@@ -153,7 +153,7 @@ pub(crate) fn view_draws(
         paths[index].push(PathOp::Move(a));
         paths[index].push(PathOp::Line(b));
     }
-    let mut draws = vec![Draw {
+    let mut draws = vec![Draw { rotation_deg:0.,
         origin_mm: [frame.rect.x, frame.rect.y],
         even_odd: false,
         path: rect(frame.rect.w, frame.rect.h),
@@ -183,7 +183,7 @@ pub(crate) fn view_draws(
             _ => frame.pen_edge_mm,
         };
         let width = if width == 0. { default } else { width }.max(0.05);
-        draws.push(Draw {
+        draws.push(Draw { rotation_deg:0.,
             origin_mm: [frame.rect.x, frame.rect.y],
             even_odd: false,
             path,
@@ -213,7 +213,7 @@ pub(crate) fn view_draws(
             .unwrap_or("#282e36");
         let color =
             ingetrazo_core::sheet_color::parse_sheet_color(color)?.map(|x| f32::from(x) / 255.);
-        draws.push(Draw {
+        draws.push(Draw { rotation_deg:0.,
             origin_mm: [frame.rect.x, frame.rect.y],
             even_odd: false,
             path: rect(frame.rect.w, frame.rect.h),
@@ -280,7 +280,7 @@ fn section_fill(
             &frame.cut_fill_color
         })?
         .map(|v| v as f32 / 255.);
-    let mut draw = Draw {
+    let mut draw = Draw { rotation_deg:0.,
         origin_mm: [frame.rect.x, frame.rect.y],
         even_odd: true,
         path,
@@ -400,7 +400,7 @@ fn view_grid(frame: &ViewFrame, metadata: Option<&serde_json::Value>) -> Result<
             let mut outline = vec![PathOp::Move(points[0])];
             outline.extend(points[1..].iter().copied().map(PathOp::Line));
             outline.push(PathOp::Close);
-            draws.push(Draw {
+            draws.push(Draw { rotation_deg:0.,
                 origin_mm: [frame.rect.x, frame.rect.y],
                 path: outline,
                 stroke: None,

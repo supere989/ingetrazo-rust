@@ -5,7 +5,7 @@ use egui::{Color32,Pos2,Rect,Vec2,TextureHandle};
 use ingetrazo_core::composition::{Sheet,TextItem};
 use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Painter,sheet_pdf::{Draw,PathOp}};
 #[derive(Clone)]struct Layout {text:String,draws:Arc<Vec<Draw>>,bytes:usize,fonts:Vec<(FontKey,usize)>}
-#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],bold:bool,italic:bool,color:[u8;4]}
+#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey {font:FontKey,glyph:u32,scale:u64,phase:[u8;2],bold:bool,italic:bool,rotation:u64,color:[u8;4]}
 #[derive(Clone)]struct GlyphImage {pixels:Arc<Vec<u8>>,left:i32,top:i32,width:usize,height:usize,bytes:usize}
 #[path="composer_text_ordered.rs"] mod ordered;
 #[derive(Clone)]struct Tile{factory_identity:Option<(u8,usize)>,ordered:Option<ordered::Ordered>,draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
@@ -31,27 +31,53 @@ impl CanvasPainter {
    let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);
    let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
    let mut clip=[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2];
-   if let Some(path)=&draw.clip{let mut bounds=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in path{if let PathOp::Move(p)|PathOp::Line(p)=op{let q=[pos[0]+p[0]*density,pos[1]+p[1]*density];bounds[0]=bounds[0].min(q[0]);bounds[1]=bounds[1].min(q[1]);bounds[2]=bounds[2].max(q[0]);bounds[3]=bounds[3].max(q[1]);}else if !matches!(op,PathOp::Close){return Err("Physical text clip is not a source rectangle".into());}}clip=[bounds[0].floor()as i64,bounds[1].floor()as i64,bounds[2].ceil()as i64,bounds[3].ceil()as i64];}
+   let mut masks=Vec::new();
+   for path in [&draw.clip,&draw.clip_intersection].into_iter().flatten(){
+    if let Some(bounds)=crate::sheet_image_paths::axis_rectangle(path){
+     let round=|v:f64|if v>=0.{(v+0.5).floor()as i64}else{(v-0.5).ceil()as i64};
+     let bounds=[round(pos[0]+bounds[0]*density),round(pos[1]+bounds[1]*density),round(pos[0]+bounds[2]*density),round(pos[1]+bounds[3]*density)];
+     clip=[clip[0].max(bounds[0]),clip[1].max(bounds[1]),clip[2].min(bounds[2]),clip[3].min(bounds[3])];continue;
+    }
+    let mask=ingetrazo_render::qt_gray::rasterize_transformed_paths(&crate::sheet_image_paths::paths(path)?,density,pos,250_000,100_000)?;
+    masks.push(mask);
+   }
+
    let Some(text)=&draw.text else{
     let mut rect=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in &draw.path{if let PathOp::Move(p)|PathOp::Line(p)=op{let q=[pos[0]+p[0]*density,pos[1]+p[1]*density];rect[0]=rect[0].min(q[0]);rect[1]=rect[1].min(q[1]);rect[2]=rect[2].max(q[0]);rect[3]=rect[3].max(q[1]);}else if !matches!(op,PathOp::Close){return Err("Physical text decoration lacks exact coverage painter".into());}}
-    if let Some(sample)=rectangle_sample(rect,rgba,clip)?{include_sample(&mut samples,&mut extent,&mut working,sample)?;}continue;
+    if let Some(sample)=rectangle_sample(rect,rgba,clip)?{include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_sample(sample,&masks)?)?;}continue;
    };
-   let scale=text.scale_mm*density;
+   let scale=text.scale_mm*density;let(sin,cos)=text.rotation_deg.to_radians().sin_cos();
+   if text.rotation_deg!=0.&&!text.decorations.is_empty(){return Err("Rotated physical text decorations unavailable".into());}
    for glyph in &text.glyphs{
-    let x=pos[0]+glyph.position_px[0]*scale;let y=pos[1]+glyph.position_px[1]*scale;
+    let x=pos[0]+(glyph.position_px[0]*cos-glyph.position_px[1]*sin)*scale;let y=pos[1]+(glyph.position_px[0]*sin+glyph.position_px[1]*cos)*scale;
     let count=text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?;
     let(fx,fy,phase)=device_position_with_count((x*64.)as i64,(y*64.)as i64,count);
-    let image=self.image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color)?;
+    let image=self.rotated_image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color,text.rotation_deg)?;
     let sample=Sample{x:fx as i64+i64::from(image.left),y:fy as i64-i64::from(image.top),image,clip};
-    include_sample(&mut samples,&mut extent,&mut working,sample)?;
+    include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_sample(sample,&masks)?)?;
    }
-   for decoration in &text.decorations{let[x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[pos[0]+x0*scale,pos[1]+y0*scale-half,pos[0]+x1*scale,pos[1]+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],pos[1]+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working,sample)?;}}
+   for decoration in &text.decorations{let[x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[pos[0]+x0*scale,pos[1]+y0*scale-half,pos[0]+x1*scale,pos[1]+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],pos[1]+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_sample(sample,&masks)?)?;}}
   }
   let factory=crate::composer_backend::Factory::MetalProducer(Default::default());
   let ordered=ordered::Ordered::build(&samples,[0;2],[0.;2],1.,&factory,ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[0.;2]})?;
   Ok(ordered.records())
  }
 
+ fn physical_clip_sample(mut sample:Sample,masks:&[Vec<ingetrazo_render::qt_gray::Span>])->Result<Sample,String>{
+  if masks.is_empty(){return Ok(sample);}
+  let mut pixels=Vec::new();pixels.try_reserve_exact(sample.image.bytes).map_err(|_|"Physical glyph clipping allocation refused")?;pixels.extend_from_slice(&sample.image.pixels);
+  for mask in masks{
+   for y in 0..sample.image.height {let gy=sample.y+y as i64;let start=mask.partition_point(|s|i64::from(s.y)<gy);let end=mask.partition_point(|s|i64::from(s.y)<=gy);let row=&mask[start..end];
+    for x in 0..sample.image.width {let gx=sample.x+x as i64;let i=row.partition_point(|s|i64::from(s.x)+i64::from(s.len)<=gx);let coverage=row.get(i).filter(|s|i64::from(s.x)<=gx&&gx<i64::from(s.x)+i64::from(s.len)).map_or(0,|s|s.coverage);
+     let at=(y*sample.image.width+x)*4;for v in &mut pixels[at..at+4]{let n=u32::from(*v)*u32::from(coverage);*v=((n+(n>>8)+128)>>8)as u8;}
+    }
+   }
+  }
+  sample.image.pixels=Arc::new(pixels);Ok(sample)
+ }
+ pub(crate) fn physical_rectangle(&mut self,draw:&Draw,density:f64)->Result<Vec<(Arc<ingetrazo_render::cad2d::Geometry>,Arc<[ingetrazo_render::cad2d::Batch]>)>,String>{
+  self.physical_records(std::slice::from_ref(draw),density)
+ }
  pub fn stats(&self)->[u64;5]{[self.layouts.len()as u64,self.glyphs.len()as u64,self.glyph_bytes as u64,self.layout_builds,self.raster_builds]}
  pub fn ordered_stats(&self)->[u64;4]{[self.ordered_builds,self.ordered_items as u64,self.ordered_parts as u64,self.ordered_bytes as u64]}
  fn retire_tile(&mut self,id:uuid::Uuid){if let Some(old)=self.tiles.remove(&id){self.tile_bytes-=old.bytes;if let Some(ordered)=old.ordered{self.ordered_items-=1;self.ordered_parts-=ordered.part_count();self.ordered_bytes-=ordered.bytes;}}}
@@ -72,10 +98,11 @@ impl CanvasPainter {
  }
  fn retire_layout(&mut self,id:uuid::Uuid){if let Some(layout)=self.layouts.remove(&id){self.layout_bytes-=layout.bytes;for (key,_)in layout.fonts{if let Some(entry)=self.font_refs.get_mut(&key){entry.0-=1;if entry.0==0{let (_,bytes)=self.font_refs.remove(&key).unwrap();self.font_bytes-=bytes;}}}}}
 
- fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool,color:Color32)->Result<GlyphImage,String>{
-  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,bold,italic,color:color.to_array()};
+ fn image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool,color:Color32)->Result<GlyphImage,String>{self.rotated_image(font,glyph,scale,phase,bold,italic,color,0.)}
+ fn rotated_image(&mut self,font:&CachedFont,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool,color:Color32,angle:f64)->Result<GlyphImage,String>{
+  let key=GlyphKey{font:font.key(),glyph,scale:scale.to_bits(),phase,bold,italic,rotation:angle.to_bits(),color:color.to_array()};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
-  let bitmap=font.rasterize_styled_glyph(glyph,scale,phase,bold,italic)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
+  let bitmap=font.rasterize_rotated_glyph(glyph,scale,phase,bold,italic,angle)?;let bytes=bitmap.coverage.len().checked_mul(4).ok_or("Canvas glyph texture size overflow")?;
   if bytes>16*1024*1024{return Err("Canvas glyph texture budget exceeded".into());}
   self.glyphs.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;self.order.try_reserve(1).map_err(|_|"Canvas glyph cache allocation failed")?;
   let mut pixels=Vec::new();pixels.try_reserve_exact(bytes).map_err(|_|"Canvas glyph coverage allocation failed")?;

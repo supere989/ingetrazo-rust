@@ -34,6 +34,7 @@ pub struct TextDecoration {
 }
 #[derive(Clone, Debug)]
 pub struct TextDraw {
+    pub rotation_deg: f64,
     pub font: std::rc::Rc<crate::paper_font::CachedFont>,
     /// Millimetres per source pixel100 layout unit.
     pub scale_mm: f64,
@@ -44,6 +45,7 @@ pub struct TextDraw {
 }
 #[derive(Clone, Debug)]
 pub struct Draw {
+    pub rotation_deg: f64,
     pub origin_mm: [f64; 2],
     pub text: Option<TextDraw>,
     pub even_odd: bool,
@@ -258,6 +260,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             return Err("PDF draw budget exceeded".into());
         }
         for draw in &page.draws {
+            if !draw.rotation_deg.is_finite()||draw.rotation_deg.abs()>1_000_000.||draw.rotation_deg!=0.&&(draw.flatten_transform||draw.text.is_some()){return Err("Invalid physical path rotation".into());}
             if let Some(text) = &draw.text {
                 if !draw.path.is_empty()
                     || draw.stroke.is_some()
@@ -266,7 +269,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                 {
                     return Err("PDF text requires a separate fill-only text draw".into());
                 }
-                if !text.scale_mm.is_finite()
+                if !text.rotation_deg.is_finite() || text.rotation_deg.abs()>1_000_000. || !text.scale_mm.is_finite()
                     || text.scale_mm <= 0.
                     || text.scale_mm > 10_000.
                     || text.glyphs.len() > crate::paper_text::MAX_GLYPHS
@@ -424,6 +427,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
     }
     for page in pages {
         for draw in &page.draws {
+            if !draw.rotation_deg.is_finite()||draw.rotation_deg.abs()>1_000_000.||draw.rotation_deg!=0.&&(draw.flatten_transform||draw.text.is_some()){return Err("Invalid physical path rotation".into());}
             if let Some(text) = &draw.text {
                 let resource = &fonts[font_indices[&text.font.key()]];
                 let shear = text.font.synthetic_italic_shear(text.italic);
@@ -515,15 +519,12 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
                 }
                 let scale = local_scale * text.scale_mm;
-                writeln!(
-                    content,
-                    "{} 0 0 {} {} {} cm",
-                    number(scale),
-                    number(scale),
-                    number(draw.origin_mm[0] * local_scale),
-                    number(draw.origin_mm[1] * local_scale)
-                )
-                .unwrap();
+                if text.rotation_deg==0. {
+                    writeln!(content,"{} 0 0 {} {} {} cm",number(scale),number(scale),number(draw.origin_mm[0]*local_scale),number(draw.origin_mm[1]*local_scale)).unwrap();
+                }else{
+                    let(sin,cos)=text.rotation_deg.to_radians().sin_cos();
+                    writeln!(content,"{} {} {} {} {} {} cm",number(scale*cos),number(scale*sin),number(-scale*sin),number(scale*cos),number(draw.origin_mm[0]*local_scale),number(draw.origin_mm[1]*local_scale)).unwrap();
+                }
                 let c = draw.fill.unwrap();
                 writeln!(
                     content,
@@ -588,6 +589,7 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             }
             let flatten = draw.flatten_transform && original_qt;
             let transform = flatten.then_some((draw.origin_mm, local_scale));
+            if draw.rotation_deg==0.{
             writeln!(
                 content,
                 "q\n/{} gs\n{} 0 0 {} {} {} cm",
@@ -606,6 +608,10 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                 })
             )
             .unwrap();
+            }else{
+                let(sin,cos)=draw.rotation_deg.to_radians().sin_cos();
+                writeln!(content,"q\n/{} gs\n{} {} {} {} {} {} cm",names[i],number(local_scale*cos),number(local_scale*sin),number(-local_scale*sin),number(local_scale*cos),number(draw.origin_mm[0]*local_scale),number(draw.origin_mm[1]*local_scale)).unwrap();
+            }
             if let Some(clip) = &draw.clip {
                 path(&mut content, clip, original_qt, transform);
                 content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });

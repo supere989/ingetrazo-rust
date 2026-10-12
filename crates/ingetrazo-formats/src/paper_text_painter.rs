@@ -23,6 +23,48 @@ pub struct Painter {
     cache: ParagraphCache,
 }
 impl Painter {
+    // qt_format_text(Qt6.12): line top=ceil(previous bottom+primary leading),
+    // final height remains QFixed ascent+descent; natural width adds negative right bearing.
+    fn box_metrics(&mut self, style:&TextStyle<'_>)->Result<([f64;2],Vec<(f64,f64,f64,f64)>),String>{
+        if !style.size_pt.is_finite()||style.size_pt<=0.||style.size_pt>10000.||!style.width_mm.is_finite()||style.width_mm<=0.||style.width_mm>1_000_000.{return Err("Invalid paper box measurement".into());}
+        if self.resolver.is_none(){self.resolver=Some(Resolver::new()?);}
+        let request=Request{family:style.family.into(),bold:style.bold,italic:style.italic,required_chars:vec![]};
+        let resolver=self.resolver.as_mut().unwrap();let primary=resolver.resolve(request.clone())?.font;
+        let scale=style.size_pt*25.4/72./100.*0.75;
+        let paragraph=self.cache.layout(resolver,&request,style.text,style.width_mm/scale,style.alignment)?;
+        let leading=primary.leading_26_6()as f64/64.;let mut height=-leading;let mut width=0_f64;let mut baselines=Vec::new();
+        for line in &paragraph.lines {
+            height=(height+leading).ceil();let baseline=height+line.line.ascent_26_6 as f64/64.;
+            height+=(line.line.ascent_26_6 as f64+line.line.descent_26_6 as f64)/64.;
+            let bearing=line.line.runs.last().and_then(|r|r.glyphs.last().map(|g|(r,g))).map(|(r,g)|r.font.right_bearing_26_6(g.id)).transpose()?.unwrap_or(0).min(0);
+            width=width.max((line.line.advance_26_6-i64::from(bearing))as f64/64.);
+            baselines.try_reserve(line.line.runs.len()).map_err(|_|"Paper box metrics allocation refused")?;for _ in &line.line.runs{baselines.push((line.baseline_26_6 as f64/64.,baseline,line.x_26_6 as f64/64.,line.line.advance_26_6 as f64/64.));}
+        }
+        if paragraph.lines.is_empty(){height=(primary.ascent_26_6()+primary.descent_26_6())as f64/64.;}
+        Ok(([width*scale,height*scale],baselines))
+    }
+    pub fn measure_box(&mut self,style:&TextStyle<'_>)->Result<[f64;2],String>{self.box_metrics(style).map(|v|v.0)}
+    /// Finite source drawText rectangle; vertical alignment is 0=top,1=center.
+    pub fn draw_box(&mut self,style:&TextStyle<'_>,height:f64,vertical:u8)->Result<Vec<Draw>,String>{
+        if !height.is_finite()||height<=0.||height>1_000_000.||vertical>1{return Err("Invalid paper text rectangle".into());}
+        let(need,baselines)=self.box_metrics(style)?;let offset=if vertical==1{(height-need[1])*0.5}else{0.};
+        let mut draws=self.draw(style)?;
+        if draws.len()!=baselines.len(){return Err("Paper box run inventory mismatch".into());}
+        for(d,(old,new,old_x,advance))in draws.iter_mut().zip(baselines){
+            if let Some(t)=&mut d.text {
+                let align=match style.alignment{Alignment::Left=>0.,Alignment::Center=>(style.width_mm/t.scale_mm-advance)*0.5,Alignment::Right=>style.width_mm/t.scale_mm-advance};
+                let fixed=|v:f64|((v*64.)as i64)as f64/64.;
+                let dx=fixed(style.origin_mm[0]/t.scale_mm+align)-old_x;
+                let dy=fixed(style.origin_mm[1]/t.scale_mm+offset/t.scale_mm)+new-old;
+                for glyph in &mut t.glyphs{glyph.position_px[0]+=dx;glyph.position_px[1]+=dy;}
+                for decoration in &mut t.decorations{decoration.line_px[0]+=dx;decoration.line_px[2]+=dx;decoration.line_px[1]+=dy;decoration.line_px[3]+=dy;}
+            }
+            d.origin_mm=[0.;2];
+            // qt_format_text clips only when measured bounds exceed the rectangle.
+            let[x,y]=style.origin_mm;
+            d.clip=if need[0]>style.width_mm||need[1]>height{Some(vec![PathOp::Move([x,y]),PathOp::Line([x+style.width_mm,y]),PathOp::Line([x+style.width_mm,y+height]),PathOp::Line([x,y+height]),PathOp::Close])}else{None};
+        }Ok(draws)
+    }
     /// Refresh is explicit; existing pages retain their immutable font resources.
     pub fn refresh_fonts(&mut self) -> Result<(), String> {
         if let Some(resolver) = &mut self.resolver {
@@ -95,7 +137,7 @@ impl Painter {
             .map_err(|_| "Paper background draw allocation failed")?;
         draws.insert(
             0,
-            Draw {
+            Draw { rotation_deg:0.,
                 origin_mm: style.origin_mm,
                 path: vec![
                     PathOp::Move([x0, y0]),
@@ -221,9 +263,10 @@ impl Painter {
                 draws
                     .try_reserve(1)
                     .map_err(|_| "Paper text draw allocation failed")?;
-                draws.push(Draw {
+                draws.push(Draw { rotation_deg:0.,
                     origin_mm: style.origin_mm,
                     text: Some(TextDraw {
+                        rotation_deg: 0.,
                         font: run.font.clone(),
                         scale_mm: scale,
                         italic: style.italic,

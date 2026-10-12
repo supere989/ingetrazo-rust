@@ -85,9 +85,10 @@ fn main() {
                         width_px: t,
                     });
                 }
-                draws.push(Draw {
+                draws.push(Draw { rotation_deg:0.,
                     origin_mm: [20., 30.],
                     text: Some(TextDraw {
+                        rotation_deg: 0.,
                         font: run.font.clone(),
                         scale_mm: scale,
                         italic: request.italic,

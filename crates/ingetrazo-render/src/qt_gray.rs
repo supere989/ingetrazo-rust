@@ -103,6 +103,16 @@ pub fn rasterize_paths(paths:&[PathContour],max_cells:usize,max_runs:usize)->Res
  for path in paths{let start=fixed(path.start)?;let mut current=start;let mut current_float=path.start;for segment in &path.segments{match segment{Segment::Line(to)=>{let next=fixed(*to)?;cells.line(current,next)?;current=next;current_float=*to;},Segment::Cubic{control1,control2,to}=>{let next=fixed(*to)?;fixed(*control1)?;fixed(*control2)?;for point in flatten_cubic(current_float,*control1,*control2,*to,0.25){let point=fixed(point)?;cells.line(current,point)?;current=point;}current=next;current_float=*to;}}}cells.line(current,start)?;}
  finish(cells,max_runs)
 }
+/// Literal local cubic flattening before a source affine transform.
+/// Cold physical painter ingress; caller maps these points exactly once.
+pub fn flatten_local_path(path:&PathContour,scale:f64,limit:usize)->Result<Vec<[f64;2]>,String>{
+ if !scale.is_finite()||scale<=0.||limit==0{return Err("Invalid affine path flatten admission".into());}
+ fixed(path.start)?;let mut current=path.start;let mut out=vec![current];
+ for segment in &path.segments{let points=match segment{Segment::Line(to)=>{fixed(*to)?;vec![*to]},Segment::Cubic{control1,control2,to}=>{fixed(*control1)?;fixed(*control2)?;fixed(*to)?;flatten_cubic(current,*control1,*control2,*to,0.25/scale)}};
+  if out.len().checked_add(points.len()).is_none_or(|n|n>limit){return Err("Affine flattened path budget exceeded".into());}
+  out.try_reserve(points.len()).map_err(|_|"Affine path allocation refused")?;current=*points.last().ok_or("Empty affine path flatten")?;out.extend(points);
+ }Ok(out)
+}
 /// Source outline mapper flattens in local coordinates before uniform transform.
 pub fn rasterize_transformed_paths(paths:&[PathContour],scale:f64,translation:[f64;2],max_cells:usize,max_runs:usize)->Result<Vec<Span>,String>{
  if !scale.is_finite()||scale<=0.||translation.iter().any(|x|!x.is_finite()){return Err("Invalid gray path transform".into());}

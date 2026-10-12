@@ -9,7 +9,7 @@ fn main() {
             media_box_points: None,
             device_dpi: None,
             origin_mm: [0., 0.],
-            draws: vec![Draw {
+            draws: vec![Draw { rotation_deg:0.,
                 origin_mm: [0., 0.],
                 even_odd: false,
                 path: vec![PathOp::Move([v, 20.]), PathOp::Line([10., 21.])],

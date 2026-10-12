@@ -7,7 +7,7 @@ use ingetrazo_render::{
     cad2d::{EncodedRgba, PremultipliedRgba8},
     qt_gray::{PathContour, Segment, Span},
 };
-fn paths(ops: &[PathOp]) -> Result<Vec<PathContour>, String> {
+pub(crate) fn paths(ops: &[PathOp]) -> Result<Vec<PathContour>, String> {
     let mut out: Vec<PathContour> = Vec::new();
     for op in ops {
         match op {
@@ -64,12 +64,8 @@ fn clip_bounds(draw: &Draw, density: f64, origin: [f64; 2]) -> Result<Option<[i3
     for ops in [&draw.clip, &draw.clip_intersection].into_iter().flatten() {
         let [PathOp::Move(a), PathOp::Line(b), PathOp::Line(c), PathOp::Line(d), PathOp::Close] =
             ops.as_slice()
-        else {
-            return Err("Physical vector nonrectangle clip remains unavailable".into());
-        };
-        if a[1] != b[1] || b[0] != c[0] || c[1] != d[1] || d[0] != a[0] {
-            return Err("Physical vector clip is not axis aligned".into());
-        }
+        else { continue; };
+        if a[1] != b[1] || b[0] != c[0] || c[1] != d[1] || d[0] != a[0] { continue; }
         let point = |p: [f64; 2]| -> Result<[i32; 2], String> {
             let q = [p[0] * density + origin[0], p[1] * density + origin[1]];
             if q.iter().any(|v| !v.is_finite() || v.abs() > 1_000_000.) {
@@ -118,6 +114,30 @@ fn clip(mut spans: Vec<Span>, bounds: Option<[i32; 4]>) -> Vec<Span> {
         });
     }
     spans
+}
+pub(crate) fn axis_rectangle(ops:&[PathOp])->Option<[f64;4]>{
+ let [PathOp::Move(a),PathOp::Line(b),PathOp::Line(c),PathOp::Line(d),PathOp::Close]=ops else{return None;};
+ (a[1]==b[1]&&b[0]==c[0]&&c[1]==d[1]&&d[0]==a[0]).then_some([a[0].min(c[0]),a[1].min(c[1]),a[0].max(c[0]),a[1].max(c[1])])
+}
+fn masks(draw:&Draw,density:f64,origin:[f64;2])->Result<Vec<Vec<Span>>,String>{
+ let mut masks=Vec::new();
+ for ops in [&draw.clip,&draw.clip_intersection].into_iter().flatten(){
+  if axis_rectangle(ops).is_some(){continue;}
+  masks.push(ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths(ops)?,density,origin,250_000,100_000)?);
+ }Ok(masks)
+}
+fn mask_clip(spans: Vec<Span>, masks:&[Vec<Span>])->Result<Vec<Span>,String>{
+ let mut out=spans;
+ for mask in masks{
+  let mut clipped=Vec::new();
+  for span in &out {
+   let first=mask.partition_point(|s|s.y<span.y);let end=mask.partition_point(|s|s.y<=span.y);let row=&mask[first..end];
+   let first=row.partition_point(|s|i64::from(s.x)+i64::from(s.len)<=i64::from(span.x));
+   let end=row.partition_point(|s|i64::from(s.x)<i64::from(span.x)+i64::from(span.len));
+   let part=ingetrazo_render::qt_gray::intersect_spans(std::slice::from_ref(span),&row[first..end],100_000)?;
+   clipped.try_reserve(part.len()).map_err(|_|"Symbol clip allocation refused")?;clipped.extend(part);if clipped.len()>100_000{return Err("Symbol clip span budget exceeded".into());}
+  }out=clipped;
+ }Ok(out)
 }
 fn stroke_line(a: DVec2, b: DVec2, width: f64, cap: u8) -> Result<Option<PathContour>, String> {
     let d = b - a;
@@ -175,12 +195,13 @@ pub(crate) fn records(
 ) -> Result<Vec<crate::sheet_image::Records>, String> {
     let mut records = Vec::new();
     for draw in draws {
-        if draw.text.is_some() || draw.even_odd {
+        if draw.rotation_deg!=0. || draw.text.is_some() || draw.even_odd {
             return Err("Physical vector text/even-odd painter remains unavailable".into());
         }
         let origin = draw.origin_mm.map(|v| v * density);
         let paths = paths(&draw.path)?;
         let bounds = clip_bounds(draw, density, origin)?;
+        let masks=masks(draw,density,origin)?;
         let color =
             |rgba: [f32; 4]| EncodedRgba::from_bytes(rgba.map(|v| (v * 255.).round() as u8), 1.);
         if let Some(fill) = draw.fill {
@@ -190,6 +211,7 @@ pub(crate) fn records(
                 )?,
                 bounds,
             );
+            let spans = mask_clip(spans,&masks)?;
             if !spans.is_empty() {
                 records.push(crate::composer_border::physical_layers(vec![(
                     spans,
@@ -257,7 +279,8 @@ pub(crate) fn records(
                     spans
                 };
                 let spans = clip(spans, bounds);
-                if !spans.is_empty() {
+                let spans = mask_clip(spans,&masks)?;
+            if !spans.is_empty() {
                     records.push(if let Some(premul) = premul {
                         crate::composer_border::physical_premultiplied_layer(spans, premul)?
                     } else {
@@ -277,6 +300,9 @@ pub(crate) fn records(
                     .last()
                     .is_some_and(|s| matches!(s,Segment::Line(p)if *p==path.start));
                 let mut a = DVec2::from_array(path.start);
+                if closed && dash.is_empty() && path.segments.iter().any(|s|matches!(s,Segment::Cubic{..})) {
+                    outlines.extend(crate::composer_cad::source_curve_stroke(path,width*0.5)?);continue;
+                }
                 if closed && dash.is_empty() {
                     if options.is_some_and(|o| o.join != 2) {
                         return Err("Physical vector closed join remains unavailable".into());
@@ -344,6 +370,7 @@ pub(crate) fn records(
                 )?,
                 bounds,
             );
+            let spans = mask_clip(spans,&masks)?;
             if !spans.is_empty() {
                 records.push(crate::composer_border::physical_layers(vec![(
                     spans,

@@ -15,7 +15,7 @@ fn main(){
   for run in line.runs {
    let mut x=run.x_26_6 as f64/64.;let mut glyphs=vec![];
    for glyph in run.glyphs {glyphs.push(TextGlyph{glyph:glyph.id,position_px:[x+glyph.offset[0]as f64/64.,line.ascent_26_6 as f64/64.+glyph.offset[1]as f64/64.]});x+=glyph.advance[0]as f64/64.;}
-   draws.push(Draw{origin_mm:[20.,30.],text:Some(TextDraw{font:run.font,scale_mm:14.*25.4/72./100.*0.75,italic:request.italic,bold:request.bold,glyphs,decorations:vec![]}),even_odd:true,path:vec![],stroke:None,stroke_options:None,fill:Some([30f32/255.,36f32/255.,44f32/255.,1.]),clip:None,clip_intersection:None,flatten_transform:false});
+   draws.push(Draw{ rotation_deg:0.,origin_mm:[20.,30.],text:Some(TextDraw{font:run.font,scale_mm:14.*25.4/72./100.*0.75,italic:request.italic,bold:request.bold,glyphs,decorations:vec![]}),even_odd:true,path:vec![],stroke:None,stroke_options:None,fill:Some([30f32/255.,36f32/255.,44f32/255.,1.]),clip:None,clip_intersection:None,flatten_transform:false});
   }
   let page=Page{device_dpi:Some(300.),size_mm:[210.,297.],media_box_points:Some([595.,842.]),origin_mm:[10.08/(72./25.4);2],draws};
   sheet_pdf::save_original_qt_paper(&out.join(format!("{name}.native.pdf")),&[page]).unwrap();

@@ -68,9 +68,10 @@ fn main() {
                 }
             })
             .collect();
-        let draw = Draw {
+        let draw = Draw { rotation_deg:0.,
             origin_mm: [20., 30.],
             text: Some(TextDraw {
+                        rotation_deg: 0.,
                 bold: false,
                 font: font.clone(),
                 scale_mm: 14. * 25.4 / 72. / 100. * 0.75,

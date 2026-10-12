@@ -289,6 +289,17 @@ impl CachedFont {
         if bold_offset>0. {return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}
         self.shaper.rasterize_glyph(glyph,scale,phase,self.synthetic_italic_shear(italic))
     }
+    pub fn right_bearing_26_6(&self,glyph:u32)->Result<i32,String>{
+        #[cfg(target_os="macos")]if let Some(n)=&self.native{return n.right_bearing_26_6(glyph);}
+        self.shaper.right_bearing_26_6(glyph)
+    }
+    pub fn rasterize_rotated_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],bold:bool,italic:bool,angle:f64)->Result<crate::paper_text::RasterGlyph,String>{
+        if angle==0.{return self.rasterize_styled_glyph(glyph,scale,phase,bold,italic);}
+        let bold_offset=self.synthetic_bold_offset_px(bold)?;
+        #[cfg(target_os="macos")]if let Some(n)=&self.native{return n.raster_rotation(glyph,scale,phase,if italic&&!self.italic{crate::paper_coretext_glyph::synthetic_italic_shear()}else{0.},bold_offset,angle);}
+        if bold_offset>0.{return Err("Canvas synthetic-bold glyph raster unsupported".into());}
+        self.shaper.rasterize_rotated_glyph(glyph,scale,phase,self.synthetic_italic_shear(italic),angle)
+    }
     pub fn shared_bytes(&self) -> &Arc<[u8]> {
         self.shaper.shared_bytes()
     }
