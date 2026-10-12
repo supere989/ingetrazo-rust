@@ -32,13 +32,13 @@ def observe(w,name,phase,outcome):
  states.append({'case':name,'phase':phase,'scene':shape(w.viewport.scene),'undo':len(w.viewport.history.undo_stack),'redo':len(w.viewport.history.redo_stack),'outcome':outcome,'camera':{'distance':w.viewport.camera.distance}})
 unit_timers=[]
 def choose_unit(cancel=False):
- completed=[False];timer=QTimer();unit_timers.append(timer)
+ completed=[False];timed_out=[False];timer=QTimer();unit_timers.append(timer)
  def accept():
   d=app.activeModalWidget()
   if not isinstance(d,QInputDialog):return
   timer.stop()
   try:
-   if cancel:d.reject()
+   if cancel or timed_out[0]:d.reject()
    else:
     combo=d.findChild(QComboBox);assert combo is not None;combo.setCurrentIndex(2)
     box=d.findChild(QDialogButtonBox);assert box is not None;QTest.mouseClick(box.button(QDialogButtonBox.Ok),Qt.LeftButton)
@@ -47,7 +47,7 @@ def choose_unit(cancel=False):
   finally:completed[0]=True
  def timeout():
   if completed[0]:return
-  timer.stop();callback_errors.append({'type':'FixtureTimeout','message':'unit chooser did not complete','traceback':''})
+  timed_out[0]=True;callback_errors.append({'type':'FixtureTimeout','message':'unit chooser did not complete','traceback':''})
   d=app.activeModalWidget()
   if d is not None:d.reject()
  timer.timeout.connect(accept);timer.start(10);QTimer.singleShot(5000,timeout)
