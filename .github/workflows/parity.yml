@@ -104,6 +104,9 @@ jobs:
         run: |
           python3 -m pip install PySide6_Essentials==6.12.0
           python3 scripts/replay-sheet-images.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker docs/audits/metal-combined-gui-ci/sheet-images --skip-text > docs/audits/metal-combined-gui-ci/sheet-images-replay.log 2>&1
+      - name: Capture and compare original native macOS sheet text once
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && github.ref == 'refs/heads/review/metal-sheet-allocation' }}
+        run: python3 scripts/check-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker docs/audits/metal-combined-gui-ci/platform-sheet-text > docs/audits/metal-combined-gui-ci/platform-sheet-text.log 2>&1
       - name: Native default sky profile cache refusal and ownership
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
