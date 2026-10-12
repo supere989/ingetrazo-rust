@@ -1,0 +1,237 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_revision": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
+  "archive_sha256": "7dc9532c1bf109a3f149528a6f7958d4c42af9d79b2aa53362e05866f0201212",
+  "members": {
+    "COPYING": {
+      "size": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    "capture.json": {
+      "size": 517,
+      "sha256": "565d8dfc11fa27a0f587552a2fb46e1108082df29af0da7e5b53ada758a77796"
+    },
+    "capture.stderr": {
+      "size": 1256,
+      "sha256": "76eab1799482b9ccf733fa1dfe11aa74d290dc87d172e2c6003eb78bce94d881"
+    },
+    "capture.stdout": {
+      "size": 27,
+      "sha256": "8fa215a9e5cc4738c69a6d105bc45da49a8ca565a0e4d70b83a9433d3fb80bac"
+    },
+    "chooser-cancel-input.igz": {
+      "size": 3552,
+      "sha256": "58be51f7106cdd02ba9cca5daaab9c067ff7f0b2e6b2085acdd4a3a5dd36802d"
+    },
+    "completed-cases.json": {
+      "size": 188113,
+      "sha256": "315bafc2f533a54b4e7d57d06abf63477e6b9ccebab68c96ab3d70416f007fe8"
+    },
+    "control-crlf-tail.dxf": {
+      "size": 79,
+      "sha256": "79630db8bb37bd3aedaeba4bcc46a65aa9f88eb1a52e76cf039e981830dee5a9"
+    },
+    "discovery/checkouts/app/vendor/libredwg/bin/dwg2dxf.exe": {
+      "size": 2,
+      "sha256": "9b8db510ef42b8ed54a3712636fda55a4f8cfcd5493e20b74ab00cd4f3979f2d"
+    },
+    "duplicate-seed.dxf": {
+      "size": 138,
+      "sha256": "651ca10a42f0d8f28e35ec0f62a0db367fccd844b322bc2ef133959336098bba"
+    },
+    "entities-2d.dwg": {
+      "size": 24028,
+      "sha256": "20db22c3e8b42d2630dab3ba4cb0bf5de417926861136d4e479a943798dcc753"
+    },
+    "entities-2d.scr": {
+      "size": 411,
+      "sha256": "e6eaaa89ccbf1a27a97afc347a55f7fed3edd11d60d6f2374029c74b5cbad5f2"
+    },
+    "no-output.py": {
+      "size": 74,
+      "sha256": "1ec13cf436ddab8a131226dfecdd220d9f398799a6b62e3d72e1892dd87b5989"
+    },
+    "null.dxf": {
+      "size": 42,
+      "sha256": "5f4894aea5ce36ddf6701fc18994c35ba1e6c423c954773d8f1de66e2486600d"
+    },
+    "original-dwg.json": {
+      "size": 190300,
+      "sha256": "a2e6dc4ac0a464bfb4cda0a8ad77d39c41796a71fcf3bee7b625aa6dc5d725b9"
+    },
+    "original-dwg.partial.json": {
+      "size": 187869,
+      "sha256": "3ec7865ba3ac75984761c6536d8e11a863d784d960c067de0085b03cafc8cae0"
+    },
+    "real-converted.dxf": {
+      "size": 56763,
+      "sha256": "fafc1c07c1d5cc70f97e7a87ef17e241e21a54024853245f80b677bf982e47c8"
+    },
+    "real-nested-input.igz": {
+      "size": 3552,
+      "sha256": "d33e248abc172e9fc25439a8aff9a9dbd4189e4935b49e4906ab3f0451c347ef"
+    },
+    "real-nested-original.igz": {
+      "size": 19284,
+      "sha256": "a92379d194d7b17767904660910f728c1ca9d493a493dfd9d1e889b8444f394b"
+    },
+    "real-root-input.igz": {
+      "size": 3552,
+      "sha256": "4e2cdd4a8ec932e00ae8fccb58436d99ec62342d076c05091a35bfce6b04fa8d"
+    },
+    "real-root-original.igz": {
+      "size": 19012,
+      "sha256": "c81ec8a6c0d1de9b546224ab13769255f45a8cd978054ab237fda08fdf97dc4d"
+    },
+    "timeout.py": {
+      "size": 26,
+      "sha256": "1d81ecf5f07a503c27dc8e59121cca32bed57ade0a64477945ea0b64651968b1"
+    },
+    "unit-cancel-input.igz": {
+      "size": 3552,
+      "sha256": "42973319303cffeb2da5d733d9fd5a7cff911e111d098b45ec421b9df61d410e"
+    },
+    "upstream.json": {
+      "size": 690,
+      "sha256": "b23ad964946e10228f9d4a590bd9bbb4ac0231a1927f1825fc862cfbdf0c15a7"
+    },
+    "warning-output.dxf": {
+      "size": 5,
+      "sha256": "282104a15572bd100f42a57c173bfccd8f49a6191b9f743f2e7104944b878a57"
+    },
+    "warning-output.py": {
+      "size": 131,
+      "sha256": "596d9146e8215c9c38b0dd19a2f7f3aabf510ab9168fa126fefb0514fb3fc7b5"
+    },
+    "failed-attempt-1/COPYING": {
+      "size": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    "failed-attempt-1/entities-2d.dwg": {
+      "size": 24028,
+      "sha256": "20db22c3e8b42d2630dab3ba4cb0bf5de417926861136d4e479a943798dcc753"
+    },
+    "failed-attempt-1/entities-2d.scr": {
+      "size": 411,
+      "sha256": "e6eaaa89ccbf1a27a97afc347a55f7fed3edd11d60d6f2374029c74b5cbad5f2"
+    },
+    "failed-attempt-1/failed-capture.json": {
+      "size": 1228,
+      "sha256": "3826a3697d6a879acd22c329181fece9f6c055a80cfb8423c98bd8218f5b4643"
+    },
+    "failed-attempt-1/real-converted.dxf": {
+      "size": 56763,
+      "sha256": "fafc1c07c1d5cc70f97e7a87ef17e241e21a54024853245f80b677bf982e47c8"
+    },
+    "failed-attempt-1/real-root-input.igz": {
+      "size": 3552,
+      "sha256": "49e199a82ed3508e74bc743bee8506846d37aec78b54b1d331986e7f39481b76"
+    },
+    "failed-attempt-1/upstream.json": {
+      "size": 690,
+      "sha256": "b23ad964946e10228f9d4a590bd9bbb4ac0231a1927f1825fc862cfbdf0c15a7"
+    },
+    "failed-attempt-2/COPYING": {
+      "size": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    "failed-attempt-2/capture.json": {
+      "size": 540,
+      "sha256": "b773a85790b1c215f2e2625b5ca1cee2efeacf86c04b058db41c6d9a6f7173ec"
+    },
+    "failed-attempt-2/capture.stderr": {
+      "size": 409,
+      "sha256": "a01f714485bec030fd5b99bfaafe57a6141d3efe2322713a5035e2a4f5cda644"
+    },
+    "failed-attempt-2/capture.stdout": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "failed-attempt-2/entities-2d.dwg": {
+      "size": 24028,
+      "sha256": "20db22c3e8b42d2630dab3ba4cb0bf5de417926861136d4e479a943798dcc753"
+    },
+    "failed-attempt-2/entities-2d.scr": {
+      "size": 411,
+      "sha256": "e6eaaa89ccbf1a27a97afc347a55f7fed3edd11d60d6f2374029c74b5cbad5f2"
+    },
+    "failed-attempt-2/real-converted.dxf": {
+      "size": 56763,
+      "sha256": "fafc1c07c1d5cc70f97e7a87ef17e241e21a54024853245f80b677bf982e47c8"
+    },
+    "failed-attempt-2/real-root-input.igz": {
+      "size": 3552,
+      "sha256": "f943a4a0af960c9f642993b23f60f8ea7f42fad74c7e1a688748e5c0af194a90"
+    },
+    "failed-attempt-2/real-root-original.igz": {
+      "size": 19012,
+      "sha256": "f0cdd77312f56b605a2ceb0e4fe47ee94b7f69480178272c1fb08e2bc901388e"
+    },
+    "failed-attempt-2/upstream.json": {
+      "size": 690,
+      "sha256": "b23ad964946e10228f9d4a590bd9bbb4ac0231a1927f1825fc862cfbdf0c15a7"
+    }
+  },
+  "sources": [
+    {
+      "path": "scripts/reference-dwg-import.py",
+      "commit": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
+      "sha256": "f0040ce9e1d6e971645dfc74c4007008202b976d387dd2b7f4c191a5662f7d70",
+      "role": "actual accepted capture producer"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "role": "actual borrowed geometry observation and seed"
+    },
+    {
+      "path": "docs/audits/dwg-import/fixture-contract.json",
+      "commit": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
+      "sha256": "593980d2772698c5577fdde87df575cdf0140af28205c76d83694fa4e73a6436",
+      "role": "approved fixture scope"
+    },
+    {
+      "path": "scripts/reference-dwg-import.py",
+      "commit": "5102e8530c66daa29054c2df628aaaf3c2a95324",
+      "sha256": "ea0207237c88e5fde7d65166a9a686654a5ad36d7f6e58d2de42f80b55cd8eac",
+      "role": "first failed setup producer"
+    },
+    {
+      "path": "scripts/reference-dwg-import.py",
+      "commit": "f6235ba6952b0cf01a7a14ced42eb2588beb53dc",
+      "sha256": "b9ae84f45f7df20467ee014c97305c3c8fbf5f2e5334922daca378eac3f35e81",
+      "role": "second failed setup producer"
+    },
+    {
+      "path": "ingetrazo/formats/dwg_bridge.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "1429b1c0cc404489cc3e234cfd2be3394c0a20c0ea78c3896d5a26ddc30be22f",
+      "role": "unchanged actual original product"
+    },
+    {
+      "path": "ingetrazo/formats/dxf_in.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "5a8a1728536de1936af2db8bdcc0c146db3a320f5cb256a3288a903b74f718a9",
+      "role": "unchanged actual original product"
+    },
+    {
+      "path": "ingetrazo/views/main_window.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "role": "unchanged actual original product"
+    }
+  ],
+  "cases": 4,
+  "states": 12,
+  "repairs": 3,
+  "discovery_controls": 6,
+  "converter_controls": 3,
+  "source_capture_invocations": 3,
+  "source_callback_errors": 0,
+  "converter": {
+    "path": "ingetrazo/vendor/libredwg/bin/dwg2dxf",
+    "sha256": "90bbecbffdca0673538b30a9cca0492931d5ec640ccd3f06e525059b1a4a64b7"
+  },
+  "scope": "Four actual original MainWindow workflows; controlled chooser provider and actual Qt unit UI, no desktop/GPU claim. First two failed setups retained. First attempt stdout/stderr were tool-returned and not saved as exact raw logs; no success inferred. No other DWG version claim."
+}
