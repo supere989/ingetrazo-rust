@@ -29,14 +29,19 @@ impl Output{
  }
 }
 /// Clip is half-open physical pixels. No pixel image or per-pixel interior mesh.
-pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{rasterize_with_cap(a,b,pen_width,clip,max_work,max_runs,true)}
+pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{rasterize_with_cap(a,b,pen_width,clip,max_work,max_runs,true,None)}
 /// Literal QRasterizer flat-cap branch, including its thick source-point segment.
-pub fn rasterize_flat(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{rasterize_with_cap(a,b,pen_width,clip,max_work,max_runs,false)}
-fn rasterize_with_cap(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize,square_cap:bool)->Result<Vec<Span>,String>{
+pub fn rasterize_flat(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{rasterize_with_cap(a,b,pen_width,clip,max_work,max_runs,false,None)}
+/// Original QRasterizer rectangle-fill call passes height/width directly.
+pub fn rasterize_rect_fill(a:[f64;2],b:[f64;2],ratio:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{
+ if !ratio.is_finite()||ratio<=0.{return Err("Rectangle fill ratio admission exceeded".into());}
+ rasterize_with_cap(a,b,ratio*(b[0]-a[0]).hypot(b[1]-a[1]),clip,max_work,max_runs,false,Some(ratio))
+}
+fn rasterize_with_cap(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize,square_cap:bool,source_ratio:Option<f64>)->Result<Vec<Span>,String>{
  if a.into_iter().chain(b).chain([pen_width]).any(|v|!v.is_finite()||v.abs()>1_000_000.)||clip[0]>clip[2]||clip[1]>clip[3]{return Err("Line raster coordinate admission exceeded".into());}
  let mut out=Output{spans:Vec::new(),limit:max_runs,work:0,max_work};
  if a==b||pen_width<=0.||clip[0]==clip[2]||clip[1]==clip[3]{return Ok(out.spans);}
- let dx=b[0]-a[0];let dy=b[1]-a[1];let length=dx.hypot(dy);let mut width=pen_width/length;
+ let dx=b[0]-a[0];let dy=b[1]-a[1];let length=dx.hypot(dy);let mut width=source_ratio.unwrap_or(pen_width/length);
  let mut pa=if square_cap{[a[0]-0.5*width*dx,a[1]-0.5*width*dy]}else{a};let mut pb=if square_cap{[b[0]+0.5*width*dx,b[1]+0.5*width*dy]}else{b};
  if !width.is_finite()||pa.into_iter().chain(pb).any(|v|!v.is_finite()){return Err("Line derived coordinate overflow".into());}
  let offs=[dy.abs()*width*0.5,dx.abs()*width*0.5];// QRectF(point-pair) stores extent, then right()/bottom() reconstruct origin+extent.

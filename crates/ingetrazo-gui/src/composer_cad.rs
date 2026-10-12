@@ -47,6 +47,7 @@ fn build_density(ctx:&egui::Context,shape:&SheetShape,density:f64,phase:DVec2,ca
  let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();let mut ordered_draws=Vec::new();let mut all_span_paths=true;let mut source_spans=Vec::new();
  for (command_index,(command,(stroke_color,fill_color))) in commands.into_iter().zip(palette).enumerate(){
   let closed_curve=source_closed_curve(&command.path);
+  let source_rect=match &command.path{ShapePath::RoundedRect{size,radius}if *radius==0.=>Some(*size),_=>None};
   let straight_outline=match &command.path {
    ShapePath::RoundedRect{size,radius} if *radius==0.=>Some(vec![DVec2::ZERO,DVec2::new(size.x,0.),*size,DVec2::new(0.,size.y)]),
    ShapePath::Polygon(points) if convex_outline(points)=>Some(points.clone()),
@@ -80,7 +81,15 @@ fn build_density(ctx:&egui::Context,shape:&SheetShape,density:f64,phase:DVec2,ca
    let thin=!fill&&command.stroke.as_ref().is_some_and(|(_,w)|*w*density<=1.);
    if thin||eligible_outline.is_some()||(closed_curve.is_some()&&(fill||width>0.))||(!fill&&width>0.&&exact_line.is_some()) {
     let radius=command.stroke.as_ref().map(|(_,w)|*w).unwrap_or(0.)/2.;
-    let spans=if thin{
+    let spans=if fill&&source_rect.is_some(){
+     // Qt6.12 QRasterPaintEngine RectangleHint/tx_noshear fill uses
+     // QRasterizer::rasterizeLine, distinct from gray-path 26.6 coverage.
+     let size=source_rect.unwrap();let y=size.y*0.5;
+     let a=[phase.x,y*density+phase.y];let b=[size.x*density+phase.x,y*density+phase.y];
+     let bounds=[phase.x.floor(),phase.y.floor(),(size.x*density+phase.x).ceil(),(size.y*density+phase.y).ceil()];
+     if bounds.iter().any(|v|!v.is_finite()||*v<f64::from(i32::MIN)||*v>f64::from(i32::MAX)){return Err("Rectangle raster bounds exceeded".into());}
+     ingetrazo_render::qt_line::rasterize_rect_fill(a,b,size.y/size.x,bounds.map(|v|v as i32),250_000,100_000)?
+    }else if thin{
      use ingetrazo_render::qt_gray::{PathContour,Segment};let mut path=if let Some(path)=&closed_curve{path.clone()}else if let Some((a,b))=exact_line{PathContour{start:[a.x,a.y],segments:vec![Segment::Line([b.x,b.y])]}}else if let Some(points)=&straight_outline{let mut segments=points.iter().skip(1).map(|p|Segment::Line([p.x,p.y])).collect::<Vec<_>>();segments.push(Segment::Line([points[0].x,points[0].y]));PathContour{start:[points[0].x,points[0].y],segments}}else{return Err("Cosmetic unsupported authored path".into());};
      let transform=|p:[f64;2]|[p[0]*density+phase.x,p[1]*density+phase.y];path.start=transform(path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>*to=transform(*to),Segment::Cubic{control1,control2,to}=>{*control1=transform(*control1);*control2=transform(*control2);*to=transform(*to);}}}
      let spans=ingetrazo_render::qt_cosmetic::rasterize_path(&path,closed,command.stroke.as_ref().unwrap().1*density,100_000)?;
