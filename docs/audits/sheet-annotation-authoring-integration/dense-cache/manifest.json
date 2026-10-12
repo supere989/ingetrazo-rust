@@ -1,0 +1,32 @@
+{
+  "revision": "3059a232eba368cc16f52de0beb0ad4276e3f8a4",
+  "result": "pass",
+  "tests": 2,
+  "seconds": 6.585379466996528,
+  "members": {
+    "result.json": {
+      "bytes": 259,
+      "sha256": "54fa936d67dc7998c45830d8f4b0bcbc03a385b81aa3dee21e081b3fa3edd824"
+    },
+    "test.log": {
+      "bytes": 21893,
+      "sha256": "3dbfcfdd958fcf675e09b55eadadcdeb90104bb264ffb9a1d463eba4038f9f4d"
+    }
+  },
+  "git_bindings": [
+    {
+      "commit": "3059a232eba368cc16f52de0beb0ad4276e3f8a4",
+      "path": "crates/ingetrazo-gui/src/composer_annotation_authoring.rs",
+      "sha256": "66b58a8c9d0ecf69d0255463bef3b52e82b265318de429e4eca29a779c3a8659"
+    },
+    {
+      "commit": "3059a232eba368cc16f52de0beb0ad4276e3f8a4",
+      "path": "crates/ingetrazo-gui/src/composer_annotation_canvas.rs",
+      "sha256": "f82cf9073fb3c27083ddcce5ebd78fd38fb2c5b9d9535a8d2c16edb030b05043"
+    }
+  ],
+  "retained_limit_per_cache_bytes": 67108864,
+  "candidate_limit_per_cache_bytes": 33554432,
+  "entry_limit_per_cache": 10000,
+  "scope": "256 actual canvas line owners across three frames with unchanged build/handle/update/byte counts; 256 layout owners using actual same-font Draws with unique font accounting. Synthetic declared payload controls test ledger eviction/refusal, not peak memory or GPU performance. Existing r7 behavioral checkpoint reused; cache-only changes do not alter document or gesture semantics."
+}

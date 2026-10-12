@@ -1,0 +1,16 @@
+{
+  "revision": "3059a232eba368cc16f52de0beb0ad4276e3f8a4",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "-p",
+    "ingetrazo-gui",
+    "--lib",
+    "dense_",
+    "--",
+    "--nocapture"
+  ],
+  "seconds": 6.585379466996528,
+  "returncode": 0
+}
