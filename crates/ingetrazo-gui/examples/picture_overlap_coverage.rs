@@ -1,4 +1,4 @@
-//! One actual chamfer export: immutable prepared spans and actual prefix GPU paint.
+//! One actual overlap shape export: immutable spans and actual prefix GPU paint.
 #[path = "sheet_symbols_workflows.rs"]
 mod symbols;
 use ingetrazo_formats::sheet_image::Format;

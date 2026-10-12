@@ -21,6 +21,7 @@ with zipfile.ZipFile(archive)as z:
  for name,entry in m['members'].items():
   assert not Path(name).is_absolute() and '..' not in Path(name).parts
   data=z.read(name);assert len(data)==entry['size'] and hashlib.sha256(data).hexdigest()==entry['sha256'];p=out/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+os.chdir(out) # Original image cache resolves authored relative asset paths literally.
 host=QMainWindow();host.viewport=Viewport();host.setCentralWidget(host.viewport);igz.load_into(host.viewport.scene,out/'picture-overlap.igz');window=ComposerWindow(host)
 errors=[]
 def error(t,e,tb):
