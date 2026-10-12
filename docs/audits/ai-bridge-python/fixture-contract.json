@@ -1,0 +1,36 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual loopback bridge run_python through existing UI-owned atomic engineering transaction; unsupported full Scene Python surfaces remain explicit refusals",
+  "authorization": "engineering-python feature plus explicit default-off enable; no added token protocol",
+  "receipt": {
+    "stdout": "actual captured string",
+    "stderr": "actual captured string/traceback",
+    "error": "actual Python error string or null",
+    "changed": "literal bool after accepted native publication"
+  },
+  "cases": [
+    "fragmented-and-ordered-requests",
+    "stdout-stderr-eval-persistent-scope",
+    "geometry-history",
+    "noop-preserves-redo",
+    "mutation-error-rollback",
+    "syntax-type-dispatch-errors",
+    "disabled-and-modal-refusals"
+  ],
+  "requirements": [
+    "one existing Controller journal and App publication",
+    "no console-log parsing",
+    "restore sys streams on success/error/refusal/unwind",
+    "same UI thread dispatch",
+    "bounded transcript refusal rather than truncation",
+    "no source capture before reviewed producer",
+    "no duplicated Undo snapshot or publication",
+    "keep core publication admission/history synchronization intact"
+  ],
+  "not_claimed": [
+    "screenshot implementation",
+    "full arbitrary Python/Scene API coverage",
+    "remote network authorization",
+    "external runtime process"
+  ]
+}

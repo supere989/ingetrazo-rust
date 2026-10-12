@@ -8,6 +8,7 @@ use ingetrazo_ai_interpreter_proof::{
 #[derive(Default)]
 pub(crate) struct Engine {
     controller: Option<Controller>,
+    receipt: Option<ingetrazo_ai_interpreter_proof::vm_mesh::ExecutionReceipt>,
     revision: Option<u64>,
     session: Option<uuid::Uuid>,
     command_depth: Option<usize>,
@@ -41,8 +42,15 @@ impl Engine {
         }
         let controller = self.controller.as_mut().unwrap();
         let before = controller.native_mesh_revision()?;
-        let changed = match controller.execute(code) {
-            Ok(changed) => changed,
+        self.receipt = None;
+        let changed = match controller.execute_receipt(code) {
+            Ok(receipt) => {
+                let changed = receipt.changed;
+                let execution_error = receipt.error.is_some();
+                self.receipt = Some(receipt);
+                if execution_error { return Ok((false, None, None)); }
+                changed
+            },
             Err(error) => {
                 self.controller.take();
                 self.revision = None;
@@ -303,10 +311,15 @@ impl crate::IngeTrazoApp {
         }
     }
     pub(crate) fn run_engineering_python(&mut self, code: &str) {
+        let _ = self.execute_engineering_python(code);
+    }
+    pub(crate) fn execute_engineering_python(&mut self, code: &str)
+        -> Result<ingetrazo_ai_interpreter_proof::vm_mesh::ExecutionReceipt, String>
+    {
         if self.undo_stack.try_reserve(1).is_err() {
             self.console_logs
                 .push("Engineering Python refused before execution: history capacity".into());
-            return;
+            return Err("Engineering Python history capacity refused".into());
         }
         match self
             .engineering_python
@@ -333,7 +346,7 @@ impl crate::IngeTrazoApp {
                                 "Group shares publication refused; interpreter scope retired"
                                     .into();
                             self.console_logs.push(self.status_message.clone());
-                            return;
+                            return Err(self.status_message.clone());
                         }
                     }
                     // One existing application Undo snapshot, including group membership.
@@ -356,7 +369,7 @@ impl crate::IngeTrazoApp {
                                 "Engineering Python refused: {}",
                                 self.status_message
                             ));
-                            return;
+                            return Err(self.status_message.clone());
                         }
                     };
                     if let Some(prepared) = prepared {
@@ -392,11 +405,17 @@ impl crate::IngeTrazoApp {
                     }
                     .into(),
                 );
+                let mut receipt = self.engineering_python.receipt.take().unwrap_or_default();
+                receipt.changed = published && changed;
+                if !receipt.stdout.is_empty() { self.console_logs.push(receipt.stdout.clone()); }
+                if !receipt.stderr.is_empty() { self.console_logs.push(receipt.stderr.clone()); }
+                Ok(receipt)
             }
             Err(error) => {
                 self.status_message = error.clone();
                 self.console_logs
                     .push(format!("Engineering Python refused: {error}"));
+                Err(error)
             }
         }
     }

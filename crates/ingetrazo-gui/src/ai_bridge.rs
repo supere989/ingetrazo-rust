@@ -189,6 +189,28 @@ impl IngeTrazoApp {
             }
         }
     }
+    fn ai_bridge_run_python(&mut self, args: Option<&Value>) -> Result<Value, String> {
+        let code = match args.filter(|v| truth(v)) {
+            None => "",
+            Some(Value::Object(args)) => {
+                if args.keys().any(|k| k != "code") { return Err("TypeError: run_python accepts only code".into()); }
+                match args.get("code") { None => "", Some(Value::String(code)) => code, _ => return Err("TypeError: code must be a string".into()) }
+            }
+            Some(_) => return Err("TypeError: args must be an object".into()),
+        };
+        #[cfg(feature="engineering-python")]
+        {
+            if !self.engineering_python_enabled { return Err("Native engineering Python is disabled; explicit enable required".into()); }
+            if self.navigation_suspended() || self.scene.active_sheet_index.is_some()
+                || self.active_tool.tool_type() != ingetrazo_tools::base::ToolType::Select
+                || self.navigation.mode.is_some()
+            { return Err("Bridge Python while a modal, composer, navigation or transform tool is active is not supported".into()); }
+            let receipt = self.execute_engineering_python(code)?;
+            Ok(json!({"stdout":receipt.stdout,"stderr":receipt.stderr,"error":receipt.error,"changed":receipt.changed}))
+        }
+        #[cfg(not(feature="engineering-python"))]
+        { let _ = code; Err("Native engineering Python support is not compiled".into()) }
+    }
     pub fn ai_bridge_request(&mut self, request: &Value) -> Value {
         let id = request.get("id").cloned().unwrap_or(Value::Null);
         let tool = request["tool"].as_str().unwrap_or("");
@@ -201,7 +223,7 @@ impl IngeTrazoApp {
         }
         let result=match tool{
    "query_model"=>Ok(self.ai_query_model()),
-   "run_python"=>Err("Native Python interpreter and complete atomic mutation journal are not implemented".to_owned()),
+   "run_python"=>self.ai_bridge_run_python(request.get("args")),
    "screenshot"=>Err("Native captured-image transport is not implemented".to_owned()),
    "undo"|"redo"=>{
     if self.scene.active_sheet_index.is_some()||self.section_name_prompt.is_some()||self.active_tool.tool_type()!=ingetrazo_tools::base::ToolType::Select||self.navigation.mode.is_some(){Err("Bridge history while a modal, composer, navigation or transform tool is active is not yet supported".to_owned())}

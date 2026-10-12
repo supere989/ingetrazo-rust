@@ -13,6 +13,7 @@ mod graph;
 use graph::GraphState;
 #[path = "identity_registry.rs"]
 pub mod identity_registry;
+pub use crate::session::ExecutionReceipt;
 // Drop removed arbitrary VM references only after releasing the membership lock.
 fn discard_tail(list: &rustpython_vm::builtins::PyListRef, keep: usize) {
     loop {
@@ -2306,6 +2307,8 @@ impl RootRestore<'_> {
 }
 
 pub struct Controller {
+    last_execution: Option<session::ExecutionReceipt>,
+    execution_rolled_back: bool,
     history_enabled: bool,
     scene: Option<PyRef<scene::console_scene::Scene>>,
     undo: Vec<HistoryCommand>,
@@ -2329,17 +2332,21 @@ impl Controller {
         let meshes = editable_mesh::module_def(&builder.ctx);
         let scenes = scene::console_scene::module_def(&builder.ctx);
         let recipe_math = recipes::_recipe_math::module_def(&builder.ctx);
+        let transcript = session::transcript::module_def(&builder.ctx);
         let interpreter = builder
             .add_native_module(vectors)
             .add_native_module(meshes)
             .add_native_module(scenes)
             .add_native_module(recipe_math)
+            .add_native_module(transcript)
             .interpreter();
         let interpreter = std::rc::Rc::new(interpreter);
         let vertex_runtime = identity_registry::Runtime::new(interpreter.clone());
         let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Edge,Face\nfrom console_scene import Group",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
         let budget = OwnerBudget::new(None);
         let mut controller = Self {
+            last_execution: None,
+            execution_rolled_back: false,
             undo_slots: budget.reserve(Kind::History, 0).unwrap(),
             redo_slots: budget.reserve(Kind::History, 0).unwrap(),
             history_enabled: false,
@@ -2415,7 +2422,18 @@ impl Controller {
                 .set(true);
         });
     }
+    pub fn execute_receipt(&mut self, source: &str) -> Result<session::ExecutionReceipt, String> {
+        let result = self.execute(source);
+        let mut receipt = self.last_execution.take().unwrap_or_default();
+        match result {
+            Ok(changed) => { receipt.changed = changed; Ok(receipt) }
+            Err(_) if self.execution_rolled_back && receipt.error.is_some() => Ok(receipt),
+            Err(error) => Err(error),
+        }
+    }
     pub fn execute(&mut self, source: &str) -> Result<bool, String> {
+        self.last_execution = None;
+        self.execution_rolled_back = false;
         if self.tainted || STAGED.with(|s| s.borrow().is_some()) {
             return Err("VM transaction admission refused".into());
         }
@@ -2438,7 +2456,11 @@ impl Controller {
                 Err(_) => None,
             };
             let group_before = self.scene.as_ref().map(|scene| scene::members(scene, &self.budget)).transpose()?;
-            let executed = session::execute(vm, &self.scope, source);
+            let captured = session::execute_captured(vm, &self.scope, source);
+            let executed = match captured {
+                Ok((outcome, receipt)) => { self.last_execution = Some(receipt); outcome }
+                Err(error) => { vm.host_budget_abort(); Err(vm.new_runtime_error(error)) }
+            };
             if self.panic_after_execution {
                 panic!("Engineering unwind after VM mutation");
             }
@@ -2450,8 +2472,9 @@ impl Controller {
             let mut history_changed = false;
             let mut history_append = false;
             let mut history_packed_edges = false;
+            let clean_python_error = executed.is_err() && !vm.host_budget_poisoned() && !stage.failed && self.last_execution.as_ref().is_some_and(|r| r.error.is_some());
             let result = if let Err(error) = executed {
-                vm.print_exception(&error);
+                let _ = error;
                 vm.host_budget_abort();
                 stage.rollback();
                 Err("Python execution refused".into())
@@ -2709,6 +2732,8 @@ impl Controller {
             } else {
                 result
             };
+            self.execution_rolled_back = result.is_err()
+                && clean_python_error;
             vm.host_budget_reset_after_discard();
             result
         });
