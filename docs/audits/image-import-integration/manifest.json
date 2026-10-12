@@ -1,0 +1,1103 @@
+{
+  "schema": 1,
+  "runtime_revision": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "a1311d61c3303ac55783634002cf904b053bcfc197a19f4acf1343356a59f658",
+  "members": {
+    "r1/build.log": {
+      "sha256": "e7dec66cc174b1a1db13a9bf51d37932acd9504692d7b7ada66823e808db5c3c",
+      "size": 28436,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r1/build.log"
+    },
+    "r1/result.json": {
+      "sha256": "cb1f2f2284fdf68fa65a26142ec5e1e22b6902ce11db07030698953b7681c210",
+      "size": 400,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r1/result.json"
+    },
+    "r2/build.log": {
+      "sha256": "53816ba916367028ddbf221b93138bff413bf71110d6465dd3bf66efae1aa16f",
+      "size": 27815,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/build.log"
+    },
+    "r2/image/native/assets/base.jpg.rgba": {
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/assets/base.jpg.rgba"
+    },
+    "r2/image/native/assets/scan.bmp.rgba": {
+      "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d",
+      "size": 1152,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/assets/scan.bmp.rgba"
+    },
+    "r2/image/native/assets/scan.png.rgba": {
+      "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879",
+      "size": 1152,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/assets/scan.png.rgba"
+    },
+    "r2/image/native/assets/scan.webp.rgba": {
+      "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d",
+      "size": 1152,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/assets/scan.webp.rgba"
+    },
+    "r2/image/native/assets/scan16.tif.rgba": {
+      "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0",
+      "size": 1152,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/assets/scan16.tif.rgba"
+    },
+    "r2/image/native/native-image-import.partial.json": {
+      "sha256": "5b61c9607c81419c9ee520d79f80a742a600b86859a01e98df6843e11789fcc2",
+      "size": 94673,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/native-image-import.partial.json"
+    },
+    "r2/image/native/picker-invocations.log": {
+      "sha256": "e839d1ce53a8c781fbe6c995d4c65235df4fc8d87ca9329ecf9b5fc00c10576c",
+      "size": 230,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/picker-invocations.log"
+    },
+    "r2/image/native/png-drag-transparency-saved.igz": {
+      "sha256": "5c5f307662f9a4417694c322a48e64f2f2713b1007cb496ee119f901f3b7ff29",
+      "size": 372719,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/png-drag-transparency-saved.igz"
+    },
+    "r2/image/native.log": {
+      "sha256": "05ce4c879587e3eba5adb15ef1b71500daaf38c214ef4523a393761c979a2974",
+      "size": 45,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/native.log"
+    },
+    "r2/image/partial-diagnostic.json": {
+      "sha256": "5370f649f637fd7dfc22399e0e215431f518dc2d6962ccb291411ae56f4f14e9",
+      "size": 4736,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/partial-diagnostic.json"
+    },
+    "r2/image/result.json": {
+      "sha256": "9b21620fe44f9a00d571de88b76f8448ff7542b4a1f6435c2e8cefe35df0930f",
+      "size": 922,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image/result.json"
+    },
+    "r2/image.log": {
+      "sha256": "64b49ed8f7cb7bfbadcd423ec912d1dda3f30afd906fd6ee0ceb116cc5645b4b",
+      "size": 840,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/image.log"
+    },
+    "r2/result.json": {
+      "sha256": "b093e746fe0f79e7288bb65b75c6f54254deba7adaceb8958e64c613833cf1e2",
+      "size": 1140,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/result.json"
+    },
+    "r2/stl/checker.log": {
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57",
+      "size": 284,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/stl/checker.log"
+    },
+    "r2/stl/comparison.json": {
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1",
+      "size": 300,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/stl/comparison.json"
+    },
+    "r2/stl/native.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/stl/native.log"
+    },
+    "r2/stl/reader.log": {
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "size": 27,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/stl/reader.log"
+    },
+    "r2/stl/result.json": {
+      "sha256": "64787d1e4220d5d5eabcbb44d35714359fc70836995c26bf3d9f40e9ba71b39a",
+      "size": 1439,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/stl/result.json"
+    },
+    "r2/stl.log": {
+      "sha256": "54cde33a2fc36e452a65db275cb7b696a6d3894333491c9867deabfc0e847db0",
+      "size": 1215,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r2/stl.log"
+    },
+    "r3/build.log": {
+      "sha256": "b365f3e2de89c9ba7a6eedcceb3fd97c758f6db8985dc68a744c56553febf00d",
+      "size": 27241,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/build.log"
+    },
+    "r3/image/native/jpeg-exif-pair-saved.igz": {
+      "sha256": "2f165d639ee39ec850eef2a99004980db94da25bca5d1621137e069e17a83f27",
+      "size": 373265,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/jpeg-exif-pair-saved.igz"
+    },
+    "r3/image/native/native-image-import.partial.json": {
+      "sha256": "4f10a33dee1079b083f90c96cefc485837e3dfef07841fe886df5615d38d76ba",
+      "size": 230271,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/native-image-import.partial.json"
+    },
+    "r3/image/native/nested-width-cm-saved.igz": {
+      "sha256": "ab95427a15c3c87a76108fd178563abb677c1eceb111e2de332aaafd7eaf4714",
+      "size": 1001,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/nested-width-cm-saved.igz"
+    },
+    "r3/image/native/picker-invocations.log": {
+      "sha256": "bfba1c8dbc070a728cb52bd3391e3baec524dfb438b2df75e62c326969af60e1",
+      "size": 690,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/picker-invocations.log"
+    },
+    "r3/image/native/webp-reuse-names-saved.igz": {
+      "sha256": "5acdcd49a4484b8d4a2d23a4c925f111c25715dc1a31bd1555dc39eb1e9e30f1",
+      "size": 373278,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/webp-reuse-names-saved.igz"
+    },
+    "r3/image/native.log": {
+      "sha256": "9b978c1bbb491f9c0f49bd1fa707222b6834f7529cf9df03753588ea9c8ab300",
+      "size": 232,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/native.log"
+    },
+    "r3/image/result.json": {
+      "sha256": "a7bb71fabfcf2c3602e30f089a305ce20d256c64617c9d7d5ff93b8f035ea90a",
+      "size": 926,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image/result.json"
+    },
+    "r3/image.log": {
+      "sha256": "02e1d7046563f1ba7f5071e1caae6c3c82832123fe4c55ac58e6a81d2c1c2011",
+      "size": 844,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/image.log"
+    },
+    "r3/result.json": {
+      "sha256": "9d1cc93da6e4167949181e488680c18cd64580ef241030f462416ae954f83377",
+      "size": 735,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r3/result.json"
+    },
+    "r4/build.log": {
+      "sha256": "5de9654a4c9aa12a66a9b5214f5ceab6a85bd434b131dab7f36f30f019c521ef",
+      "size": 27241,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/build.log"
+    },
+    "r4/image/checker.log": {
+      "sha256": "6c244707e75655634e2403dee7be35b4a4d59e95ca445595c71cfa409cb78a4b",
+      "size": 159,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/checker.log"
+    },
+    "r4/image/comparison.json": {
+      "sha256": "c17676f672a07effdafd1d486f075495d00df6e54741ab62a028dedb5a60a914",
+      "size": 165,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/comparison.json"
+    },
+    "r4/image/full-diagnostic.json": {
+      "sha256": "d7bca648cc1abef7bb82d41b8a2622e03b36faf49dc174b99a4c2bdd3d83b823",
+      "size": 114017,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/full-diagnostic.json"
+    },
+    "r4/image/native/bmp-free-aspect-saved.igz": {
+      "sha256": "4a3f104694b0ba37356dc75028301f8dfb2fe1cdcfb956d0c67ee9e5bafcced6",
+      "size": 373399,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/bmp-free-aspect-saved.igz"
+    },
+    "r4/image/native/cancel-invalid-escape-saved.igz": {
+      "sha256": "7c0b306e94c6de0125c6ff65f31fc826e89a614496e1de6ec94886c588f0647d",
+      "size": 372699,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/cancel-invalid-escape-saved.igz"
+    },
+    "r4/image/native/native-image-import.json": {
+      "sha256": "4794fb27df064ca987cf3bfeaadb350c33d7ac72c99bfc778cc89f11ca5141ca",
+      "size": 888885,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/native-image-import.json"
+    },
+    "r4/image/native/native-image-import.partial.json": {
+      "sha256": "b19eb834088b46cc0d1b5cd88fc7fe2413d06648964794aec9dc9c713fc280d0",
+      "size": 888742,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/native-image-import.partial.json"
+    },
+    "r4/image/native/oblique-face-width-saved.igz": {
+      "sha256": "5d37e4ee69439ba10c9569bbf3b0f0826bbd24ae336427c95c42d1b1cf16bb56",
+      "size": 372792,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/oblique-face-width-saved.igz"
+    },
+    "r4/image/native/picker-invocations.log": {
+      "sha256": "8716b1f968c7509e8afc4f9e6d8b39dd5ff7dcb71260d05c3106d78267eec298",
+      "size": 1495,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/picker-invocations.log"
+    },
+    "r4/image/native/png-drag-transparency-saved.igz": {
+      "sha256": "9efa7819aa0ab563d79e897cf5fd9799d0d5a1c4a8a88878c22ad97ad79e292c",
+      "size": 372719,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/png-drag-transparency-saved.igz"
+    },
+    "r4/image/native/reopens-image-import.json": {
+      "sha256": "5a11dd444243ec66c51d4e257b4a33053c9488c9ca3737699a44ecb71874549f",
+      "size": 95021,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/reopens-image-import.json"
+    },
+    "r4/image/native/tiff16-orientation-saved.igz": {
+      "sha256": "6057c4c2806209f5383675fe08c7a1ecbae5615d3a4a093abbddb404e3656df9",
+      "size": 374170,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/tiff16-orientation-saved.igz"
+    },
+    "r4/image/native.log": {
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "size": 37,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/native.log"
+    },
+    "r4/image/result.json": {
+      "sha256": "07416090f183fda9fb5f7641ae65c53419a876ff09e1da312c930f2fc4c44256",
+      "size": 1796,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image/result.json"
+    },
+    "r4/image.log": {
+      "sha256": "6f812b4053ffeec0984d46e489f2e8861b039868081d01ba8f1e339a56dc3de3",
+      "size": 1570,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/image.log"
+    },
+    "r4/result.json": {
+      "sha256": "98ff549025fc1f897191db8e858f13aad47c759acc5d287a728e84bb19231e04",
+      "size": 732,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r4/result.json"
+    },
+    "r5/build.log": {
+      "sha256": "2443f81f74caf53870a0a374a8c2028c64579e86918c209b92406443e681df1d",
+      "size": 27241,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/build.log"
+    },
+    "r5/image/checker.log": {
+      "sha256": "87aad011f9871df113c8c267eeec612f0d7400320535fd05a207a07efa18c381",
+      "size": 95,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/checker.log"
+    },
+    "r5/image/comparison-distance-schema.json": {
+      "sha256": "af9c55b57305c9e677bdb1ee407ea876b95f162e348fde122676def0a496fa60",
+      "size": 89,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/comparison-distance-schema.json"
+    },
+    "r5/image/comparison.json": {
+      "sha256": "faf8ad33340150f8a99a26abafe366be272956aa12a0834635ae2e72af590ca9",
+      "size": 101,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/comparison.json"
+    },
+    "r5/image/full-diagnostic.json": {
+      "sha256": "59ad9d8892ff3af13d6e6bbedfd769c022e6c946db6c67299710ec407749e04e",
+      "size": 15369,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/full-diagnostic.json"
+    },
+    "r5/image/native/bmp-free-aspect-projection-transport.json": {
+      "sha256": "14e47e828667ffebbffedc3584fac2cd6f7823e3a238ee50be43a8efa3a568b3",
+      "size": 3179,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/bmp-free-aspect-projection-transport.json"
+    },
+    "r5/image/native/bmp-free-aspect-saved.igz": {
+      "sha256": "692d0be18a135f66c46489cc7e57879f8c308ba5a278f7a7a8e7499d6b2e1239",
+      "size": 373353,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/bmp-free-aspect-saved.igz"
+    },
+    "r5/image/native/cancel-invalid-escape-projection-transport.json": {
+      "sha256": "bd2b67677c64fa6a7758c0c6d0b77d7ce6db90de1c844b5d324cfef8f960532c",
+      "size": 3614,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/cancel-invalid-escape-projection-transport.json"
+    },
+    "r5/image/native/cancel-invalid-escape-saved.igz": {
+      "sha256": "0e23eb4e9784a64378cc68f525cc9ffc3122921ea3cf23b052080a9f6626a1c0",
+      "size": 372671,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/cancel-invalid-escape-saved.igz"
+    },
+    "r5/image/native/jpeg-exif-pair-projection-transport.json": {
+      "sha256": "0ffc862554cd30a6fb03defda8d0056abd85dd25ed7b3a713a2d4c3413e169c0",
+      "size": 1880,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/jpeg-exif-pair-projection-transport.json"
+    },
+    "r5/image/native/jpeg-exif-pair-saved.igz": {
+      "sha256": "90f525cf63abea71188f8acc79e173f7bb338497ea97097ade8c097069dc4aba",
+      "size": 373238,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/jpeg-exif-pair-saved.igz"
+    },
+    "r5/image/native/native-image-import.json": {
+      "sha256": "8a4173d0795d3eefa2d931b6900b7d2fd755083979f219ce17530f17d4ad8b26",
+      "size": 909301,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/native-image-import.json"
+    },
+    "r5/image/native/native-image-import.partial.json": {
+      "sha256": "b405e95c6ab7eeab553cdf3c9aa5bc298541e4e8eb34f7b55ac2d21d6c65bea0",
+      "size": 909158,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/native-image-import.partial.json"
+    },
+    "r5/image/native/nested-width-cm-projection-transport.json": {
+      "sha256": "76af68baa802f303ead3eae2909c7037eeaa15422f25cb1dac17bf7c4de85580",
+      "size": 1879,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/nested-width-cm-projection-transport.json"
+    },
+    "r5/image/native/nested-width-cm-saved.igz": {
+      "sha256": "a98ff6607aaddb56e74979f0712636ddd685af25920dd7efee86cc71fcf6cc5c",
+      "size": 977,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/nested-width-cm-saved.igz"
+    },
+    "r5/image/native/oblique-face-width-saved.igz": {
+      "sha256": "caf0961df13d41822142a5aeeba9f462a463cf51ed4807475a7158327976a5b5",
+      "size": 372751,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/oblique-face-width-saved.igz"
+    },
+    "r5/image/native/png-drag-transparency-projection-transport.json": {
+      "sha256": "54a3fd9509f7620c8add90ce2a48850e91e2bd1c9e23570e440617c880118eb0",
+      "size": 2747,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/png-drag-transparency-projection-transport.json"
+    },
+    "r5/image/native/png-drag-transparency-saved.igz": {
+      "sha256": "c0ecc921589889c0cec0891ba96b60f0b363036757959931e2432a0b59736774",
+      "size": 372672,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/png-drag-transparency-saved.igz"
+    },
+    "r5/image/native/reopens-image-import.json": {
+      "sha256": "98ca649e457740fa27149efab6f384381fc75bffda18d72ebaebfe7c63e7dd7e",
+      "size": 98003,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/reopens-image-import.json"
+    },
+    "r5/image/native/source-material-observations.json": {
+      "sha256": "eed24b64b4b6cf96ff246c5fe30483bb296e37c7228277360b70e38494a2a169",
+      "size": 2525,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/source-material-observations.json"
+    },
+    "r5/image/native/source-materials/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba": {
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "size": 2046000,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/source-materials/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    "r5/image/native/tiff16-orientation-saved.igz": {
+      "sha256": "b1cc368b88173c86103519139f26b50dad76e807af525a90d01a7185eecc2d15",
+      "size": 374142,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/tiff16-orientation-saved.igz"
+    },
+    "r5/image/native/webp-reuse-names-projection-transport.json": {
+      "sha256": "39c20fb3646ce8915a635ec8776dc373bbd453a806dc0049f6574fe2e38ae6fa",
+      "size": 5349,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/webp-reuse-names-projection-transport.json"
+    },
+    "r5/image/native/webp-reuse-names-saved.igz": {
+      "sha256": "52547afd73f43bcddfcc1ba556b49ffe0d53d1c44676c50ca32a5b38fb035a00",
+      "size": 373249,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/webp-reuse-names-saved.igz"
+    },
+    "r5/image/result.json": {
+      "sha256": "2c625c5f1e8602fd3ea1a60a007c36872a0ed9ecfd52fbc4695a7683362f9e9e",
+      "size": 1792,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image/result.json"
+    },
+    "r5/image.log": {
+      "sha256": "a5aeefe6b46a65b618ccd9f8272b640c2aef4702969952441e06e2f710b9373b",
+      "size": 1566,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/image.log"
+    },
+    "r5/result.json": {
+      "sha256": "47f014defd3d345aeee8e4d9ca69cb05fcb945c4efab12cb2355f7f763f9f1d8",
+      "size": 734,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r5/result.json"
+    },
+    "r6/build.log": {
+      "sha256": "daf2c2d050879ebad08d06cd64cbaa82163d1d269047eef227f390e4b1672b7c",
+      "size": 27335,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/build.log"
+    },
+    "r6/image/checker.log": {
+      "sha256": "f6aae9304abd44f9e745d1263be54db039987908dc7a5fb58b196143f451f3f2",
+      "size": 822,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image/checker.log"
+    },
+    "r6/image/comparison.json": {
+      "sha256": "563a0cb619fce2e640da4d6fe024bd9d421e0a69980899ba43e50148b7b13759",
+      "size": 884,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image/comparison.json"
+    },
+    "r6/image/native/native-image-import.json": {
+      "sha256": "5f72513cdb8ff91ae0e05eb761959c28184b707d042fea7fdc64612342996a1b",
+      "size": 909249,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image/native/native-image-import.json"
+    },
+    "r6/image/native/native-image-import.partial.json": {
+      "sha256": "73eabbecd441243afd7789b4787229e4ad993457a2aca6d9b7fed06006fe3c05",
+      "size": 909106,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image/native/native-image-import.partial.json"
+    },
+    "r6/image/native/nested-width-cm-saved.igz": {
+      "sha256": "f19ae87decbb07cdc65c2983d3b899579b3a6a02c7c69fa3b9c8b703af5b269d",
+      "size": 1054,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image/native/nested-width-cm-saved.igz"
+    },
+    "r6/image/result.json": {
+      "sha256": "630fc8f870efef527d2ec6a08c481fc421cc7008fdfafb3fb61bbda0aa68e894",
+      "size": 1457,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image/result.json"
+    },
+    "r6/image.log": {
+      "sha256": "42a45dc705d1d16430c873fa4f7dcd459a89b02328aacc90735b6483c07e961e",
+      "size": 1233,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/image.log"
+    },
+    "r6/result.json": {
+      "sha256": "be54667f1fa1a4845cf542c9c6a0924f779142a62ff4a9e2ec0d2ea5eae2c8c3",
+      "size": 733,
+      "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/result.json"
+    }
+  },
+  "identical_file_aliases": {
+    "r2/image/native/assets/scan-exif.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r3/image/native/assets/base.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r3/image/native/assets/scan-exif.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r3/image/native/assets/scan.bmp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.bmp.rgba",
+      "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d",
+      "size": 1152
+    },
+    "r3/image/native/assets/scan.png.rgba": {
+      "retained_member": "r2/image/native/assets/scan.png.rgba",
+      "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879",
+      "size": 1152
+    },
+    "r3/image/native/assets/scan.webp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.webp.rgba",
+      "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d",
+      "size": 1152
+    },
+    "r3/image/native/assets/scan16.tif.rgba": {
+      "retained_member": "r2/image/native/assets/scan16.tif.rgba",
+      "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0",
+      "size": 1152
+    },
+    "r3/image/native/png-drag-transparency-saved.igz": {
+      "retained_member": "r2/image/native/png-drag-transparency-saved.igz",
+      "sha256": "5c5f307662f9a4417694c322a48e64f2f2713b1007cb496ee119f901f3b7ff29",
+      "size": 372719
+    },
+    "r4/image/native/assets/base.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r4/image/native/assets/scan-exif.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r4/image/native/assets/scan.bmp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.bmp.rgba",
+      "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d",
+      "size": 1152
+    },
+    "r4/image/native/assets/scan.png.rgba": {
+      "retained_member": "r2/image/native/assets/scan.png.rgba",
+      "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879",
+      "size": 1152
+    },
+    "r4/image/native/assets/scan.webp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.webp.rgba",
+      "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d",
+      "size": 1152
+    },
+    "r4/image/native/assets/scan16.tif.rgba": {
+      "retained_member": "r2/image/native/assets/scan16.tif.rgba",
+      "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0",
+      "size": 1152
+    },
+    "r4/image/native/jpeg-exif-pair-saved.igz": {
+      "retained_member": "r3/image/native/jpeg-exif-pair-saved.igz",
+      "sha256": "2f165d639ee39ec850eef2a99004980db94da25bca5d1621137e069e17a83f27",
+      "size": 373265
+    },
+    "r4/image/native/nested-width-cm-saved.igz": {
+      "retained_member": "r3/image/native/nested-width-cm-saved.igz",
+      "sha256": "ab95427a15c3c87a76108fd178563abb677c1eceb111e2de332aaafd7eaf4714",
+      "size": 1001
+    },
+    "r4/image/native/webp-reuse-names-saved.igz": {
+      "retained_member": "r3/image/native/webp-reuse-names-saved.igz",
+      "sha256": "5acdcd49a4484b8d4a2d23a4c925f111c25715dc1a31bd1555dc39eb1e9e30f1",
+      "size": 373278
+    },
+    "r4/image/reader.log": {
+      "retained_member": "r2/stl/reader.log",
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "size": 27
+    },
+    "r5/image/native/assets/base.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r5/image/native/assets/scan-exif.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r5/image/native/assets/scan.bmp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.bmp.rgba",
+      "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d",
+      "size": 1152
+    },
+    "r5/image/native/assets/scan.png.rgba": {
+      "retained_member": "r2/image/native/assets/scan.png.rgba",
+      "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879",
+      "size": 1152
+    },
+    "r5/image/native/assets/scan.webp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.webp.rgba",
+      "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d",
+      "size": 1152
+    },
+    "r5/image/native/assets/scan16.tif.rgba": {
+      "retained_member": "r2/image/native/assets/scan16.tif.rgba",
+      "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0",
+      "size": 1152
+    },
+    "r5/image/native/oblique-face-width-projection-transport.json": {
+      "retained_member": "r5/image/native/nested-width-cm-projection-transport.json",
+      "sha256": "76af68baa802f303ead3eae2909c7037eeaa15422f25cb1dac17bf7c4de85580",
+      "size": 1879
+    },
+    "r5/image/native/picker-invocations.log": {
+      "retained_member": "r4/image/native/picker-invocations.log",
+      "sha256": "8716b1f968c7509e8afc4f9e6d8b39dd5ff7dcb71260d05c3106d78267eec298",
+      "size": 1495
+    },
+    "r5/image/native/tiff16-orientation-projection-transport.json": {
+      "retained_member": "r5/image/native/nested-width-cm-projection-transport.json",
+      "sha256": "76af68baa802f303ead3eae2909c7037eeaa15422f25cb1dac17bf7c4de85580",
+      "size": 1879
+    },
+    "r5/image/native.log": {
+      "retained_member": "r4/image/native.log",
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "size": 37
+    },
+    "r5/image/reader.log": {
+      "retained_member": "r2/stl/reader.log",
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "size": 27
+    },
+    "r6/image/native/assets/base.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r6/image/native/assets/scan-exif.jpg.rgba": {
+      "retained_member": "r2/image/native/assets/base.jpg.rgba",
+      "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a",
+      "size": 1152
+    },
+    "r6/image/native/assets/scan.bmp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.bmp.rgba",
+      "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d",
+      "size": 1152
+    },
+    "r6/image/native/assets/scan.png.rgba": {
+      "retained_member": "r2/image/native/assets/scan.png.rgba",
+      "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879",
+      "size": 1152
+    },
+    "r6/image/native/assets/scan.webp.rgba": {
+      "retained_member": "r2/image/native/assets/scan.webp.rgba",
+      "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d",
+      "size": 1152
+    },
+    "r6/image/native/assets/scan16.tif.rgba": {
+      "retained_member": "r2/image/native/assets/scan16.tif.rgba",
+      "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0",
+      "size": 1152
+    },
+    "r6/image/native/bmp-free-aspect-projection-transport.json": {
+      "retained_member": "r5/image/native/bmp-free-aspect-projection-transport.json",
+      "sha256": "14e47e828667ffebbffedc3584fac2cd6f7823e3a238ee50be43a8efa3a568b3",
+      "size": 3179
+    },
+    "r6/image/native/bmp-free-aspect-saved.igz": {
+      "retained_member": "r5/image/native/bmp-free-aspect-saved.igz",
+      "sha256": "692d0be18a135f66c46489cc7e57879f8c308ba5a278f7a7a8e7499d6b2e1239",
+      "size": 373353
+    },
+    "r6/image/native/cancel-invalid-escape-projection-transport.json": {
+      "retained_member": "r5/image/native/cancel-invalid-escape-projection-transport.json",
+      "sha256": "bd2b67677c64fa6a7758c0c6d0b77d7ce6db90de1c844b5d324cfef8f960532c",
+      "size": 3614
+    },
+    "r6/image/native/cancel-invalid-escape-saved.igz": {
+      "retained_member": "r5/image/native/cancel-invalid-escape-saved.igz",
+      "sha256": "0e23eb4e9784a64378cc68f525cc9ffc3122921ea3cf23b052080a9f6626a1c0",
+      "size": 372671
+    },
+    "r6/image/native/jpeg-exif-pair-projection-transport.json": {
+      "retained_member": "r5/image/native/jpeg-exif-pair-projection-transport.json",
+      "sha256": "0ffc862554cd30a6fb03defda8d0056abd85dd25ed7b3a713a2d4c3413e169c0",
+      "size": 1880
+    },
+    "r6/image/native/jpeg-exif-pair-saved.igz": {
+      "retained_member": "r5/image/native/jpeg-exif-pair-saved.igz",
+      "sha256": "90f525cf63abea71188f8acc79e173f7bb338497ea97097ade8c097069dc4aba",
+      "size": 373238
+    },
+    "r6/image/native/nested-width-cm-projection-transport.json": {
+      "retained_member": "r5/image/native/nested-width-cm-projection-transport.json",
+      "sha256": "76af68baa802f303ead3eae2909c7037eeaa15422f25cb1dac17bf7c4de85580",
+      "size": 1879
+    },
+    "r6/image/native/oblique-face-width-projection-transport.json": {
+      "retained_member": "r5/image/native/nested-width-cm-projection-transport.json",
+      "sha256": "76af68baa802f303ead3eae2909c7037eeaa15422f25cb1dac17bf7c4de85580",
+      "size": 1879
+    },
+    "r6/image/native/oblique-face-width-saved.igz": {
+      "retained_member": "r5/image/native/oblique-face-width-saved.igz",
+      "sha256": "caf0961df13d41822142a5aeeba9f462a463cf51ed4807475a7158327976a5b5",
+      "size": 372751
+    },
+    "r6/image/native/picker-invocations.log": {
+      "retained_member": "r4/image/native/picker-invocations.log",
+      "sha256": "8716b1f968c7509e8afc4f9e6d8b39dd5ff7dcb71260d05c3106d78267eec298",
+      "size": 1495
+    },
+    "r6/image/native/png-drag-transparency-projection-transport.json": {
+      "retained_member": "r5/image/native/png-drag-transparency-projection-transport.json",
+      "sha256": "54a3fd9509f7620c8add90ce2a48850e91e2bd1c9e23570e440617c880118eb0",
+      "size": 2747
+    },
+    "r6/image/native/png-drag-transparency-saved.igz": {
+      "retained_member": "r5/image/native/png-drag-transparency-saved.igz",
+      "sha256": "c0ecc921589889c0cec0891ba96b60f0b363036757959931e2432a0b59736774",
+      "size": 372672
+    },
+    "r6/image/native/reopens-image-import.json": {
+      "retained_member": "r5/image/native/reopens-image-import.json",
+      "sha256": "98ca649e457740fa27149efab6f384381fc75bffda18d72ebaebfe7c63e7dd7e",
+      "size": 98003
+    },
+    "r6/image/native/source-material-observations.json": {
+      "retained_member": "r5/image/native/source-material-observations.json",
+      "sha256": "eed24b64b4b6cf96ff246c5fe30483bb296e37c7228277360b70e38494a2a169",
+      "size": 2525
+    },
+    "r6/image/native/source-materials/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba": {
+      "retained_member": "r5/image/native/source-materials/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "size": 2046000
+    },
+    "r6/image/native/tiff16-orientation-projection-transport.json": {
+      "retained_member": "r5/image/native/nested-width-cm-projection-transport.json",
+      "sha256": "76af68baa802f303ead3eae2909c7037eeaa15422f25cb1dac17bf7c4de85580",
+      "size": 1879
+    },
+    "r6/image/native/tiff16-orientation-saved.igz": {
+      "retained_member": "r5/image/native/tiff16-orientation-saved.igz",
+      "sha256": "b1cc368b88173c86103519139f26b50dad76e807af525a90d01a7185eecc2d15",
+      "size": 374142
+    },
+    "r6/image/native/webp-reuse-names-projection-transport.json": {
+      "retained_member": "r5/image/native/webp-reuse-names-projection-transport.json",
+      "sha256": "39c20fb3646ce8915a635ec8776dc373bbd453a806dc0049f6574fe2e38ae6fa",
+      "size": 5349
+    },
+    "r6/image/native/webp-reuse-names-saved.igz": {
+      "retained_member": "r5/image/native/webp-reuse-names-saved.igz",
+      "sha256": "52547afd73f43bcddfcc1ba556b49ffe0d53d1c44676c50ca32a5b38fb035a00",
+      "size": 373249
+    },
+    "r6/image/native.log": {
+      "retained_member": "r4/image/native.log",
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "size": 37
+    },
+    "r6/image/reader.log": {
+      "retained_member": "r2/stl/reader.log",
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "size": 27
+    }
+  },
+  "git_bindings": [
+    {
+      "path": "Cargo.toml",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "f4d008a0b2fd159d774ef480cb574261a62be4895da778bbdd47da3f5c2d59ed"
+    },
+    {
+      "path": "Cargo.lock",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "98371189195b3d89215dfae59da93c0592ebd4a7873b8582f257bd1088f766b7"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "52e3f2f7d9f8df44d84fb39a7c53a4857ca8b64d0f88ae2542a19145e33b30d7"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/geotiff_import_workflows.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "0ac0f521df28c9f31bf4062603e0582847227fc3fc20229588985de174a4100e"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/support/image_import_material_observer.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "f948292df24338b16372da4e9b817837c96c8d4fad6818a4f786c2d48e9b329f"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "ef5ff085a3fa76d7c86a6528fc2a6f1c292775687d534cfc8c2ecdd570139a71"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/image_import.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "6f2f2cd79251c5a61e41203cdf3037849bba8a027640b50d5db55a31c656f4d2"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "31ab973fab689c4b9a083ff4eb159c6176c81b43b665200cc8c332a26c8beb3b"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "0403665ad7aabdd6b439a3d05f2adeab8e0ffed1966a008c099612ecb166897c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/tool_history.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "6a4806cedc6bd5dc305e8ac928df56ffb518ea46703cd7b106e5e648e64c6243"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/viewport.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "99f0475cd5a8259f9425e2de6b0d5b98c13e08d12337e5e7e2275abeca6278f4"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/vcb_input.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "abf685226a82a0644dc17ed7bd9d70523756c307bdf497d43bc4c86e4412e3a4"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/image.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "efa8f9ba7a710b23e9a66020b51b471bf459b43a73bf5642c28f92339ab618d5"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/base.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "48492d7c7b1891c06ec2f10e0aec88c3f4070b02307d92b656a2baef213d6a5b"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/lib.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "0348234d2cc07ee1edb956ecaebf5682e20c5c24b314d5fd1c7bb5a3da478185"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/source_texture_decode.rs",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "6e7df7f363136a42074e76832f80f2e2d6de1a9aae0a90cad1d73771585ca205"
+    },
+    {
+      "path": "scripts/check-image-import.py",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "6f2373a127cd51851ae594478f3f56ec5fdce041a546e06c942fbbb11ff42b00"
+    },
+    {
+      "path": "scripts/reference-image-import-reopens.py",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "a2dc84b04745bbe49445e5c0bd42c1cc4af985b50b39abebf89c1e252841a069"
+    },
+    {
+      "path": "scripts/replay-image-import.py",
+      "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+    }
+  ],
+  "source_archive": "docs/audits/image-import/source-records.zip",
+  "source_archive_sha256": "0ee692a668f6ea949eba66bbc8ecb012e307a075450926ed4e5a1a61136a035d",
+  "source_manifest_sha256": "0972a076fb9f365f4428af112d64a51c946de7a319390224894025fdbbdd4c87",
+  "binary": {
+    "path": "/tmp/ingetrazo-native-font-merge-target/debug/examples/image_import_workflows",
+    "sha256": "979e7aff8fb960a13d694a038008f60297d84071b3d901ca0a790f10948a9e5d",
+    "revision": "2d77d06cb6fb427fe5af9bd4959096e909ef6520"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "receipt": "r1/result.json",
+      "revision": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "9437c86270cc6ff53657b5e1dc19817c7ddb881dc24bf5aeace67c1dc6cb5e5f"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/image_import.rs",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+        },
+        {
+          "path": "crates/ingetrazo-tools/src/image.rs",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "f1090c8c7f99e6b518c99d3073a661f6915deba9a1ae6b29b52fdd07ae5f8331"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/viewport.rs",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "ef466e42cd54103b812a3ac6a7c38ae6994ec4abdcebbd1b0e5a2d407e770e45"
+        },
+        {
+          "path": "scripts/check-image-import.py",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "1854b15e5d3f72369b81b7a1a9e4eb8fe8159b8a2a95c81a29f916f31122e64f"
+        },
+        {
+          "path": "scripts/reference-image-import-reopens.py",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "f47cbd90a89988662236d3d53a5df8725e777fb629cfdaabf4a37fc3c4b20bab"
+        },
+        {
+          "path": "scripts/replay-image-import.py",
+          "commit": "471d75eae3ec3f05dc8c894b42a83262f4831a1a",
+          "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "receipt": "r2/result.json",
+      "revision": "33983186961306693db53db510988e2ff6ca560a",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "08e3e6b357b85fd7511a0ceed02cfe8bf349af5cee4a1ba08c8137eeca3ea9a2"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/image_import.rs",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+        },
+        {
+          "path": "crates/ingetrazo-tools/src/image.rs",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "f1090c8c7f99e6b518c99d3073a661f6915deba9a1ae6b29b52fdd07ae5f8331"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/viewport.rs",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "ef466e42cd54103b812a3ac6a7c38ae6994ec4abdcebbd1b0e5a2d407e770e45"
+        },
+        {
+          "path": "scripts/check-image-import.py",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "1854b15e5d3f72369b81b7a1a9e4eb8fe8159b8a2a95c81a29f916f31122e64f"
+        },
+        {
+          "path": "scripts/reference-image-import-reopens.py",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "f47cbd90a89988662236d3d53a5df8725e777fb629cfdaabf4a37fc3c4b20bab"
+        },
+        {
+          "path": "scripts/replay-image-import.py",
+          "commit": "33983186961306693db53db510988e2ff6ca560a",
+          "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "receipt": "r3/result.json",
+      "revision": "83a53679124827a501cc08faf80fae0cdc196443",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "f10b0496f354650181b94ed746779966890d12e6223c0c8c61b99b239e0e33ab"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/image_import.rs",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+        },
+        {
+          "path": "crates/ingetrazo-tools/src/image.rs",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "f1090c8c7f99e6b518c99d3073a661f6915deba9a1ae6b29b52fdd07ae5f8331"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/viewport.rs",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "ef466e42cd54103b812a3ac6a7c38ae6994ec4abdcebbd1b0e5a2d407e770e45"
+        },
+        {
+          "path": "scripts/check-image-import.py",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "1854b15e5d3f72369b81b7a1a9e4eb8fe8159b8a2a95c81a29f916f31122e64f"
+        },
+        {
+          "path": "scripts/reference-image-import-reopens.py",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "f47cbd90a89988662236d3d53a5df8725e777fb629cfdaabf4a37fc3c4b20bab"
+        },
+        {
+          "path": "scripts/replay-image-import.py",
+          "commit": "83a53679124827a501cc08faf80fae0cdc196443",
+          "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+        }
+      ]
+    },
+    {
+      "attempt": 4,
+      "receipt": "r4/result.json",
+      "revision": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "8598626734ce38a59a41a3b6fb4c4200b091427fadb1434bdc735d18d515234f"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/image_import.rs",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+        },
+        {
+          "path": "crates/ingetrazo-tools/src/image.rs",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "f1090c8c7f99e6b518c99d3073a661f6915deba9a1ae6b29b52fdd07ae5f8331"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/viewport.rs",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "99f0475cd5a8259f9425e2de6b0d5b98c13e08d12337e5e7e2275abeca6278f4"
+        },
+        {
+          "path": "scripts/check-image-import.py",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "1854b15e5d3f72369b81b7a1a9e4eb8fe8159b8a2a95c81a29f916f31122e64f"
+        },
+        {
+          "path": "scripts/reference-image-import-reopens.py",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "f47cbd90a89988662236d3d53a5df8725e777fb629cfdaabf4a37fc3c4b20bab"
+        },
+        {
+          "path": "scripts/replay-image-import.py",
+          "commit": "ff7fdfdf815fdfc5948201b925c4d50afe701b1a",
+          "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+        }
+      ]
+    },
+    {
+      "attempt": 5,
+      "receipt": "r5/result.json",
+      "revision": "2707697be1f8f9333aca04db95210f88aca1f931",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "f620d16997edb7e469340ae68752de160cb2bc4f62a0dda5f8074b09041fe471"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/image_import.rs",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+        },
+        {
+          "path": "crates/ingetrazo-tools/src/image.rs",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "f1090c8c7f99e6b518c99d3073a661f6915deba9a1ae6b29b52fdd07ae5f8331"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/viewport.rs",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "99f0475cd5a8259f9425e2de6b0d5b98c13e08d12337e5e7e2275abeca6278f4"
+        },
+        {
+          "path": "scripts/check-image-import.py",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "f501718b7f9151398d2d64b09ab838e734a4cfbf6928f41e16786b8dedcafee3"
+        },
+        {
+          "path": "scripts/reference-image-import-reopens.py",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "a2dc84b04745bbe49445e5c0bd42c1cc4af985b50b39abebf89c1e252841a069"
+        },
+        {
+          "path": "scripts/replay-image-import.py",
+          "commit": "2707697be1f8f9333aca04db95210f88aca1f931",
+          "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+        }
+      ]
+    },
+    {
+      "attempt": 6,
+      "receipt": "r6/result.json",
+      "revision": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/image_import_workflows.rs",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "52e3f2f7d9f8df44d84fb39a7c53a4857ca8b64d0f88ae2542a19145e33b30d7"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/image_import.rs",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "7bfbd1af38d7ebaaee31a33e6bad5a6cb0da4e3b88a0b593346e58f45a6add01"
+        },
+        {
+          "path": "crates/ingetrazo-tools/src/image.rs",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "efa8f9ba7a710b23e9a66020b51b471bf459b43a73bf5642c28f92339ab618d5"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/viewport.rs",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "99f0475cd5a8259f9425e2de6b0d5b98c13e08d12337e5e7e2275abeca6278f4"
+        },
+        {
+          "path": "scripts/check-image-import.py",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "6f2373a127cd51851ae594478f3f56ec5fdce041a546e06c942fbbb11ff42b00"
+        },
+        {
+          "path": "scripts/reference-image-import-reopens.py",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "a2dc84b04745bbe49445e5c0bd42c1cc4af985b50b39abebf89c1e252841a069"
+        },
+        {
+          "path": "scripts/replay-image-import.py",
+          "commit": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
+          "sha256": "23667e38e7e0a3142c4b5cf66ae9d89f20049735787ab1b46481063aba71900b"
+        }
+      ]
+    }
+  ],
+  "acceptance": {
+    "ok": true,
+    "cases": 8,
+    "states": 114,
+    "headers": 7,
+    "literal_states": true,
+    "decoded_bytes": true,
+    "readers": 8,
+    "negative_controls": 29,
+    "guards": [
+      "actual_picker",
+      "actual_pointer",
+      "actual_vcb",
+      "modal_ownership",
+      "external_independence",
+      "resource_reuse",
+      "refusal_preserved",
+      "undo_armed_resource",
+      "idle_readonly"
+    ],
+    "scope": "Literal App/model/transient tool/history/resource bytes; camera.distance accepts only exact finite positive int/f64 numeric equality with lossless integer representation; all other types and values remain strict and actual original IGZ readers. Source error-message text diagnostic only; pinned original/input-bound material locator-to-resource identity supplement preserves all geometry metadata. Required operative native modal/refusal guards. No framebuffer/GPU/general-codec claim."
+  },
+  "fresh_source_captures": 0,
+  "cleanup_performed": false
+}
