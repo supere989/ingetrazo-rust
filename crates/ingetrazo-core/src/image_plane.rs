@@ -214,6 +214,7 @@ impl ImagePlaneList{
         Some(ImagePoseChanges{entries:&self.pose_journal.entries[..self.pose_journal.len],revision,next:0,examined:0})
     }
     fn changed(&mut self){self.epoch.store(next_image_membership_epoch(),std::sync::atomic::Ordering::Relaxed);let revision=next_image_membership_epoch();self.publication.store(revision,std::sync::atomic::Ordering::Relaxed);self.pose_journal.reset(revision);}
+    pub fn try_reserve(&mut self,n:usize)->Result<(),String>{self.planes.try_reserve(n).map_err(|_|"Could not reserve reference images".into())}
     pub fn push(&mut self,p:ImagePlane){self.planes.push(p);self.changed();}
     pub fn remove(&mut self,index:usize)->ImagePlane{let p=self.planes.remove(index);self.changed();p}
     pub fn insert(&mut self,index:usize,p:ImagePlane){self.planes.insert(index,p);self.changed();}

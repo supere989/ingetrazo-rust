@@ -25,8 +25,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     let painter = ui.painter_at(rect);
-    if app.annotation_editor.is_some() {ui.ctx().data_mut(|data| {data.remove::<egui::Pos2>(response.id.with("followme_press"));data.remove::<ToolContext>(response.id.with("followme_context"));});}
-    let tool_input_admitted=ui.is_enabled()&&app.text3d_dialog.is_none()&&app.annotation_editor.is_none();
+    if app.geotiff_import.owns_input()||app.annotation_editor.is_some() {ui.ctx().data_mut(|data| {data.remove::<egui::Pos2>(response.id.with("followme_press"));data.remove::<ToolContext>(response.id.with("followme_context"));});}
+    let tool_input_admitted=ui.is_enabled()&&app.text3d_dialog.is_none()&&app.annotation_editor.is_none()&&!app.geotiff_import.owns_input();
     // Source leaveEvent clears hover; a modal freezes it until actual departure.
     if ui.input(|i|i.pointer.hover_pos().is_none_or(|p|!rect.contains(p))){app.active_tool.clear_annotation_hover();}
     let box_release=crate::box_selection::input(app,ui,rect,response.id,response.contains_pointer());
@@ -252,7 +252,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
     // Observe release beyond the viewport, without committing a tool during paste.
-    if app.annotation_editor.is_none() && scale_input_admitted && app.paste_preview.is_none()
+    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input() && scale_input_admitted && app.paste_preview.is_none()
         && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale)
         && pointer.button_released(egui::PointerButton::Primary)
     {
@@ -268,10 +268,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    if app.annotation_editor.is_none(){scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);}
+    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input(){scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);}
 
     // Handle Esc to cancel active tool and clear locks
-    if app.annotation_editor.is_none() && ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input() && ui.input(|i| i.key_pressed(egui::Key::Escape)) {
         app.snap_engine.reset_operation_state();
         if app.cancel_blender_pick() {
         } else if app.paste_preview.is_some() {
