@@ -1,0 +1,91 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "088bed7516672c72db29942eb8a475d7829bc225749a2c96a0d643750e8be5f1",
+  "members": {
+    "aspect-selection-input.igz": {
+      "size": 496,
+      "sha256": "439a9d349689963fb3b6f8b4f58c419209175791a220da27261c61b444e4d001"
+    },
+    "aspect-selection-original.igz": {
+      "size": 1649,
+      "sha256": "555a9a2ce72b20073147b82178c7079992f81f2ab3b66f790e14446ef142077e"
+    },
+    "assets/beech.jpg": {
+      "size": 41699,
+      "sha256": "c6df15b4d2d346f31982d62307662e7cffed3ef391e6296eeb6386913b45d7f4"
+    },
+    "assets/checker.png": {
+      "size": 431,
+      "sha256": "22dd51f90a74a4e4a93f82fe5f6601544f20e1c779b4c884cdc83c21c97dc8e3"
+    },
+    "assets/person.png": {
+      "size": 33171,
+      "sha256": "ff8bb7835734149c0b6f71ec6fb5c607583ba2b8940be42c458ce3c6eaa0b49d"
+    },
+    "authoring-input.igz": {
+      "size": 11510,
+      "sha256": "82d9befd55d9fb50713c11c615d8855900515943f34c2d5db451e659aa63869b"
+    },
+    "authoring-original.igz": {
+      "size": 11771,
+      "sha256": "eaa83c25bbe478b08ea85dbbd748c51cd608fe5afbb18c5fc620e8be7e3542e8"
+    },
+    "missing-fallback-input.igz": {
+      "size": 497,
+      "sha256": "0dfc6ff6243497c6dcc5984e7aa45ec4ae81755896ebaee6b2ac550160e37b44"
+    },
+    "missing-fallback-original.igz": {
+      "size": 1080,
+      "sha256": "2c4756a9d45105ed175f1a285a9daac915f87bac8a3b3a6ac185dff0df1be986"
+    },
+    "original-picture-authoring.json": {
+      "size": 336182,
+      "sha256": "e33218841a40cb38c5951aad0ed07c9509aaad711272563c32b3acabb626b6af"
+    },
+    "original-reopens.json": {
+      "size": 12765,
+      "sha256": "054117bf25f392eb31be0b70c0fe753356f9e4b44176ed03b6c7469836bf0667"
+    },
+    "original-z-controls.json": {
+      "size": 3365,
+      "sha256": "438ac8c15ec47c1d206014173a25ef36e092e8b799d4d0f945319016b8b1e975"
+    },
+    "provenance.json": {
+      "size": 454,
+      "sha256": "01679c68cc4b850b01d257e8e7138e1dc13f4436924f9c3cc5c11ca748ae6573"
+    },
+    "source-run.log": {
+      "size": 41,
+      "sha256": "2771ef84a046f1714d6a15a269f0f692288df45c0979c8265b4e26342e3bd44d"
+    },
+    "source-run.stderr": {
+      "size": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591"
+    },
+    "source-z-run.log": {
+      "size": 19,
+      "sha256": "4c9baf1366386f0fe5ce3447779d02ecbd710740ea4daa64be087dde32fec544"
+    },
+    "source-z-run.stderr": {
+      "size": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848"
+    }
+  },
+  "cases": 3,
+  "states": 44,
+  "original_reopens": 3,
+  "z_categories": 15,
+  "physical_source_captures": 0,
+  "producers": {
+    "reference-picture-authoring.py": {
+      "sha256": "9ac80920f08002b2a4da338e484f18da4c290895e7787a79cc0376360c13c6c8"
+    },
+    "reference-picture-authoring-z.py": {
+      "sha256": "51cde2878e722d8496186382e369f37b25275eefb9166052430f18e31af0b00d"
+    },
+    "reference-picture-authoring-reopens.py": {
+      "sha256": "2b7585ca63e7c65037cb2f4a96a06f59c2fc55b5094b65dbcc599556cfab31b6"
+    }
+  },
+  "source_scope": "Actual original ComposerWindow actions/Qt widget signals+writer/reader. Chooser return injection; no OS pointer claim. source_version retained diagnostic, full typed composition/history/selection literal. Unknown input fields tolerated/dropped by original; native raw-preservation guard separate."
+}
