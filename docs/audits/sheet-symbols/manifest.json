@@ -1,7 +1,7 @@
 {
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "records.zip",
-  "archive_sha256": "8a5877a98bec6e3022bf7f64e6348902faf73d1f7a4fa732f0da9b71bba65253",
+  "archive_sha256": "02e0116455576a42ba9b0a7e6b5631aa259b1abc95952b11885289e4c2783747",
   "entries": [
     {
       "path": "build-affine-fixed.jsonl",
@@ -105,8 +105,8 @@
     },
     {
       "path": "final-receipt.json",
-      "bytes": 7704,
-      "sha256": "389397165a9003f304ad5d47f052733f553086bd85c5b263d6603d96652bcc8c"
+      "bytes": 8016,
+      "sha256": "05ab989d8e40e1b4cb27bedc3254b19c0219c45af46e824cb6d3050ea367cf9e"
     },
     {
       "path": "hardware/check.json",
