@@ -1286,7 +1286,7 @@ fn material_pipeline(metal:&NativeMetal,lib:&ProtocolObject<dyn MTLLibrary>,vert
  if alpha{color.setSourceRGBBlendFactor(MTLBlendFactor::SourceAlpha);color.setDestinationRGBBlendFactor(MTLBlendFactor::OneMinusSourceAlpha);color.setRgbBlendOperation(MTLBlendOperation::Add);color.setSourceAlphaBlendFactor(MTLBlendFactor::Zero);color.setDestinationAlphaBlendFactor(MTLBlendFactor::One);color.setAlphaBlendOperation(MTLBlendOperation::Add);}
  metal.device.newRenderPipelineStateWithDescriptor_error(&d).map_err(|e|format!("Metal material pipeline:{e:?}"))
 }
-fn image(
+pub(crate) fn image(
     metal: &NativeMetal,
     extent: (u32, u32),
     format: MTLPixelFormat,

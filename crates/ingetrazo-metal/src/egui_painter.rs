@@ -1354,7 +1354,11 @@ impl SheetReadbackPool {
   self.slots.retain(|(extent,image,buffer)|*extent==size||Arc::strong_count(image)>1||Arc::strong_count(buffer)>1);
   if let Some((_,image,buffer))=self.slots.iter().find(|(extent,image,buffer)|*extent==size&&Arc::strong_count(image)==1&&Arc::strong_count(buffer)==1){return Ok((image.clone(),buffer.clone()));}
   if self.slots.len()>=3{return Err("Paper readback pool has no completed slot".into());}
-  let image=Arc::new(allocate_sheet_target(metal,size)?);let buffer=Arc::new(metal.buffer(row*size[1],true)?);
+  let extent=(u32::try_from(size[0]).map_err(|_|"Paper target width exceeds native domain")?,u32::try_from(size[1]).map_err(|_|"Paper target height exceeds native domain")?);
+  // Standalone textures use the same queried/actual allocation accounting as
+  // world targets. A heap-layout query may be zero on a non-heap device.
+  let image=Arc::new(crate::world::image(metal,extent,MTLPixelFormat::BGRA8Unorm,MTLTextureUsage::RenderTarget,4)?);
+  let buffer=Arc::new(metal.buffer(row.checked_mul(size[1]).ok_or("Paper readback extent overflow")?,true)?);
   self.slots.try_reserve(1).map_err(|_|"Paper readback pool allocation failed")?;
   self.slots.push((size,image.clone(),buffer.clone()));Ok((image,buffer))
  }
@@ -1581,19 +1585,4 @@ fn allocate_target(metal: &NativeMetal, size: [usize; 2]) -> Result<Image, Strin
         budget: metal.budget.clone(),
         handle,
     })
-}
-
-fn allocate_sheet_target(metal:&NativeMetal,size:[usize;2])->Result<Image,String>{
- let descriptor=MTLTextureDescriptor::new();descriptor.setTextureType(MTLTextureType::Type2D);
- unsafe{descriptor.setWidth(size[0]);descriptor.setHeight(size[1]);}
- descriptor.setPixelFormat(MTLPixelFormat::BGRA8Unorm);descriptor.setStorageMode(MTLStorageMode::Private);descriptor.setUsage(MTLTextureUsage::RenderTarget);
- let estimate=metal.device.heapTextureSizeAndAlignWithDescriptor(&descriptor).size as u64;
- if estimate==0{return Err("Native paper texture size query returned zero".into());}
- let ticket=metal.budget.lock().map_err(|_|"Metal budget poisoned")?.reserve(0,estimate)?;
- let Some(raw)=metal.device.newTextureWithDescriptor(&descriptor)else{metal.budget.lock().map_err(|_|"Metal budget poisoned")?.cancel(ticket)?;return Err("Native paper texture allocation failed".into());};
- let actual=MTLResource::allocatedSize(&*raw)as u64;
- if actual==0||actual>estimate{metal.budget.lock().map_err(|_|"Metal budget poisoned")?.cancel(ticket)?;return Err(format!("Native paper texture allocation {actual} exceeds queried ticket {estimate}"));}
- let handle=(&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>()as usize as u64;
- let mut ledger=metal.budget.lock().map_err(|_|"Metal budget poisoned")?;ledger.cancel(ticket)?;let ticket=ledger.reserve(0,actual)?;ledger.commit(ticket,handle)?;drop(ledger);
- Ok(Image{raw:ManuallyDrop::new(raw),budget:metal.budget.clone(),handle})
 }

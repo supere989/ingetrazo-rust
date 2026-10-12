@@ -1,0 +1,7 @@
+# Standalone native Metal sheet target allocation
+
+The first actual Intel image-export execution at `b48d482e` refused before comparison: `Native paper texture size query returned zero`. ARM passed all ten geometry/codec images. A heap texture size query describes a heap allocation, while this exporter creates a standalone texture; its result cannot be used as a standalone allocation upper bound.
+
+The repair removes the duplicate sheet allocator and reuses the existing world target allocator with BGRA8Unorm/RenderTarget/4-byte pixels. That allocator reserves available logical capacity before creation, accepts a consistent zero heap query, checks actual allocatedSize, and reconciles the reservation before publication. It retains allocation refusal, rollback and cached Arc resource ownership. This is accounting for standalone allocation, not a claim of a physical allocator upper bound. Readback row multiplication now also checks overflow.
+
+Independent static review accepted the narrow change. Actual native Mac CI is required; no native execution claim is made from Linux. The dedicated repair branch also captures one actual original macOS text recipe and compares it through the existing prebuilt image consumer, recording font tables and source bindings. This observation is branch-specific and separate from the ten accepted geometry/codec cases; a text mismatch remains a failure. No broad Linux rebuild or source recapture accompanies this Metal repair.
