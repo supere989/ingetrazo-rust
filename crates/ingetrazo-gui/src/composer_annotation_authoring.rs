@@ -690,7 +690,9 @@ pub(super) fn properties(app: &mut IngeTrazoApp, ui: &mut egui::Ui, s: usize) {
     let mut reset = false;
     egui::Window::new(ingetrazo_core::i18n::tr(LABELS[f]))
         .id(egui::Id::new("annotation-properties"))
-        .default_pos(egui::pos2(800., 160.))
+        // Original properties live beside the paper, not over its blank-click area.
+        .anchor(egui::Align2::RIGHT_TOP, egui::vec2(-8., 110.))
+        .default_width(260.)
         .show(ui.ctx(), |ui| {
             ui.set_enabled(true);
             let draft = &mut app
