@@ -1,5 +1,6 @@
 //! Original App policy kept separate from the direct reference loader.
 use super::*;
+use image::ImageDecoder;
 use serde_json::Value;
 use std::{collections::HashMap, io::Read};
 pub(super) struct Input {
@@ -84,7 +85,7 @@ pub(super) fn finish(
     mesh: &mut Mesh,
     faces: &HashMap<usize, SourceFace>,
     source: &Value,
-    _assets: &HashMap<String, Vec<u8>>,
+    assets: &HashMap<String, Vec<u8>>,
 ) -> Result<(), GltfError> {
     if mesh.faces.is_empty() {
         return Err(invalid("glTF has no triangles"));
@@ -108,11 +109,9 @@ pub(super) fn finish(
         if face.vertices.len() != 3 {
             return Err(invalid("glTF nontriangle"));
         }
-        let points: [DVec3; 3] = std::array::from_fn(|k| {
-            (mesh.vertices[face.vertices[k]].position * scale)
-                .as_vec3()
-                .as_dvec3()
-        });
+        let raw_points: [DVec3; 3] =
+            std::array::from_fn(|k| mesh.vertices[face.vertices[k]].position * scale);
+        let points = raw_points.map(|p| p.as_vec3().as_dvec3());
         let ids = points.map(|p| prepared.add_vertex(p));
         let Some(id) = prepared.add_face(ids.to_vec(), vec![]) else {
             continue;
@@ -131,13 +130,13 @@ pub(super) fn finish(
             let uv = info
                 .uv
                 .ok_or_else(|| invalid("Missing glTF UV provenance"))?;
-            let e1 = points[1] - points[0];
-            let e2 = points[2] - points[0];
+            let e1 = raw_points[1] - raw_points[0];
+            let e2 = raw_points[2] - raw_points[0];
             let a = DMat3::from_cols(e1, e2, e1.cross(e2)).transpose();
             if a.determinant().abs() > 1e-18 {
                 let gu = a.inverse() * DVec3::new(uv[1].x - uv[0].x, uv[2].x - uv[0].x, 0.);
                 let gv = a.inverse() * DVec3::new(uv[1].y - uv[0].y, uv[2].y - uv[0].y, 0.);
-                attrs.insert("texture".into(),serde_json::json!({"embed":texture["embed"],"uvw":[gu.x,gu.y,gu.z,uv[0].x-gu.dot(points[0]),gv.x,gv.y,gv.z,uv[0].y-gv.dot(points[0])],"sw":if gu.length()>1e-9{1./gu.length()}else{1.},"sh":if gv.length()>1e-9{1./gv.length()}else{1.}}));
+                attrs.insert("texture".into(),serde_json::json!({"embed":texture["embed"],"uvw":[gu.x,gu.y,gu.z,uv[0].x-gu.dot(raw_points[0]),gv.x,gv.y,gv.z,uv[0].y-gv.dot(raw_points[0])],"sw":if gu.length()>1e-9{1./gu.length()}else{1.},"sh":if gv.length()>1e-9{1./gv.length()}else{1.}}));
                 attrs.insert("back".into(), true.into());
             }
         } else if rgba[..3] != [1., 1., 1.] {
@@ -151,7 +150,69 @@ pub(super) fn finish(
             );
         }
     }
-    crate::obj::obj_source_soften(&mut prepared);
+    if prepared.edges.len() <= 500000 {
+        crate::obj::obj_source_soften(&mut prepared);
+    }
+    let mut stats: HashMap<String, (usize, f64)> = HashMap::new();
+    for face in &prepared.faces {
+        if let Some(key) = face
+            .attrs
+            .get("texture")
+            .and_then(|t| t.get("embed"))
+            .and_then(Value::as_str)
+        {
+            let entry = stats.entry(key.into()).or_default();
+            entry.0 += 1;
+            let p0 = prepared.vertices[face.vertices[0]].position;
+            let mut n = DVec3::ZERO;
+            for i in 1..face.vertices.len() - 1 {
+                n += (prepared.vertices[face.vertices[i]].position - p0)
+                    .cross(prepared.vertices[face.vertices[i + 1]].position - p0);
+            }
+            entry.1 += 0.5 * n.as_vec3().length() as f64;
+        }
+    }
+    let foliage: std::collections::HashSet<_> = stats
+        .into_iter()
+        .filter_map(|(key, (count, area))| {
+            let alpha = assets.get(&key).is_some_and(|bytes| image_alpha(bytes));
+            if alpha || (count > 200 && area / (count as f64) < 0.02) {
+                Some(key)
+            } else {
+                None
+            }
+        })
+        .collect();
+    for edge in &mut prepared.edges {
+        if !edge.faces.is_empty()
+            && edge.faces.iter().all(|&i| {
+                prepared.faces[i]
+                    .attrs
+                    .get("texture")
+                    .and_then(|t| t.get("embed"))
+                    .and_then(Value::as_str)
+                    .is_some_and(|key| foliage.contains(key))
+            })
+        {
+            edge.hidden = true;
+        }
+    }
     *mesh = prepared;
     Ok(())
+}
+
+fn image_alpha(bytes: &[u8]) -> bool {
+    if bytes.len() > 16 * 1024 * 1024 {
+        return false;
+    }
+    let Ok(format) = image::guess_format(bytes) else {
+        return false;
+    };
+    let mut reader = image::ImageReader::with_format(std::io::Cursor::new(bytes), format);
+    let mut limits = image::Limits::default();
+    limits.max_alloc = Some(1024 * 1024);
+    reader.limits(limits);
+    reader
+        .into_decoder()
+        .is_ok_and(|d| d.color_type().has_alpha())
 }

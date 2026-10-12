@@ -76,7 +76,7 @@ impl Drop for Service {
 #[derive(Default)]
 pub struct State {
     service: Option<Service>,
-    running: Option<(PathBuf, Kind, uuid::Uuid, u64)>,
+    running: Option<(PathBuf, Kind, uuid::Uuid, u64, Vec<uuid::Uuid>)>,
     pub error: Option<String>,
     pub completed: u64,
     pub label: Option<(uuid::Uuid, String)>,
@@ -130,6 +130,7 @@ impl IngeTrazoApp {
             kind,
             self.clipboard_document,
             self.model_revision,
+            self.scene.history_context.clone(),
         ));
         self.status_message = format!("Importing {}", path.display());
         Ok(())
@@ -161,8 +162,11 @@ impl IngeTrazoApp {
         else {
             return;
         };
-        let (path, kind, document, revision) = self.exchange_import.running.take().unwrap();
-        if (document, revision) != (self.clipboard_document, self.model_revision) {
+        let (path, kind, document, revision, context) =
+            self.exchange_import.running.take().unwrap();
+        if (document, revision) != (self.clipboard_document, self.model_revision)
+            || context != self.scene.history_context
+        {
             self.status_message = "Import result retired after document/model change".into();
             return;
         }
@@ -192,8 +196,14 @@ impl IngeTrazoApp {
             &self.scene
         };
         let mut candidate = owner.clone();
-        candidate.layers = self.scene.layers.clone();
-        candidate.embedded_textures = self.scene.embedded_textures.clone();
+        if candidate.layers != self.scene.layers {
+            candidate.layers.clone_from(&self.scene.layers);
+        }
+        if candidate.embedded_textures != self.scene.embedded_textures {
+            candidate
+                .embedded_textures
+                .clone_from(&self.scene.embedded_textures);
+        }
         let active_mesh = if active && parked {
             let mut mesh = self.scene.mesh.clone();
             plan.emit_active_mesh(&mut mesh)?;

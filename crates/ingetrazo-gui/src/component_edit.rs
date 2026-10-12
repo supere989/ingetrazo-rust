@@ -77,7 +77,8 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
                 let mut local=finishing_scene.clone();local.mesh=marker.mesh.clone();
                 let (restored,_)=component_candidate(session,&local)?;
                 if let Some(group)=restored.groups.iter().find(|g|g.id==session.group_id){
-                    if let Some(old)=entry.groups.iter_mut().find(|g|g.id==session.group_id){*old=group.clone();}
+                    fn find_group(groups:&mut[ingetrazo_core::groups::Group],id:uuid::Uuid)->Option<&mut ingetrazo_core::groups::Group>{for group in groups{if group.id==id{return Some(group);}if let Some(child)=find_group(&mut group.children,id){return Some(child);}}None}
+                    if let Some(old)=find_group(&mut entry.groups,session.group_id){*old=group.clone();}
                     if let Some(id)=group.mesh_share{if let Some(mesh)=restored.mesh_shares.get(&id){entry.mesh_shares.insert(id,mesh.clone());}}
                     if let Some(id)=group.component_definition{if let Some(def)=restored.component_definitions.get(&id){entry.component_definitions.insert(id,def.clone());}}
                 }
