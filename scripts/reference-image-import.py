@@ -101,12 +101,22 @@ for name,actions,edit_path in roster:
    p=None
    if a['asset'] is not None:p=external/a['filename'];shutil.copyfile(out/a['asset'],p)
    file_dialogs.getOpenFileName=lambda *args,**kw:('','')if p is None else(str(p),'')
+   completed=[False];expired=[False]
    def dismiss():
     widget=app.activeModalWidget()
-    if isinstance(widget,QMessageBox):
+    if not isinstance(widget,QMessageBox):return
+    try:
+     assert not expired[0],'Image message deadline expired'
      assert a['phase']=='invalid-header','Unexpected actual source message dialog'
      dialogs.append({'case':name,'phase':a['phase'],'text':widget.text()});QTest.keyClick(widget,Qt.Key_Return)
-   timer=QTimer();timer.timeout.connect(dismiss);timer.start(10);win._on_import_image();timer.stop()
+    except BaseException:sys.excepthook(*sys.exc_info())
+    finally:widget.reject();completed[0]=True
+   def deadline(completed=completed,expired=expired):
+    if not completed[0]:
+     expired[0]=True;errors.append('Image import/message fixture deadline expired')
+   timer=QTimer();timer.timeout.connect(dismiss);timer.start(10);QTimer.singleShot(5000,deadline)
+   try:win._on_import_image()
+   finally:completed[0]=True;timer.stop()
    if p is not None and a['filename']!='invalid.png':assert vp.active_tool.name=='Image'and vp.active_tool.armed;imported.append(vp.active_tool.path)
   elif op in ['move','press','release']:
    projected=vp._world_to_pixel(V(*a['world']));assert projected is not None;pixel=QPoint(round(projected[0]),round(projected[1]));a['pixel']=[pixel.x(),pixel.y()];a['viewport_size']=[vp.width(),vp.height()];mod=Qt.ShiftModifier if a.get('shift')else Qt.NoModifier
@@ -122,6 +132,11 @@ for name,actions,edit_path in roster:
    for p in external.iterdir():p.unlink()
   else:raise AssertionError(op)
   app.processEvents();record(a['phase']);assert not errors,errors
+  if name=='oblique-face-width' and a['phase']=='first-press':
+   assert vp.active_tool.work_plane is not None,'Actual face plane not acquired'
+   normal=vp.active_tool.work_plane[1].normalized();assert abs(normal.z())<.999,'Oblique cohort fell back to ground'
+  if name=='oblique-face-width' and op=='vcb':
+   assert all(abs(V.dotProduct(edge,normal))<=1e-5*max(1.,edge.length())for edge in [s.image_planes[-1].u,s.image_planes[-1].v]),'Committed plane edges left acquired face'
   if op=='press' and len(s.image_planes)>previous:assert len(s.image_planes)==previous+1 and len(vp.history.undo_stack)==history+1
   if op=='import':assert len(s.image_planes)==previous and len(vp.history.undo_stack)==history
   (out/'original-image-import.partial.json').write_text(json.dumps({'cases':cases,'states':states,'headers':headers,'errors':errors,'dialogs':dialogs},indent=2,allow_nan=False)+'\n')
