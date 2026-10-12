@@ -1,0 +1,143 @@
+{
+  "precondition": "All source/integration archive members authenticated; independent review accepted 88 members, 56 dedup aliases and 62 Git bindings before purge.",
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r2/image/source",
+      "files": 59,
+      "logical_bytes": 8016399
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/picker",
+      "files": 1,
+      "logical_bytes": 82756640
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r2/image/native/external",
+      "files": 1,
+      "logical_bytes": 1253
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r3/image/source",
+      "files": 59,
+      "logical_bytes": 8016399
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/picker",
+      "files": 1,
+      "logical_bytes": 82756640
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r3/image/native/external",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r4/image/source",
+      "files": 59,
+      "logical_bytes": 8016399
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r4/image/data",
+      "files": 7,
+      "logical_bytes": 378287
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/picker",
+      "files": 1,
+      "logical_bytes": 82756640
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r4/image/native/external",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r5/image/source",
+      "files": 59,
+      "logical_bytes": 8016399
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r5/image/data",
+      "files": 7,
+      "logical_bytes": 378287
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/picker",
+      "files": 1,
+      "logical_bytes": 82756640
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r5/image/native/external",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r6/image/source",
+      "files": 59,
+      "logical_bytes": 8016399
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r6/image/data",
+      "files": 7,
+      "logical_bytes": 378287
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r6/image/native/picker",
+      "files": 1,
+      "logical_bytes": 82756640
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r6/image/native/external",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r2/stl/source",
+      "files": 54,
+      "logical_bytes": 11645379
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r2/stl/native/picker",
+      "files": 1,
+      "logical_bytes": 82496904
+    },
+    {
+      "path": "/tmp/ingetrazo-image-stl-integration-r2/stl/native/shared-config",
+      "files": 1,
+      "logical_bytes": 1317
+    },
+    {
+      "path": "/tmp/ingetrazo-image-source-proof-r1/config",
+      "files": 1,
+      "logical_bytes": 26
+    },
+    {
+      "path": "/tmp/ingetrazo-image-source-proof-r1/data",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-image-source-proof-r2/config",
+      "files": 1,
+      "logical_bytes": 26
+    },
+    {
+      "path": "/tmp/ingetrazo-image-source-proof-r2/data",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-image-source-proof-r2/cache",
+      "files": 25,
+      "logical_bytes": 2625317
+    },
+    {
+      "path": "/tmp/ingetrazo-image-source-proof-r2/external",
+      "files": 0,
+      "logical_bytes": 0
+    }
+  ],
+  "canonical_native_outputs_and_failures_retained": true,
+  "shared_cargo_target_retained": true,
+  "space_claim": "Logical bytes include hardlinked picker binaries; not a claim of physical reclaimed bytes."
+}
