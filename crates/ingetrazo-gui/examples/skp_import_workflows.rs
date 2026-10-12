@@ -67,7 +67,7 @@ fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
             .native_document
             .get("component")
             .and_then(Value::as_bool)
-            .unwrap_or(g.component_definition.is_some());
+            .unwrap_or(true);
         let billboard = if g.billboard {
             g.native_document
                 .get("billboard")
@@ -217,6 +217,11 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                     DVec3::new(0., 1., 0.),
                     "Prior nested label",
                 ));
+            if name == "nested-root-ownership" {
+                let a = app.scene.mesh.add_vertex(DVec3::new(20., 1., 0.));
+                let b = app.scene.mesh.add_vertex(DVec3::new(21., 1., 0.));
+                app.scene.mesh.add_edge(a, b);
+            }
         }
         let before = scene(&app)?;
         let history = (app.undo_stack.len(), app.redo_stack.len());
