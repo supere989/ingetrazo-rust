@@ -76,7 +76,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("STL mesh (*.stl)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.choose_stl_import();
                     ui.close_menu();
                 }
                 if ui.button(tr("Image (PNG / JPG)…")).clicked() {
