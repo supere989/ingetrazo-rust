@@ -39,7 +39,7 @@ pub struct Info {
     pub big: bool,
     pub little_endian: bool,
     pub transform: Option<[f64; 6]>,
-    pub epsg: Option<u16>,
+    pub epsg: Option<u64>,
     pub zone: Option<i32>,
     pub northern: Option<bool>,
     pub geographic: bool,
@@ -47,6 +47,9 @@ pub struct Info {
     pub nodata: Option<String>,
 }
 impl Info {
+    pub fn retained_bytes(&self) -> Result<usize, String> {
+        info_bytes(self)
+    }
     pub fn georeferenced(&self) -> bool {
         self.transform.is_some() && (self.geographic || self.zone.is_some())
     }
@@ -222,14 +225,103 @@ fn text(tags: &HashMap<u16, Tag>, key: u16) -> &str {
 fn first(tags: &HashMap<u16, Tag>, key: u16, default: u64) -> Result<u64, String> {
     numbers(tags, key).first().map_or(Ok(default), |n| n.u64())
 }
-fn ints(tags: &HashMap<u16, Tag>, key: u16) -> Result<Vec<u64>, String> {
-    numbers(tags, key).iter().map(|n| n.u64()).collect()
+fn charge(resident: &mut usize, bytes: usize, limit: usize) -> Result<(), String> {
+    *resident = resident
+        .checked_add(bytes)
+        .ok_or("TIFF memory accounting overflow")?;
+    if *resident > limit {
+        return Err("TIFF memory admission exceeded".into());
+    }
+    Ok(())
 }
-fn shorts(tags: &HashMap<u16, Tag>, key: u16) -> Result<Vec<u16>, String> {
-    numbers(tags, key)
-        .iter()
-        .map(|n| u16::try_from(n.u64()?).map_err(|_| "TIFF short overflow".into()))
-        .collect()
+fn tag_bytes(tag: &Tag) -> Result<usize, String> {
+    match tag {
+        Tag::Numbers(v) => product(v.capacity(), std::mem::size_of::<Number>()),
+        Tag::Bytes(v) => Ok(v.capacity()),
+        Tag::Text(v) => Ok(v.capacity()),
+    }
+}
+fn reserve_text(
+    text: &mut String,
+    additional: usize,
+    resident: usize,
+    limit: usize,
+) -> Result<(), String> {
+    let before = text.capacity();
+    let need = text
+        .len()
+        .checked_add(additional)
+        .ok_or("TIFF text size overflow")?;
+    if need > before {
+        if resident
+            .checked_add(need - before)
+            .is_none_or(|n| n > limit)
+        {
+            return Err("TIFF text admission exceeded".into());
+        }
+        text.try_reserve_exact(additional)
+            .map_err(|_| "TIFF text allocation refused")?;
+        if resident
+            .checked_add(text.capacity() - before)
+            .is_none_or(|n| n > limit)
+        {
+            return Err("TIFF text capacity admission exceeded".into());
+        }
+    }
+    Ok(())
+}
+fn latin1(data: &[u8], resident: usize, limit: usize) -> Result<String, String> {
+    let end = data.iter().rposition(|b| *b != 0).map_or(0, |i| i + 1);
+    let data = &data[..end];
+    let bytes = data
+        .len()
+        .checked_add(data.iter().filter(|b| **b >= 128).count())
+        .ok_or("TIFF text size overflow")?;
+    let mut text = String::new();
+    reserve_text(&mut text, bytes, resident, limit)?;
+    for b in data {
+        text.push(char::from(*b))
+    }
+    Ok(text)
+}
+fn copied_text(text: &str, resident: &mut usize, limit: usize) -> Result<String, String> {
+    let mut out = String::new();
+    reserve_text(&mut out, text.len(), *resident, limit)?;
+    out.push_str(text);
+    charge(resident, out.capacity(), limit)?;
+    Ok(out)
+}
+fn ints(
+    tags: &HashMap<u16, Tag>,
+    key: u16,
+    resident: &mut usize,
+    limit: usize,
+) -> Result<Vec<u64>, String> {
+    let source = numbers(tags, key);
+    let mut out = allocated(source.len(), 0u64, *resident, limit)?;
+    for (dst, n) in out.iter_mut().zip(source) {
+        *dst = n.u64()?
+    }
+    charge(resident, product(out.capacity(), 8)?, limit)?;
+    Ok(out)
+}
+fn shorts(
+    tags: &HashMap<u16, Tag>,
+    key: u16,
+    resident: &mut usize,
+    limit: usize,
+) -> Result<Vec<u16>, String> {
+    let source = numbers(tags, key);
+    let mut out = allocated(source.len(), 0u16, *resident, limit)?;
+    for (dst, n) in out.iter_mut().zip(source) {
+        *dst = u16::try_from(n.u64()?).map_err(|_| "TIFF short overflow")?
+    }
+    charge(resident, product(out.capacity(), 2)?, limit)?;
+    Ok(out)
+}
+fn short(tags: &HashMap<u16, Tag>, key: u16, default: u64) -> Result<u16, String> {
+    u16::try_from(first(tags, key, default)?)
+        .map_err(|_| format!("TIFF tag {key} exceeds its supported integer domain"))
 }
 pub fn read_info(path: &Path, limits: Limits) -> Result<Info, String> {
     let mut f = File::open(path).map_err(|e| e.to_string())?;
@@ -279,6 +371,12 @@ pub fn read_header<R: Read + Seek>(f: &mut R, path: &Path, limits: Limits) -> Re
     let mut tags = HashMap::new();
     tags.try_reserve(count.min(32))
         .map_err(|_| "TIFF tag allocation refused")?;
+    // HashMap capacity is a load-factor count, not the underlying bucket count.
+    charge(
+        &mut resident,
+        product(tags.capacity(), 2 * (std::mem::size_of::<(u16, Tag)>() + 1))?,
+        limits.memory_bytes,
+    )?;
     for entry in raw.chunks_exact(entry_size) {
         let tag = value(&entry[..2], le) as u16;
         if !known(tag) {
@@ -309,13 +407,13 @@ pub fn read_header<R: Read + Seek>(f: &mut R, path: &Path, limits: Limits) -> Re
             f.read_exact(&mut data).map_err(|e| e.to_string())?;
         }
         let parsed = if typ == 2 {
-            Tag::Text(
-                data.iter()
-                    .map(|b| char::from(*b))
-                    .collect::<String>()
-                    .trim_end_matches('\0')
-                    .to_string(),
-            )
+            Tag::Text(latin1(
+                &data,
+                resident
+                    .checked_add(data.capacity())
+                    .ok_or("TIFF memory overflow")?,
+                limits.memory_bytes,
+            )?)
         } else if typ == 7 {
             Tag::Bytes(data)
         } else {
@@ -350,18 +448,13 @@ pub fn read_header<R: Read + Seek>(f: &mut R, path: &Path, limits: Limits) -> Re
             }
             Tag::Numbers(values)
         };
-        resident = resident
-            .checked_add(match &parsed {
-                Tag::Numbers(v) => v.capacity() * std::mem::size_of::<Number>(),
-                Tag::Bytes(v) => v.capacity(),
-                Tag::Text(v) => v.capacity(),
-            })
-            .ok_or("TIFF header budget overflow")?;
-        if resident > limits.memory_bytes {
-            return Err("TIFF header admission exceeded".into());
+        charge(&mut resident, tag_bytes(&parsed)?, limits.memory_bytes)?;
+        if let Some(old) = tags.insert(tag, parsed) {
+            resident -= tag_bytes(&old)?;
         }
-        tags.insert(tag, parsed);
     }
+    resident -= raw.capacity();
+    drop(raw);
     let width = usize::try_from(first(&tags, 256, 0)?).map_err(|_| "TIFF width overflow")?;
     let height = usize::try_from(first(&tags, 257, 0)?).map_err(|_| "TIFF height overflow")?;
     if width == 0 || height == 0 {
@@ -372,62 +465,115 @@ pub fn read_header<R: Read + Seek>(f: &mut R, path: &Path, limits: Limits) -> Re
     if samples == 0 {
         return Err("Zero TIFF sample count".into());
     }
-    let mut bits = shorts(&tags, 258)?;
+    let mut bits = shorts(&tags, 258, &mut resident, limits.memory_bytes)?;
     if bits.is_empty() {
-        bits.push(1);
+        bits = allocated(1, 1u16, resident, limits.memory_bytes)?;
+        charge(
+            &mut resident,
+            product(bits.capacity(), 2)?,
+            limits.memory_bytes,
+        )?;
     }
     if samples > bits.len() {
-        if product(samples, 2)? > limits.memory_bytes {
+        let before = product(bits.capacity(), 2)?;
+        let required = product(samples, 2)?;
+        if resident
+            .checked_add(required.saturating_sub(before))
+            .is_none_or(|n| n > limits.memory_bytes)
+        {
             return Err("TIFF bits admission exceeded".into());
         }
+        bits.try_reserve_exact(samples - bits.len())
+            .map_err(|_| "TIFF bits allocation refused")?;
+        charge(
+            &mut resident,
+            product(bits.capacity(), 2)? - before,
+            limits.memory_bytes,
+        )?;
         bits.resize(samples, *bits.last().unwrap());
     }
     let tiled = tags.contains_key(&324);
     let tile_w = if tiled {
-        first(&tags, 322, 0)? as usize
+        usize::try_from(first(&tags, 322, 0)?).map_err(|_| "TIFF tile width overflow")?
     } else {
         width
     };
     let rows = first(&tags, 278, height as u64)?;
     let tile_h = if tiled {
-        first(&tags, 323, 0)? as usize
+        usize::try_from(first(&tags, 323, 0)?).map_err(|_| "TIFF tile height overflow")?
     } else if rows == 0 {
         height
     } else {
-        (rows as usize).min(height)
+        usize::try_from(rows)
+            .map_err(|_| "TIFF strip height overflow")?
+            .min(height)
     };
     if tile_w == 0 || tile_h == 0 {
         return Err("Zero TIFF block extent".into());
     }
-    let offsets = ints(&tags, if tiled { 324 } else { 273 })?;
-    let bytecounts = ints(&tags, if tiled { 325 } else { 279 })?;
+    let offsets = ints(
+        &tags,
+        if tiled { 324 } else { 273 },
+        &mut resident,
+        limits.memory_bytes,
+    )?;
+    let bytecounts = ints(
+        &tags,
+        if tiled { 325 } else { 279 },
+        &mut resident,
+        limits.memory_bytes,
+    )?;
     if offsets.is_empty() {
         return Err("the TIFF has no image data".into());
     }
     if bytecounts.is_empty() {
         return Err("the TIFF has no byte counts".into());
     }
+    let extra_samples = shorts(&tags, 338, &mut resident, limits.memory_bytes)?;
+    let sample_format = shorts(&tags, 339, &mut resident, limits.memory_bytes)?;
+    let nodata = if tags.contains_key(&42113) {
+        Some(copied_text(
+            text(&tags, 42113),
+            &mut resident,
+            limits.memory_bytes,
+        )?)
+    } else {
+        None
+    };
+    let path_charge = product(path.as_os_str().len(), 2)?;
+    if resident
+        .checked_add(path_charge)
+        .is_none_or(|n| n > limits.memory_bytes)
+    {
+        return Err("TIFF path admission exceeded".into());
+    }
+    let owned_path = path.to_owned();
+    charge(
+        &mut resident,
+        product(owned_path.capacity(), 2)?,
+        limits.memory_bytes,
+    )?;
     let mut info = Info {
-        path: path.to_owned(),
+        path: owned_path,
         width,
         height,
         samples,
         bits,
-        compression: first(&tags, 259, 1)? as u16,
-        photometric: first(&tags, 262, if samples >= 3 { 2 } else { 1 })? as u16,
-        planar: first(&tags, 284, 1)? as u16,
+        compression: short(&tags, 259, 1)?,
+        photometric: short(&tags, 262, if samples >= 3 { 2 } else { 1 })?,
+        planar: short(&tags, 284, 1)?,
         tiled,
         tile_w,
         tile_h,
         offsets,
         bytecounts,
-        predictor: first(&tags, 317, 1)? as u16,
+        predictor: short(&tags, 317, 1)?,
         jpeg_tables: match tags.remove(&347) {
             Some(Tag::Bytes(b)) => b,
             _ => vec![],
         },
-        extra_samples: shorts(&tags, 338)?,
-        sample_format: shorts(&tags, 339)?,
+        extra_samples,
+        sample_format,
         big,
         little_endian: le,
         transform: None,
@@ -436,12 +582,17 @@ pub fn read_header<R: Read + Seek>(f: &mut R, path: &Path, limits: Limits) -> Re
         northern: None,
         geographic: false,
         citation: String::new(),
-        nodata: tags.get(&42113).map(|_| text(&tags, 42113).to_string()),
+        nodata,
     };
-    placement(&mut info, &tags)?;
+    placement(&mut info, &tags, &mut resident, limits.memory_bytes)?;
     Ok(info)
 }
-fn placement(info: &mut Info, tags: &HashMap<u16, Tag>) -> Result<(), String> {
+fn placement(
+    info: &mut Info,
+    tags: &HashMap<u16, Tag>,
+    resident: &mut usize,
+    limit: usize,
+) -> Result<(), String> {
     let matrix = numbers(tags, 34264);
     let scale = numbers(tags, 33550);
     let tie = numbers(tags, 33922);
@@ -472,6 +623,7 @@ fn placement(info: &mut Info, tags: &HashMap<u16, Tag>) -> Result<(), String> {
     let ascii = text(tags, 34737);
     let (mut model, mut raster, mut epsg, mut geographic) = (None, 1, None, None);
     let mut citation = String::new();
+    let mut char_offsets: Option<Vec<usize>> = None;
     if keys.len() >= 4 {
         for key in keys[4..].chunks_exact(4).take(keys[3].u64()? as usize) {
             let (k, loc, count, val) = (key[0].u64()?, key[1].u64()?, key[2].u64()?, key[3].u64()?);
@@ -481,22 +633,61 @@ fn placement(info: &mut Info, tags: &HashMap<u16, Tag>) -> Result<(), String> {
                 3072 => epsg = Some(val),
                 2048 => geographic = Some(val),
                 1026 | 3073 if loc == 34737 => {
-                    let part = ascii
-                        .chars()
-                        .skip(val as usize)
-                        .take(count as usize)
-                        .collect::<String>();
-                    citation.push_str(part.trim_end_matches('|'));
+                    if char_offsets.is_none() {
+                        let n = ascii
+                            .chars()
+                            .count()
+                            .checked_add(1)
+                            .ok_or("TIFF text index overflow")?;
+                        let mut offsets = allocated(n, 0usize, *resident, limit)?;
+                        for (dst, (index, _)) in offsets.iter_mut().zip(ascii.char_indices()) {
+                            *dst = index;
+                        }
+                        *offsets.last_mut().unwrap() = ascii.len();
+                        charge(
+                            resident,
+                            product(offsets.capacity(), std::mem::size_of::<usize>())?,
+                            limit,
+                        )?;
+                        char_offsets = Some(offsets);
+                    }
+                    let offsets = char_offsets.as_ref().unwrap();
+                    let chars = offsets.len() - 1;
+                    let start = usize::try_from(val).unwrap_or(usize::MAX).min(chars);
+                    let end = start
+                        .saturating_add(usize::try_from(count).unwrap_or(usize::MAX))
+                        .min(chars);
+                    let part = ascii[offsets[start]..offsets[end]].trim_end_matches('|');
+                    let before = citation.capacity();
+                    reserve_text(
+                        &mut citation,
+                        part.len().checked_add(1).ok_or("TIFF citation overflow")?,
+                        *resident,
+                        limit,
+                    )?;
+                    charge(resident, citation.capacity() - before, limit)?;
+                    citation.push_str(part);
                     citation.push('|');
                 }
                 _ => {}
             }
         }
     }
-    info.citation = citation.trim_matches('|').to_string();
-    info.epsg = epsg
-        .filter(|v| *v != 0 && *v != 32767)
-        .and_then(|v| u16::try_from(v).ok());
+    if let Some(offsets) = char_offsets {
+        *resident -= product(offsets.capacity(), std::mem::size_of::<usize>())?;
+    }
+    let start = citation
+        .bytes()
+        .position(|b| b != b'|')
+        .unwrap_or(citation.len());
+    let end = citation
+        .bytes()
+        .rposition(|b| b != b'|')
+        .map_or(start, |i| i + 1);
+    citation.drain(..start);
+    citation.truncate(end - start);
+    info.citation = citation;
+    info.epsg = epsg.filter(|v| *v != 0 && *v != 32767);
     if let Some(t) = &mut transform {
         if raster == 2 {
             t[2] = t[2] - 0.5 * t[0] - 0.5 * t[1];
@@ -517,7 +708,8 @@ fn placement(info: &mut Info, tags: &HashMap<u16, Tag>) -> Result<(), String> {
         }
     }
     if info.zone.is_none() {
-        let lower = ascii.to_ascii_lowercase();
+        let mut lower = copied_text(ascii, resident, limit)?;
+        lower.make_ascii_lowercase();
         for (at, _) in lower.match_indices("utm") {
             let mut p = &lower[at + 3..];
             p = p.trim_start();
@@ -537,6 +729,7 @@ fn placement(info: &mut Info, tags: &HashMap<u16, Tag>) -> Result<(), String> {
                 break;
             }
         }
+        *resident -= lower.capacity();
     }
     if info.zone.is_none() {
         info.geographic = model == Some(2)
@@ -565,15 +758,21 @@ fn ceil(n: usize, d: usize) -> usize {
     n / d + usize::from(n % d != 0)
 }
 fn info_bytes(info: &Info) -> Result<usize, String> {
-    let n = info
-        .offsets
-        .capacity()
-        .checked_add(info.bytecounts.capacity())
-        .ok_or("TIFF metadata overflow")?;
-    product(n, 8)?
-        .checked_add(info.jpeg_tables.capacity())
-        .and_then(|v| v.checked_add(std::mem::size_of::<Info>()))
-        .ok_or_else(|| "TIFF metadata overflow".into())
+    let mut n = std::mem::size_of::<Info>();
+    for bytes in [
+        product(info.offsets.capacity(), 8)?,
+        product(info.bytecounts.capacity(), 8)?,
+        product(info.bits.capacity(), 2)?,
+        product(info.extra_samples.capacity(), 2)?,
+        product(info.sample_format.capacity(), 2)?,
+        info.jpeg_tables.capacity(),
+        product(info.path.capacity(), 2)?,
+        info.citation.capacity(),
+        info.nodata.as_ref().map_or(0, String::capacity),
+    ] {
+        n = n.checked_add(bytes).ok_or("TIFF metadata overflow")?;
+    }
+    Ok(n)
 }
 pub fn read_rgba(
     info: &Info,
@@ -724,7 +923,14 @@ fn decode_band<R: Read + Seek>(
             f.read_exact(&mut encoded).map_err(|e| e.to_string())?;
             let x0 = tx * info.tile_w;
             let cols = (info.width - x0).min(info.tile_w);
-            let block = decode_block(&encoded, info, per, resident + encoded.capacity(), limits)?;
+            let block = decode_block(
+                &encoded,
+                info,
+                per,
+                resident + encoded.capacity(),
+                limits,
+                stats,
+            )?;
             let live = resident + encoded.capacity() + block.capacity();
             stats.largest_block_bytes = stats
                 .largest_block_bytes
@@ -784,29 +990,44 @@ fn sample_rgba(p: &[u8], photometric: u16, out: &mut [u8]) {
         out[3] = if p.len() >= 4 { p[3] } else { 255 };
     }
 }
-fn bounded_extend(out: &mut Vec<u8>, data: &[u8], need: usize) {
-    let take = (need - out.len()).min(data.len());
-    out.extend_from_slice(&data[..take]);
-}
 fn decode_block(
     encoded: &[u8],
     info: &Info,
     samples: usize,
     resident: usize,
     limits: Limits,
+    stats: &mut DecodeStats,
 ) -> Result<Vec<u8>, String> {
     let count = product(product(info.tile_w, info.tile_h)?, samples)?;
     if info.compression == 7 {
-        return jpeg_block(encoded, info, samples, count, resident, limits);
+        return jpeg_block(encoded, info, samples, count, resident, limits, stats);
     }
     let step = if info.bits[0] == 16 { 2 } else { 1 };
     let need = product(count, step)?;
-    let mut bytes = allocated(need, 0u8, resident, limits.memory_bytes)?;
+    // Conservative inflater state includes its history ring; LZW owns fixed
+    // prefix/suffix/stack tables. Neither grows with decoded excess.
+    let codec_work = match info.compression {
+        8 | 32946 => 128 * 1024,
+        5 => 16 * 1024,
+        _ => 0,
+    };
+    let admitted = resident
+        .checked_add(codec_work)
+        .ok_or("TIFF codec work overflow")?;
+    let mut bytes = allocated(need, 0u8, admitted, limits.memory_bytes)?;
+    stats.peak_logical_bytes = stats.peak_logical_bytes.max(admitted + bytes.capacity());
+    // Valid strips/tiles fit their declared extent; bound unused decoded excess
+    // without dropping the Deflate checksum/error validation at stream end.
+    let work_cap = need
+        .checked_add(1024 * 1024)
+        .ok_or("TIFF decoded work overflow")?;
     let mut filled = 0;
+    let mut total = 0usize;
     match info.compression {
         1 => {
             filled = need.min(encoded.len());
             bytes[..filled].copy_from_slice(&encoded[..filled]);
+            total = encoded.len();
         }
         8 | 32946 => {
             let mut decoder = flate2::read::ZlibDecoder::new(encoded);
@@ -819,8 +1040,18 @@ fn decode_block(
                 }
                 filled += n;
             }
+            total = filled;
             let mut scratch = [0u8; 8192];
-            while decoder.read(&mut scratch).map_err(|e| e.to_string())? != 0 {}
+            loop {
+                let n = decoder.read(&mut scratch).map_err(|e| e.to_string())?;
+                if n == 0 {
+                    break;
+                }
+                total = total
+                    .checked_add(n)
+                    .filter(|n| *n <= work_cap)
+                    .ok_or("TIFF Deflate exceeds declared decoded work budget")?;
+            }
         }
         32773 => {
             let mut at = 0;
@@ -830,13 +1061,22 @@ fn decode_block(
                 if h < 128 {
                     let n = usize::from(h) + 1;
                     let end = (at + n).min(encoded.len());
+                    total = total
+                        .checked_add(end - at)
+                        .filter(|n| *n <= work_cap)
+                        .ok_or("TIFF PackBits exceeds declared decoded work budget")?;
                     let n = (end - at).min(need - filled);
                     bytes[filled..filled + n].copy_from_slice(&encoded[at..at + n]);
                     filled += n;
                     at = end;
                 } else if h > 128 {
                     if at < encoded.len() {
-                        let n = (257 - usize::from(h)).min(need - filled);
+                        let produced = 257 - usize::from(h);
+                        total = total
+                            .checked_add(produced)
+                            .filter(|n| *n <= work_cap)
+                            .ok_or("TIFF PackBits exceeds declared decoded work budget")?;
+                        let n = produced.min(need - filled);
                         bytes[filled..filled + n].fill(encoded[at]);
                         filled += n;
                     }
@@ -844,10 +1084,12 @@ fn decode_block(
                 }
             }
         }
-        5 => filled = lzw_decode_into(encoded, &mut bytes)?,
+        5 => {
+            (filled, total) = lzw_decode_into(encoded, &mut bytes, work_cap)?;
+        }
         _ => return Err("Unsupported TIFF compression".into()),
     }
-    if step == 2 && filled % 2 != 0 {
+    if step == 2 && total % 2 != 0 {
         return Err("Odd byte count in 16-bit TIFF samples".into());
     }
     if step == 1 {
@@ -890,13 +1132,14 @@ fn decode_block(
     bytes.truncate(count);
     Ok(bytes)
 }
-fn lzw_decode_into(data: &[u8], out: &mut [u8]) -> Result<usize, String> {
+fn lzw_decode_into(data: &[u8], out: &mut [u8], work_cap: usize) -> Result<(usize, usize), String> {
     // Prefix table avoids allocating/copying a growing byte string for every code.
     let mut prefix = [0u16; 4096];
     let mut suffix = [0u8; 4096];
     let mut stack = [0u8; 4096];
     let (mut bits, mut table, mut prev) = (9usize, 258usize, None::<usize>);
     let (mut acc, mut nacc, mut pos, mut written) = (0u32, 0usize, 0usize, 0usize);
+    let mut total = 0usize;
     loop {
         while nacc < bits && pos < data.len() {
             acc = (acc << 8) | u32::from(data[pos]);
@@ -938,6 +1181,10 @@ fn lzw_decode_into(data: &[u8], out: &mut [u8]) -> Result<usize, String> {
         let first = cursor as u8;
         stack[n] = first;
         n += 1;
+        total = total
+            .checked_add(n + usize::from(special))
+            .filter(|n| *n <= work_cap)
+            .ok_or("TIFF LZW exceeds declared decoded work budget")?;
         for b in stack[..n].iter().rev() {
             if written < out.len() {
                 out[written] = *b;
@@ -960,7 +1207,7 @@ fn lzw_decode_into(data: &[u8], out: &mut [u8]) -> Result<usize, String> {
             bits += 1;
         }
     }
-    Ok(written)
+    Ok((written, total))
 }
 struct Jpeg(turbojpeg_sys::tjhandle);
 impl Drop for Jpeg {
@@ -977,6 +1224,7 @@ fn jpeg_block(
     count: usize,
     resident: usize,
     limits: Limits,
+    stats: &mut DecodeStats,
 ) -> Result<Vec<u8>, String> {
     let tables = &info.jpeg_tables;
     let splice =
@@ -1001,6 +1249,19 @@ fn jpeg_block(
         resident + merged.capacity(),
         limits.memory_bytes,
     )?;
+    stats.peak_logical_bytes = stats
+        .peak_logical_bytes
+        .max(resident + merged.capacity() + out.capacity());
+    // Header parsing also owns native decoder state, before image dimensions
+    // allow the larger per-pixel work estimate below.
+    let header_live = resident + merged.capacity() + out.capacity();
+    if header_live
+        .checked_add(1024 * 1024)
+        .is_none_or(|n| n > limits.memory_bytes)
+    {
+        return Err("JPEG header work exceeds CPU admission".into());
+    }
+    stats.peak_logical_bytes = stats.peak_logical_bytes.max(header_live + 1024 * 1024);
     let handle = unsafe { turbojpeg_sys::tjInitDecompress() };
     if handle.is_null() {
         return Err("Could not allocate JPEG tile decoder".into());
@@ -1026,17 +1287,28 @@ fn jpeg_block(
     }
     let pixels = product(w as usize, h as usize)?;
     let raw_size = product(pixels, 4)?;
-    let work = product((w as usize + 31) * (h as usize + 31), 64)?
+    let work = product(product(w as usize + 31, h as usize + 31)?, 64)?
         .checked_add(1024 * 1024)
         .ok_or("JPEG work overflow")?;
     let live = resident + merged.capacity() + out.capacity();
     if live
-        .checked_add(work)
+        .checked_add(raw_size)
+        .and_then(|n| n.checked_add(work))
         .is_none_or(|n| n > limits.memory_bytes)
     {
         return Err("JPEG tile work exceeds CPU admission".into());
     }
-    let mut raw = allocated(raw_size, 0u8, live, limits.memory_bytes)?;
+    let mut raw = allocated(
+        raw_size,
+        0u8,
+        live.checked_add(work).ok_or("JPEG work overflow")?,
+        limits.memory_bytes,
+    )?;
+    let peak = live + raw.capacity() + work;
+    stats.peak_logical_bytes = stats.peak_logical_bytes.max(peak);
+    stats.largest_block_bytes = stats
+        .largest_block_bytes
+        .max(data.len() + merged.capacity() + out.capacity() + raw.capacity() + work);
     let cmyk = matches!(
         color,
         turbojpeg_sys::TJCS_TJCS_CMYK | turbojpeg_sys::TJCS_TJCS_YCCK
@@ -1081,4 +1353,94 @@ fn jpeg_block(
         }
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    use std::io::Write;
+    fn minimal(compression: u16) -> Info {
+        Info {
+            path: PathBuf::new(),
+            width: 1,
+            height: 1,
+            samples: 1,
+            bits: vec![8],
+            compression,
+            photometric: 1,
+            planar: 1,
+            tiled: false,
+            tile_w: 1,
+            tile_h: 1,
+            offsets: vec![],
+            bytecounts: vec![],
+            predictor: 1,
+            jpeg_tables: vec![],
+            extra_samples: vec![],
+            sample_format: vec![],
+            big: false,
+            little_endian: true,
+            transform: None,
+            epsg: None,
+            zone: None,
+            northern: None,
+            geographic: false,
+            citation: String::new(),
+            nodata: None,
+        }
+    }
+    fn stats() -> DecodeStats {
+        DecodeStats {
+            bands: 1,
+            peak_logical_bytes: 0,
+            largest_band_bytes: 0,
+            largest_block_bytes: 0,
+            full_resolution_fallback: false,
+        }
+    }
+    fn deflate(bytes: &[u8]) -> Vec<u8> {
+        let mut encoder =
+            flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::default());
+        encoder.write_all(bytes).unwrap();
+        encoder.finish().unwrap()
+    }
+    #[test]
+    fn declared_tile_bounds_deflate_work_without_losing_checksum() {
+        let info = minimal(8);
+        let limits = Limits {
+            memory_bytes: 16 * 1024 * 1024,
+        };
+        let encoded = deflate(&[4, 5, 6]);
+        assert_eq!(
+            decode_block(&encoded, &info, 1, 0, limits, &mut stats()).unwrap(),
+            vec![4]
+        );
+        let mut corrupt = encoded;
+        *corrupt.last_mut().unwrap() ^= 1;
+        assert!(decode_block(&corrupt, &info, 1, 0, limits, &mut stats()).is_err());
+        let bomb = deflate(&vec![7; 1024 * 1024 + 2]);
+        assert!(decode_block(&bomb, &info, 1, 0, limits, &mut stats())
+            .unwrap_err()
+            .contains("decoded work budget"));
+    }
+    #[test]
+    fn metadata_text_and_tag_domains_preserve_admission() {
+        let bytes = vec![0xd1; 512];
+        assert!(latin1(&bytes, 700, 1500).is_err());
+        let text = latin1(&bytes, 700, 1724).unwrap();
+        assert_eq!(text.chars().count(), 512);
+        assert_eq!(text.len(), 1024);
+        let mut tags = HashMap::new();
+        tags.insert(259, Tag::Numbers(vec![Number::Unsigned(65537)]));
+        assert!(short(&tags, 259, 1).is_err());
+        let mut info = minimal(1);
+        info.bits.reserve_exact(100);
+        info.citation = "x".repeat(50);
+        assert!(
+            info.retained_bytes().unwrap()
+                >= std::mem::size_of::<Info>()
+                    + info.bits.capacity() * 2
+                    + info.citation.capacity()
+        );
+    }
 }
