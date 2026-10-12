@@ -43,8 +43,18 @@ fn observe(
         for f in &g.mesh.faces {
             let mut attrs = json!(f.attrs);
             if let Some(texture) = attrs.get_mut("texture") {
-                if let Some(key) = texture["path"].as_str().map(str::to_owned) {
-                    texture["path"] = resource(app, &key, out, resources)?;
+                if let Some(key) = texture
+                    .get("path")
+                    .or_else(|| texture.get("embed"))
+                    .and_then(Value::as_str)
+                    .map(str::to_owned)
+                {
+                    let identity = resource(app, &key, out, resources)?;
+                    texture
+                        .as_object_mut()
+                        .ok_or("Actual texture record must be an object")?
+                        .remove("embed");
+                    texture["path"] = identity;
                 }
             }
             faces.push(json!({"outer":f.vertices.iter().map(|i|g.mesh.vertices[*i].position.to_array()).collect::<Vec<_>>(),"holes":f.holes.iter().map(|h|h.iter().map(|i|g.mesh.vertices[*i].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>(),"attrs":attrs}));
