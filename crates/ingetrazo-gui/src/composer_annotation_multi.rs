@@ -10,7 +10,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 const MAX_MEMBERS: usize = 10_000;
 const CATEGORIES: [usize; 6] = [7, 8, 9, 10, 12, 13];
 #[derive(Clone, Debug, Default)]
-pub(super) struct State {
+pub(in crate::composer) struct State {
     pub members: Vec<Owner>,
     pub external: bool,
     membership: HashSet<Owner>,
