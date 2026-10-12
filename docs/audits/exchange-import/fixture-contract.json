@@ -1,0 +1,111 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cohorts": 13,
+  "planned_states": 61,
+  "planned_readers": 11,
+  "original_sources": [
+    {
+      "path": "tests/test_dae_import.py",
+      "sha256": "f5d132603d0030cd269424c37fe208d56fe38a083c82d386ba25b0e2dbe37cf3",
+      "bytes": 18234,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "formats/dae.py",
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc",
+      "bytes": 48406,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "formats/glb.py",
+      "sha256": "d1f4a5d5089feaf54579051f7f66ba2cacc4ed7c5a458241bd017b283c7da9bc",
+      "bytes": 18074,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "formats/fuse.py",
+      "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae",
+      "bytes": 16553,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "bytes": 41235,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "bytes": 286141,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+      "bytes": 622724,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "bytes": 161511,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "bytes": 74619,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "bytes": 37346,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52",
+      "bytes": 20829,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "georef/datum.py",
+      "sha256": "2fa474d5f3a9ad49317aeb52dafb4eb499f6d1d874117f4885286f9760a281a9",
+      "bytes": 9963,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    }
+  ],
+  "sources": [
+    {
+      "path": "scripts/reference-exchange-import.py",
+      "sha256": "71235a808ccd8e1c136f302396569218d4057c159da59332338a7b2c672d1b34",
+      "bytes": 13781
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "5980ecbcc5979d70bf4eaca8cb256d02de2a6f8177e081d722f0968e5be2a85b",
+      "bytes": 1554
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "bytes": 4180
+    }
+  ],
+  "source_capture_command": "QT_QPA_PLATFORM=offscreen /tmp/ingetrazo-parity-python/bin/python scripts/reference-exchange-import.py OUTPUT",
+  "native_consumer": "exchange_import_workflows SOURCE OUTPUT",
+  "reader": "reference-exchange-import-reopens.py SOURCE NATIVE",
+  "checker": "check-exchange-import.py SOURCE NATIVE COMPARISON",
+  "scope": [
+    "actual chooser provider and App commands; no invented dialog or camera fit",
+    "asset units/up-axis, authored400/401 and GLBauto-scale",
+    "root/nested combined owners plus one history boundary",
+    "datum Undo persistence; failed datum leak retained and native atomic correction explicit",
+    "exact camera distance; lossless numericint/f64 only",
+    "layer names finite schema; no full metadata/viewport pixel/generalformat claim",
+    "group observation is expanded world geometry and owner tree/billboard; authored local matrices, shared registry identity and locator persistence are not separately authenticated by this cohort"
+  ],
+  "resource_identity": "actual encoded bytes SHA replaces locator only; UV/sw/sh/back/color/opacity/ownership literal"
+}
