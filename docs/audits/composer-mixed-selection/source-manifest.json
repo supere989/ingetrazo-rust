@@ -1,0 +1,87 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "48f76a08675a749d292233903285498824182ff70fefcb57515c9621c191d851",
+  "members": {
+    "all-kinds-box-input.igz": {
+      "size": 12590,
+      "sha256": "ee85db62356447aa5f961b9480d498c628aafb3902751fd38ed106852ba0fb28"
+    },
+    "all-kinds-box-original.igz": {
+      "size": 12590,
+      "sha256": "ee85db62356447aa5f961b9480d498c628aafb3902751fd38ed106852ba0fb28"
+    },
+    "bound-frame-followers-input.igz": {
+      "size": 7629,
+      "sha256": "2259edb2e78484efd4905430e03bfca9d2ccb2d07cf216bef0e19e4157afb2cb"
+    },
+    "bound-frame-followers-original.igz": {
+      "size": 7668,
+      "sha256": "1a4773216ad47a02e135ab4e7f3f10e9ca071c829ef9612b32c6415d79381788"
+    },
+    "fixture.png": {
+      "size": 100,
+      "sha256": "c968eca4fcd6db211bd26814897242ab7f599f55ceae330787bb0d12c0e0ad95"
+    },
+    "group-id-and-alt-stack-input.igz": {
+      "size": 8094,
+      "sha256": "ac727050e6d477b614713ff772160cdb3a713754f09d7806b1aab039ec8f8740"
+    },
+    "group-id-and-alt-stack-original.igz": {
+      "size": 8094,
+      "sha256": "ac727050e6d477b614713ff772160cdb3a713754f09d7806b1aab039ec8f8740"
+    },
+    "locked-hidden-list-input.igz": {
+      "size": 7469,
+      "sha256": "f8f78db3e657ad50a2ca71a8bf5d4fba819f941449f3dd1d6c869a8c63d3cb9b"
+    },
+    "locked-hidden-list-original.igz": {
+      "size": 7470,
+      "sha256": "a24bb9cc24313fe06196130f896de1c762a9f43905c4891ab73818196f4adc47"
+    },
+    "mixed-ctrl-move-input.igz": {
+      "size": 7468,
+      "sha256": "269bd324ee733967d1832b4b91b77e357543e3071b1c8ee5cf4b23f37d7bdf61"
+    },
+    "mixed-ctrl-move-original.igz": {
+      "size": 7521,
+      "sha256": "dd58fa7947fb37e4c72249924ff9beab168ae07117a080fb676eba3e19dbb322"
+    },
+    "mixed-delete-history-input.igz": {
+      "size": 7763,
+      "sha256": "f8d714d3f92987b0922e15c5c7a22d9fdd442ab92800a6388eedda455eea1ba9"
+    },
+    "mixed-delete-history-original.igz": {
+      "size": 7473,
+      "sha256": "a001f7ca88a5446822b31845909d50713752ec1ca58bcfaa8d43bf0eb7ec441b"
+    },
+    "original-mixed.json": {
+      "size": 1706193,
+      "sha256": "651c0668b05f4ada2dcf89af28ac213a3d4347ebff663936d57cc5a864068dd5"
+    },
+    "original-reopens.json": {
+      "size": 59413,
+      "sha256": "26654e5acdf2a5a36250ac325ec7c950d4deb751c353f6f414b57d28e8a9cda7"
+    },
+    "same-kind-properties-input.igz": {
+      "size": 7473,
+      "sha256": "2bcc46ab07b628a09739715053a82811140f6ec5db943ba3f648343b243fd23a"
+    },
+    "same-kind-properties-original.igz": {
+      "size": 7485,
+      "sha256": "5bd29fa6857fc1cd0f78ac2b52f7ae7c7c843c764e15e3429c33c564b5b2147b"
+    },
+    "sheet-switch-history-input.igz": {
+      "size": 9351,
+      "sha256": "60016b4f8f9a4704c7519772f4cb17504d28336973470d5ff1d56af7cad8ca58"
+    },
+    "sheet-switch-history-original.igz": {
+      "size": 9364,
+      "sha256": "1334bc750c9b018bbb92bdc1aedd0a5572a1c07a0879b28afda41103eb2a9313"
+    }
+  },
+  "cases": 8,
+  "states": 105,
+  "original_readers": 8,
+  "capture_attempts": 3,
+  "scope": "Selection traversal order diagnostic; exact geometry and history remain strict."
+}

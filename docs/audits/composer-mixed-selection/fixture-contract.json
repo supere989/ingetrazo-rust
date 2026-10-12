@@ -1,0 +1,44 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Heterogeneous single-sheet Select cohorts across all fifteen source _SheetItem kinds; existing painter/handles retained. Profiles semantic box ownership only; full profile painter remains explicit separate scope.",
+  "cases": [
+    {
+      "name": "all-kinds-box"
+    },
+    {
+      "name": "mixed-ctrl-move"
+    },
+    {
+      "name": "same-kind-properties"
+    },
+    {
+      "name": "mixed-delete-history"
+    },
+    {
+      "name": "group-id-and-alt-stack"
+    },
+    {
+      "name": "locked-hidden-list"
+    },
+    {
+      "name": "sheet-switch-history"
+    },
+    {
+      "name": "bound-frame-followers"
+    }
+  ],
+  "source_laws": {
+    "selection": "Ctrl press toggle/swallow; empty press retains cohort until release; window contains source boundingRect, crossing intersects; Ctrl add, Shift toggle, Ctrl+Shift remove. Locked/hidden cannot canvas-acquire; explicit Items selection separate.",
+    "panel": "Retain shown model while member; propagate changed fields to same concrete source model type only, one CompoundCommand/coalesced signature.",
+    "move": "Each member source own snap/anchor law; source press snapshot and single Compound geometry release. Capture actual callback exceptions; do not fake successful source history.",
+    "delete": "Real Delete focus excludes editor; compound remove, Undo appends per-family restored model and retains UUID identities.",
+    "raw": "Native unknown leaves separately protected; original known model equality remains literal."
+  },
+  "native_controls": [
+    "actual_pointer_ingress",
+    "idle_reused",
+    "atomic_refusal",
+    "foreign_ui_owned",
+    "cohort_cap_atomic"
+  ]
+}
