@@ -73,23 +73,31 @@ fn click(
     time: &mut f64,
     id: &str,
 ) -> Result<(), Error> {
-    let rect = ctx
+    let mut rect = ctx
         .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
         .ok_or("Missing actual annotation control")?;
-    let p = rect.center();
-    frame(
-        ctx,
-        app,
-        time,
-        vec![egui::Event::PointerMoved(p)],
-        Default::default(),
-    );
-    let live = ctx
-        .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
-        .ok_or("Annotation control disappeared")?;
-    if live != rect {
-        return Err("Annotation control moved during hover".into());
+    let mut stable = false;
+    for _ in 0..4 {
+        frame(
+            ctx,
+            app,
+            time,
+            vec![egui::Event::PointerMoved(rect.center())],
+            Default::default(),
+        );
+        let live = ctx
+            .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
+            .ok_or("Annotation control disappeared")?;
+        if live == rect {
+            stable = true;
+            break;
+        }
+        rect = live;
     }
+    if !stable {
+        return Err("Annotation control did not settle during hover".into());
+    }
+    let p = rect.center();
     for pressed in [true, false] {
         frame(
             ctx,
