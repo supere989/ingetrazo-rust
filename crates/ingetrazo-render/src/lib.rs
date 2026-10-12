@@ -173,3 +173,5 @@ pub mod annotation_query;
 pub mod billboards;
 
 pub mod paper_picture;
+
+pub mod world_background;
