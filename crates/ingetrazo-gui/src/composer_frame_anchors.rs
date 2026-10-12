@@ -44,6 +44,25 @@ pub(super) struct SnapHit {
     pub page: [f64; 2],
 }
 impl IngeTrazoApp {
+    pub fn select_composer_frame(&mut self, sheet: Uuid, frame: Uuid) -> Result<(), String> {
+        let s = self
+            .scene
+            .sheets
+            .iter()
+            .position(|s| s.id == sheet)
+            .ok_or("Missing frame sheet")?;
+        let index = self.scene.sheets[s]
+            .items
+            .iter()
+            .position(|i| matches!(i,SheetItem::ViewFrame(f) if f.id==frame))
+            .ok_or("Missing frame")?;
+        self.enter_composer_sheet(s);
+        self.composer_state.annotation_authoring.selected = None;
+        self.composer_state.picture_authoring.selected = None;
+        self.composer_state.legend_authoring.selected = None;
+        self.scene.sheets[s].selected_item = Some(index);
+        Ok(())
+    }
     /// Shared View panel controller. Unknown frame metadata is left untouched.
     pub fn edit_composer_frame(
         &mut self,

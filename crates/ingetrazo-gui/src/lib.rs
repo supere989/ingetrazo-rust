@@ -220,5 +220,6 @@ mod composer_view_captions;
 mod composer_legend;
 mod composer_annotations;
 mod composer_frame_projection;
+pub mod frame_annotation_sync_consumer;
 
 mod composer_picture;
