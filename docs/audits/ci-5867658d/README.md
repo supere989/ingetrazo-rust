@@ -1,0 +1,11 @@
+# Terminal CI evidence for 5867658d
+
+The full run 38279452492 ended FAILURE; the separate ordered Metal compute run 38279452500 ended SUCCESS on both native Apple jobs. Both executed `5867658de1019f02ae2ddd85d1c0dbbfec0a4b0f`. Eight immutable artifact ZIPs and six terminal API responses are retained; API digests and every nested member authenticate. Necessary downloads occurred once, with no retry, dispatch, build, native execution or source capture by this packaging lane.
+
+Linux actually passed workspace tests/example coverage, frozen STL import (11 cases/38 states/eight readers/seven negatives) and Image import (eight cases/114 states/eight readers/29 negatives). Fresh revision-bound reports and binary receipts support those finite claims. Windows native compile/recovery and both Apple cross-target metadata jobs passed. The full run still failed Linux physical symbol/legend/picture/six-family export checks and both actual native Mac physical/authoring/frame/section/text checks. Intel additionally failed document-dimension sample admission and packaged World startup; ARM passed those two stages. Later Mac ownership/device/submission/ordered-compute stages in the full workflow were skipped, so their uploaded historical files establish no new pass.
+
+The separate ordered workflow actually executed seven whole Qt-reference images through native Metal compute on each Apple architecture, with source-order/missing-UI/phase and budget rollback controls. It reports presentation_claim=false. Its success is not packaged World, 3D rendering or general platform parity.
+
+The current thirteen-case/61-state COLLADA/glTF App proof lane was not executed by this broad workflow: no exchange_import_workflows/check-exchange-import invocation exists in the executed YAML and no matching new native artifacts exist. The successful older Original runtime exchange import semantics step invokes audit-exchange-imports.py for OBJ/STL/DXF loader-level probes. The local exchange proof remains strict FAIL with 45 matching states and sixteen directed-winding residual states; it is not converted to a CI pass.
+
+Step status, raw artifacts and revision bindings are preserved in the manifest. Canonical original source proof archives are not separately duplicated. This packet changes no tracker classification or release gate and makes no broad source-parity claim.
