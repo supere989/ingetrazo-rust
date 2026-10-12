@@ -152,7 +152,11 @@ impl Ui {
     fn vcb(&mut self, a: &mut IngeTrazoApp, text: &str) -> Result<(), String> {
         let images = a.scene.image_planes.len();
         let history = a.undo_stack.len();
-        self.frame(a, vec![egui::Event::Text(text.to_owned())]);
+        // Ordinary viewport typing emits one character per Text event. The
+        // production VCB route deliberately rejects unit-bearing whole-string pastes.
+        for character in text.chars() {
+            self.frame(a, vec![egui::Event::Text(character.to_string())]);
+        }
         if a.vcb_text != text {
             return Err(format!(
                 "Actual viewport VCB did not accept input: {:?}",
@@ -325,7 +329,13 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                     &action["pixel"],
                     action["shift"].as_bool().unwrap_or(false),
                 )?,
-                "vcb" => ui.vcb(&mut a, action["text"].as_str().ok_or("Typed value")?)?,
+                "vcb" => {
+                    ui.vcb(&mut a, action["text"].as_str().ok_or("Typed value")?)
+                        .map_err(|error| format!(
+                            "Image case {name}, phase {}, tool {}: {error}",
+                            action["phase"], a.active_tool.name()
+                        ))?;
+                }
                 "undo" => a.undo(),
                 "redo" => a.redo(),
                 "escape" => ui.key(&mut a, egui::Key::Escape),
