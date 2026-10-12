@@ -1,0 +1,25 @@
+{
+  "owner_raw": {
+    "path": "/tmp/ingetrazo-sheet-legend-proof",
+    "files": 103,
+    "raw_bytes": 55030882,
+    "every_file_matched_canonical_bytes": true,
+    "canonical_archives": {
+      "source-records.zip": "487648f12afa9f9b73d0bbcf459d56486ceeb843ed3fac8e5110206f84db6cd0",
+      "records.zip": "b32a7201c37a78010a955e46426b81d470fec0264b5bf5dbae5e0701237b7e0b"
+    },
+    "independent_archive_review": "325e5918",
+    "owner_confirmed_terminal_and_unused": true,
+    "removed_at": "2026-10-12T03:44:35.431951+00:00"
+  },
+  "hardware_raw": {
+    "path": "/tmp/ingetrazo-sheet-legends-nvidia-3a43",
+    "files": 34,
+    "raw_bytes": 27405220,
+    "every_file_matched_canonical_bytes": true,
+    "archive_sha256": "b32a7201c37a78010a955e46426b81d470fec0264b5bf5dbae5e0701237b7e0b",
+    "independent_archive_review": "325e5918",
+    "owner_confirmed_terminal_and_unused": true,
+    "removed_at": "2026-10-12T03:44:35.773106+00:00"
+  }
+}

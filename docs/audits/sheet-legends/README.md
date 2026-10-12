@@ -15,3 +15,5 @@ Replay from the integrated repository with the pinned Qt environment:
 Actual GPU transport is `scripts/run-sheet-legends-nvidia.py`; its fixed paths bind this historical integrated binary/source and retained private CDI, and its complete command is retained in `nvidia-3a43/transport.json`. Compare output with the exact compiled checker archived under `compiled-scripts`.
 
 This is partial physical export acceptance, not full P29 completion. Legend editing/refresh UI, arbitrary unsupported sheet painters and macOS font/pixel parity are outside this proof. No old accepted image/symbol/caption corpus was recaptured or rerun by the owner. Root independently ran affected regressions in its shared build.
+
+After independent archive review, root matched all 137 remaining owner/hardware temporary files (82,436,102 bytes) against the immutable source/proof archives and removed those terminal directories. `cleanup.json` records both operations. Worktrees, compiled targets, the private CDI and the new picture workflow fixtures were preserved.
