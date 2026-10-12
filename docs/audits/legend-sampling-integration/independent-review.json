@@ -1,0 +1,14 @@
+{
+  "archive_sha256": "5fb651b0f143e77e2df3d3111d7ad09997d48566ab019a950428962499bec90a",
+  "authenticated_members": 183,
+  "raw_bytes": 2344598,
+  "git_bindings": 42,
+  "source_archives": 5,
+  "current_binaries_verified": 5,
+  "initial_legend_binary": "Historical build receipt binding only; superseded by final579 binary.",
+  "legend_scope": "53literaloriginalstates;16explicitnativegesture/historyextensionstates;4readers+immediateDeleteoriginalreader;26controls. Source read-only h_mm failures remain explicit.",
+  "sampling": "10PNG/11JPEG/11PDFexact;oneoverlapPNGpixel/max1 strictfailure.48storedsoftwarepayloadhashesmatchactualhardwarepairedreceipt; notsecondGPUrawcomparison.",
+  "tracker": "All37criterionstrings and5gate lines unchanged after P37 restoration;15Verified/4Implemented/18Partial.",
+  "verdict": "Accepted finite packet and claims; no build/replay/source capture by reviewer.",
+  "limitations": "Physicallegendpixels,Metalpixelacceptance,multi-item,broadercomposer/performance remainopen."
+}
