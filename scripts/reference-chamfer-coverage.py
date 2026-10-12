@@ -42,13 +42,14 @@ class Observer(ActualPainter):
   pen=self.pen()
   if pen.widthF()==window.comp.cajetin.border_mm and self.brush().style()==Qt.NoBrush and path.elementCount()>=8:
    assert len(stages)==0,'ambiguous heavy operation'
-   device=self.device();assert isinstance(device,QImage)
+   device=self.device();assert isinstance(device,QImage)and device.format()==QImage.Format_RGB32
    assert pen.color().alpha()==255 and self.opacity()==1.0 and self.compositionMode()==QPainter.CompositionMode_SourceOver
    row={'path':path_data(path),'fill_rule':number(path.fillRule()),'pen':{'width':pen.widthF(),'rgba':list(pen.color().getRgb()),'cap':number(pen.capStyle()),'join':number(pen.joinStyle()),'miter':pen.miterLimit(),'cosmetic':pen.isCosmetic()},'world_transform':transform_data(self.worldTransform()),'combined_transform':transform_data(self.combinedTransform()),'view_transform_enabled':self.viewTransformEnabled(),'window':[self.window().x(),self.window().y(),self.window().width(),self.window().height()],'viewport':[self.viewport().x(),self.viewport().y(),self.viewport().width(),self.viewport().height()],'opacity':self.opacity(),'composition':number(self.compositionMode()),'hints':number(self.renderHints()),'has_clip':self.hasClipping(),'clip_path':path_data(self.clipPath())if self.hasClipping()else[],'device':{'format':number(device.format()),'dpm':[device.dotsPerMeterX(),device.dotsPerMeterY()],'pixel_ratio':device.devicePixelRatio()},'prefix':save(device.copy(),'prefix')}
    for name,color in [('transparent',QColor(0,0,0,0)),('white',QColor(255,255,255)),('black',QColor(0,0,0))]:
     image=QImage(device.size(),QImage.Format_ARGB32_Premultiplied if name=="transparent" else device.format());image.setDotsPerMeterX(device.dotsPerMeterX());image.setDotsPerMeterY(device.dotsPerMeterY());image.setDevicePixelRatio(device.devicePixelRatio());image.fill(color)
-    q=ActualPainter(image);q.setWindow(self.window());q.setViewport(self.viewport());q.setViewTransformEnabled(self.viewTransformEnabled());q.setWorldTransform(self.worldTransform());q.setRenderHints(self.renderHints());q.setOpacity(self.opacity());q.setCompositionMode(self.compositionMode());q.setPen(pen);q.setBrush(self.brush());q.setBackground(self.background());q.setBackgroundMode(self.backgroundMode())
+    q=ActualPainter(image);q.setWindow(self.window());q.setViewport(self.viewport());q.setViewTransformEnabled(self.viewTransformEnabled());q.setWorldTransform(self.worldTransform());q.setRenderHints(q.renderHints(),False);q.setRenderHints(self.renderHints());q.setOpacity(self.opacity());q.setCompositionMode(self.compositionMode());q.setPen(pen);q.setBrush(self.brush());q.setBackground(self.background());q.setBackgroundMode(self.backgroundMode())
     if self.hasClipping():q.setClipPath(self.clipPath())
+    assert q.renderHints()==self.renderHints()and transform_data(q.combinedTransform())==transform_data(self.combinedTransform()),"probe painter state differs"
     q.drawPath(QPainterPath(path));q.end();row[name]=dict(save(image,'heavy-'+name),device_format=number(image.format()),scope='public alpha mask on ARGB32 premultiplied'if name=='transparent'else'original RGB32 destination composition')
    # Delegate the identical ordinary operation. Probe snapshots never replace
    # its geometry, state, clip or paint route.
