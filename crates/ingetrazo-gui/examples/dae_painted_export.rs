@@ -250,6 +250,94 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut actual_case = case.clone();
         actual_case["exports"] = json!(actual_exports);
         cases.push(actual_case);
+        if name == "missing-resource-write-error" {
+            // Meaningful independent native modal control: selected geometry and
+            // a real prior Undo action would change the document if admitted.
+            a.save_undo_state();
+            a.scene.mesh.faces[0]
+                .attrs
+                .insert("color".into(), json!([0.2, 0.3, 0.4]));
+            a.scene.select(SelectionItem::Face(0));
+            let ctx = egui::Context::default();
+            let mut tick = 0.;
+            fn frame(
+                a: &mut IngeTrazoApp,
+                ctx: &egui::Context,
+                tick: &mut f64,
+                events: Vec<egui::Event>,
+            ) {
+                *tick += 0.016;
+                let _ = ctx.run(
+                    egui::RawInput {
+                        screen_rect: Some(egui::Rect::from_min_size(
+                            egui::Pos2::ZERO,
+                            egui::vec2(800., 600.),
+                        )),
+                        time: Some(*tick),
+                        events,
+                        ..Default::default()
+                    },
+                    |ctx| a.update_ui(ctx),
+                );
+            }
+            frame(&mut a, &ctx, &mut tick, vec![]);
+            let blocked = out.join("modal-blocked.dae");
+            std::fs::create_dir_all(&blocked)?;
+            assert!(a.export_dae_to_path(&blocked).is_err());
+            assert!(a.dae_export_error.is_some());
+            let before = a.scene.clone();
+            let pose = camera(&a);
+            let counts = (a.undo_stack.len(), a.redo_stack.len());
+            let ctrl = egui::Modifiers {
+                ctrl: true,
+                command: true,
+                ..Default::default()
+            };
+            let point = egui::pos2(20., 20.);
+            frame(
+                &mut a,
+                &ctx,
+                &mut tick,
+                vec![
+                    egui::Event::Key {
+                        key: egui::Key::Z,
+                        physical_key: None,
+                        pressed: true,
+                        repeat: false,
+                        modifiers: ctrl,
+                    },
+                    egui::Event::Key {
+                        key: egui::Key::Delete,
+                        physical_key: None,
+                        pressed: true,
+                        repeat: false,
+                        modifiers: Default::default(),
+                    },
+                    egui::Event::PointerMoved(point),
+                    egui::Event::PointerButton {
+                        pos: point,
+                        button: egui::PointerButton::Primary,
+                        pressed: true,
+                        modifiers: Default::default(),
+                    },
+                    egui::Event::PointerButton {
+                        pos: point,
+                        button: egui::PointerButton::Primary,
+                        pressed: false,
+                        modifiers: Default::default(),
+                    },
+                ],
+            );
+            assert_eq!(a.scene, before);
+            assert_eq!(camera(&a), pose);
+            assert_eq!((a.undo_stack.len(), a.redo_stack.len()), counts);
+            assert!(a.dae_export_error.is_some());
+            // New actual export attempt retires old modal ownership; retry is
+            // independent of the frozen source phases and cannot manufacture them.
+            a.export_dae_to_path(&out.join("modal-retry.dae"))?;
+            assert!(a.dae_export_error.is_none());
+            assert_eq!(a.scene, before);
+        }
         // Auxiliary opaque preservation control is separate from literal states/saves.
         let mesh = if !a.scene.mesh.faces.is_empty() {
             &mut a.scene.mesh

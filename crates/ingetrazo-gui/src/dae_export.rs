@@ -5,6 +5,7 @@ use ingetrazo_core::i18n::tr;
 use std::path::{Path, PathBuf};
 impl IngeTrazoApp {
     pub fn choose_dae_export(&mut self) {
+        self.dae_export_error = None;
         let base = self
             .current_file
             .as_ref()
@@ -28,33 +29,38 @@ impl IngeTrazoApp {
         } else {
             chosen.with_extension("dae")
         };
-        let mut overrides = Vec::new();
-        overrides
-            .try_reserve_exact(self.component_edit_stack.len())
-            .map_err(|_| "DAE edit-view admission failed".to_owned())?;
-        for (i, session) in self.component_edit_stack.iter().enumerate() {
-            let owner = self
+        self.dae_export_error = None;
+        let result = (|| -> Result<(), String> {
+            let mut overrides = Vec::new();
+            overrides
+                .try_reserve_exact(self.component_edit_stack.len())
+                .map_err(|_| "DAE edit-view admission failed".to_owned())?;
+            for (i, session) in self.component_edit_stack.iter().enumerate() {
+                let owner = self
+                    .component_edit_stack
+                    .get(i + 1)
+                    .map_or(&self.scene, |s| s.parked_scene());
+                overrides.push(ingetrazo_formats::dae::PlacementOverride {
+                    id: session.edited_group_id(),
+                    mesh: &owner.mesh,
+                    children: &owner.groups,
+                });
+            }
+            let root = self
                 .component_edit_stack
-                .get(i + 1)
+                .first()
                 .map_or(&self.scene, |s| s.parked_scene());
-            overrides.push(ingetrazo_formats::dae::PlacementOverride {
-                id: session.edited_group_id(),
-                mesh: &owner.mesh,
-                children: &owner.groups,
-            });
-        }
-        let root = self
-            .component_edit_stack
-            .first()
-            .map_or(&self.scene, |s| s.parked_scene());
-        match ingetrazo_formats::dae::save_dae_view(
-            &self.scene,
-            &root.mesh,
-            &root.groups,
-            &overrides,
-            &path,
-            "IngeTrazo model",
-        ) {
+            ingetrazo_formats::dae::save_dae_view(
+                &self.scene,
+                &root.mesh,
+                &root.groups,
+                &overrides,
+                &path,
+                "IngeTrazo model",
+            )
+            .map_err(|e| e.to_string())
+        })();
+        match result {
             Ok(()) => {
                 self.status_message = format!(
                     "{} → {}",
@@ -73,21 +79,19 @@ impl IngeTrazoApp {
     }
 }
 pub(crate) fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
-    let Some(error) = app.dae_export_error.as_ref() else {
+    let Some(error) = app.dae_export_error.clone() else {
         return;
     };
-    let mut close = false;
-    egui::Window::new(tr("Export COLLADA failed"))
-        .collapsible(false)
-        .resizable(false)
-        .anchor(egui::Align2::CENTER_CENTER, egui::Vec2::ZERO)
-        .show(ctx, |ui| {
-            ui.label(error);
-            if ui.button(tr("OK")).clicked() {
-                close = true;
-            }
-        });
-    if close {
+    let response = egui::Modal::new(egui::Id::new("dae-export-error")).show(ctx, |ui| {
+        ui.heading(tr("Export COLLADA failed"));
+        ui.label(error);
+        let button = ui.button(tr("OK"));
+        if std::env::var_os("INGETRAZO_UI_OBSERVE").is_some() {
+            ctx.data_mut(|d| d.insert_temp(egui::Id::new("dae-export-error-ok"), button.rect));
+        }
+        button.clicked()
+    });
+    if response.inner || response.should_close() {
         app.dae_export_error = None;
     }
 }
