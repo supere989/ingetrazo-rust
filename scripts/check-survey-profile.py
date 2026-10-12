@@ -15,7 +15,23 @@ def strict(a,b,path=''):
  else:assert a==b,(path,a,b)
 assert [c['name']for c in a['cases']]==expected
 assert [(s['case'],s['phase'])for s in a['states']]==[(n,phase)for n in expected for phase in ['compute','repeat']]
-strict(a,b)
+def profiles_equal(a,b):
+ assert a.keys()==b.keys()
+ for key in a:
+  if key!='states':strict(a[key],b[key],'/'+key)
+ assert len(a['states'])==len(b['states'])==18
+ # Runtime loader epochs are local; retain literal observations and bind
+ # unchanged compute/repeat pairs within each runtime independently.
+ for runtime in (a,b):
+  for i in range(0,18,2):
+   pair=runtime['states'][i:i+2]
+   assert all(type(row['version'])is int and row['version']>=0 for row in pair),'invalid runtime epoch'
+   assert pair[0]['version']==pair[1]['version'],'Profile changed runtime epoch'
+ for i,(x,y)in enumerate(zip(a['states'],b['states'])):
+  assert x.keys()==y.keys(),('state keys',i)
+  for key in x:
+   if key!='version':strict(x[key],y[key],'/states/'+str(i)+'/'+key)
+profiles_equal(a,b)
 r=json.loads((p/'profile-reopens.json').read_text());assert [c['case']for c in r]==expected
 for c in r:strict(c['original'],c['native'])
 for c in a['cases']:
@@ -27,13 +43,17 @@ assert json.loads((p/"profile-guards.json").read_text())==[dict(guard=n,unchange
 boundary=json.loads((p/'omitted-empty-boundary.json').read_text());assert boundary['source_writer_triangle_count_guard'] and boundary['zero_triangle_IGZ_omits_photo_mesh'] and boundary['reopened_native_no_photo_refuses_DEM']
 count=0
 for i,row in enumerate(b['states']):
+ c=copy.deepcopy(b);c['states'][i]['version']+=1
+ try:profiles_equal(a,c)
+ except AssertionError:count+=1
+ else:raise AssertionError('runtime epoch change accepted')
  c=copy.deepcopy(b);c['states'][i]['undo']+=1
- try:strict(a,c)
+ try:profiles_equal(a,c)
  except AssertionError:count+=1
  else:raise AssertionError('readonly history mutation accepted')
  if row['profile']and row['profile']['samples']:
   c=copy.deepcopy(b);c['states'][i]['profile']['samples'][0]['station']+=.25
-  try:strict(a,c)
+  try:profiles_equal(a,c)
   except AssertionError:count+=1
   else:raise AssertionError('chainage mutation accepted')
-print(json.dumps(dict(cases=9,states=18,samples=sum(len(s['profile']['samples'])for s in a['states']if s['profile']),actual_original_reopens=9,byte_exact_CSV=sum(c['csv']for c in a['cases']),negative_controls=count,cache_cases=9,atomic_guards=4,passed=True)))
+print(json.dumps(dict(cases=9,states=18,samples=sum(len(s['profile']['samples'])for s in a['states']if s['profile']),actual_original_reopens=9,byte_exact_CSV=sum(c['csv']for c in a['cases']),negative_controls=count,readonly_epoch_pairs=9,cache_cases=9,atomic_guards=4,passed=True)))
