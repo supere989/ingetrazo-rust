@@ -1,0 +1,19 @@
+# Legend authoring source contract
+
+The frozen original is 6be29fe437a7cd992d4e079f71720821b25216b9, with Qt 6.12. The authoring corpus contains three cases and 53 literal states: Add and automatic selection, title editing and coalescing, visible-layer snapshot refresh, no-op refresh, text-focus Delete protection, selected Delete, Undo/Redo, empty visible layers, two-step Escape cancellation, and loaded locked legends selected explicitly through the fixture/list-equivalent path. All actions use actual Qt toolbar, page, text and button/key handlers. Layer replacement and explicit selection are declared fixture publications, not a claim of layer editing or locked canvas picking.
+
+The row list is a snapshot of visible model layers in their original order, including visible locked layers. Changing model layers does not update a legend until Refresh. Height is derived as 7.5 + 5.5 * max(row count, 1), and is not serialized. Title commands coalesce only with consecutive title commands for the same object. Refresh uses a different field signature. Deleting a legend clears selection; Undo restores the record at its original index without restoring the deleted selection.
+
+## Gesture boundary and native correctness expectations
+
+A missing-only fourth case adds 16 observed states for a single legend move and width resize. The first actual Qt release raises AttributeError: EditItemCommand tries to assign the read-only h_mm property captured by the generic item handler. The first hard failure, its four-state partial record and traceback are retained. An observer catches only that known exception at the external QtTest call boundary, without modifying the original classes, and records the remaining width/minimum, inert source Undo/Redo and actual save/reader behavior. Three release exceptions are preserved literally.
+
+The source geometry moves from (40, 40) to (63, 63), then width changes from 55 to 70 and finally to the minimum 25. Derived height remains 18.5. The source records no geometry Undo command. native-gesture-expectations.json separately binds reversible native history to those original before/preview geometry values: one command per release, Undo/Redo restores positions and widths, and the selected surviving legend remains selected. This is an explicit native correctness difference, not exact source history parity. The strict checker compares the original 53 authoring states literally and the 16 gesture states to that separate declared expectation. Original gesture records and failures are never normalized or replaced.
+
+## Save and metadata
+
+Four final saves have actual original-reader results for the complete known composition and layer records. A loaded legend input contains two declared unknown metadata leaves. The original reader tolerates and drops them; native preservation is checked separately in the actual native saved document. The native known-state projection may remove only these two declared keys.
+
+The checker requires exact ordered case/state/reader inventories, strict scalar types, complete known dictionaries, actual UI and warm/refusal guards, and 24 rejecting controls. checker-selftest.json is a synthetic checker-only test, not native acceptance. Native runtime and consumer remain geometry-owned and unbuilt at this source freeze.
+
+Run replay-legend-authoring.py PREBUILT_BINARY FRESH_OUTPUT to authenticate the archive, run composer_legend_authoring SOURCE NATIVE, use the pinned original reader and apply the strict checker. Replay performs no build or new source capture. Physical PNG/PDF painters, multi-item manipulation and additional label/elevation snapping are outside this finite authoring contract.

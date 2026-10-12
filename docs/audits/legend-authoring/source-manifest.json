@@ -1,0 +1,119 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "b5878ad73fbeecfd75cd1e24145a3e96ee9f0a6aedc6c09242d556b09e4ad386",
+  "members": {
+    "authoring.log": {
+      "size": 46,
+      "sha256": "e901cb58c9c7f5c8a951f8b278a0e6a8c25ddbb790cf03d8d6c26344db155f35"
+    },
+    "authoring.stderr": {
+      "size": 447,
+      "sha256": "c69054c257642487233ff22cc9beb0fe60ae319c8269d0105562fca6f1e50850"
+    },
+    "empty-visible-cancel-input.igz": {
+      "size": 683,
+      "sha256": "a6d57c14a6f82be3f4f2fc80af49033975ed594401ad6e83a5d3b00aff596bad"
+    },
+    "empty-visible-cancel-original.igz": {
+      "size": 1003,
+      "sha256": "85fc0f9e77f27238c9ef8eb3f1aa87c9b1cd91c69774361005dd32ea254b7c19"
+    },
+    "first-gesture-hard-failure.partial.json": {
+      "size": 7744,
+      "sha256": "00e98b2380c63e1f9988bb7fcdbe9ce787a072a04e3f91000be448fb3492ca38"
+    },
+    "gesture-hard-failure.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "gesture-hard-failure.stderr": {
+      "size": 2822,
+      "sha256": "a9d7d246a65da8a3a44d9b005440040e41734ce6354392d95355fd75ae78696f"
+    },
+    "gesture-observed.log": {
+      "size": 46,
+      "sha256": "1b4d8ec4615cc5784bdc74dc40bd261ff247ea8bf967a531102326d05e4519fc"
+    },
+    "gesture-observed.stderr": {
+      "size": 299,
+      "sha256": "e15cc28e49c7dc0e894f1fabf2d7c02bb534179a206788cf956ea5cc78f299e7"
+    },
+    "lifecycle-input.igz": {
+      "size": 1327,
+      "sha256": "c87926bcbb79c266aa4ccb13aba79dec4c725cc61176c8ff05c369207889a5a3"
+    },
+    "lifecycle-original.igz": {
+      "size": 1746,
+      "sha256": "2a47b0f5b9f9a8b5504c58857112b475a695bd163574a4ce683c2cf2b82e9303"
+    },
+    "loaded-locked-input.igz": {
+      "size": 1446,
+      "sha256": "bf300a4c74291768196d14a8a1079280faafa37de94981445dfc6f4612223bb6"
+    },
+    "loaded-locked-original.igz": {
+      "size": 1196,
+      "sha256": "6e4ab4fea3d6373d3ac7d15cb9c41b29167bf13d1ed4d293e91865f77b659df1"
+    },
+    "native-gesture-expectations.json": {
+      "size": 17552,
+      "sha256": "a888c5ca02fb0a9a115316862fb9c4d9d5d5b24f5119b02c890ad0eb87c2bd39"
+    },
+    "original-legend.json": {
+      "size": 105424,
+      "sha256": "f947d3eacc8340326ff497169572969067ec5350bc1fd288fb8e3fb48f3dea8d"
+    },
+    "original-reopens.json": {
+      "size": 3656,
+      "sha256": "07dc85b0b161dfd67661511e481517982fbf3e683bde8d200db9af7bf52894d9"
+    },
+    "single-legend-gestures-input.igz": {
+      "size": 1156,
+      "sha256": "72fef35bc171a2d8f5a5a9d91d9c7cc63ea4510730fe695d0981a27c32ba8d3c"
+    },
+    "single-legend-gestures-original.igz": {
+      "size": 1156,
+      "sha256": "5231d58be5d3e0d0bc65ea2727ecead5c594227b502c7ff68a60ca170a19a0c0"
+    }
+  },
+  "producer_commit": "d90cfd7e9a757d3007e3c38a549db3cb14fdb86b",
+  "producers": {
+    "scripts/reference-legend-authoring.py": "3d1bcaf6ca7bf18a5cdf460b89bb14e7dbc81402d0aa4d4eb7822d1df1859c5a",
+    "scripts/reference-legend-authoring-reopens.py": "d7d20ac28b89220cd17b72964b276d4d2055d8a5b138dc27c3f665adb93a79c5",
+    "scripts/check-legend-authoring.py": "3fba09c37ed3204eb14be624ef7ccb1e6c8e67db1a649d330f71d9a8be023a75",
+    "scripts/replay-legend-authoring.py": "4aa3ea287f3a333569f121fecb3e301f38d2d611a5c0ea8aa6d72383595023d9"
+  },
+  "source_hashes": {
+    "views/composer.py": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
+    "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
+    "core/layers.py": "21d31c9aa1b4bfe0c9437a1a7a83a8212b4d34f38ad3c2b1b3a6b1a7ee4c835b",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "counts": {
+    "cases": 4,
+    "source_exact_authoring_states": 53,
+    "observed_source_gesture_states": 16,
+    "explicit_native_correctness_gesture_states": 16,
+    "original_reader_pairs": 4,
+    "source_gesture_exceptions": 3,
+    "rejected_controls": 24
+  },
+  "scope": "Literal source authoring; gesture release failure retained with separate native reversible-history expectations. No native runtime acceptance or physical painter capture.",
+  "captures": [
+    {
+      "scope": "Three authoring cases captured once",
+      "output": "/tmp/ingetrazo-sheet-legend-authoring-source-proof",
+      "states": 53
+    },
+    {
+      "scope": "Missing-only first gesture hard failure",
+      "output": "/tmp/ingetrazo-sheet-legend-gesture-source-proof",
+      "recorded_states": 4
+    },
+    {
+      "scope": "Missing-only gesture observer continuation across known external-call exception",
+      "output": "/tmp/ingetrazo-sheet-legend-gesture-observed-proof",
+      "states": 16
+    }
+  ],
+  "correctness_difference": "Source geometry release raises on read-only h_mm and records no history; native writes persisted x/y/w only and owns reversible history explicitly."
+}
