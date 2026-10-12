@@ -221,7 +221,7 @@ fn owners(app: &IngeTrazoApp, groups: &[Group]) -> Value {
                 .native_document
                 .get("component")
                 .and_then(Value::as_bool)
-                .unwrap_or(g.component_definition.is_some());
+                .unwrap_or(true);
             let xform = if current == Some(g.id) && g.children.is_empty() {
                 Value::Null
             } else if g.transform == DMat4::IDENTITY

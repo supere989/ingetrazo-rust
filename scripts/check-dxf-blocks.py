@@ -52,4 +52,9 @@ for name in extra:
   try:strict(sa,c)
   except AssertionError:pass
   else:raise AssertionError('addendum mutation accepted')
-print(json.dumps(dict(cases=20,states=140,actual_original_reopens=20,cancel_reopen=1,negative_controls=len(mutations)+28,ownership_guards=4,passed=True)))
+for original,filename in [(a,'first-native-dxf-blocks.json'),(sa,'first-native-dxf-blocks-addendum.json')]:
+ candidate=json.loads((p/filename).read_text())
+ try:strict(original,candidate)
+ except AssertionError:pass
+ else:raise AssertionError('retained observer failure accepted')
+print(json.dumps(dict(retained_failures_rejected=2,cases=20,states=140,actual_original_reopens=20,cancel_reopen=1,negative_controls=len(mutations)+28,ownership_guards=4,passed=True)))

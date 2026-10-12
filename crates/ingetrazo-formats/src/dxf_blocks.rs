@@ -270,7 +270,7 @@ fn polyline(p: &[Pair], r: Record, scale: f64, m: DMat4) -> Result<Vec<DxfEntity
                 curved: false,
             });
         } else {
-            let radius = libm::hypot(end.x - a.x, end.y - a.y) * (1. + b * b) / (4. * b);
+            let radius = libm::hypot(end.x - a.x, end.y - a.y) * (1. + b * b) / 4. / b;
             let angle = libm::atan2(end.y - a.y, end.x - a.x)
                 + (std::f64::consts::PI / 2. - libm::atan(b) * 2.);
             let center = DVec3::new(
