@@ -1,0 +1,9 @@
+# OBJ/DXF unit import native evidence
+
+Both retained native attempts execute the complete 13-case, 47-state workflow and seven actual original readers, but the strict checker fails. Final runtime `c5d04a1d` has 41 exact states and five exact readers. The remaining 32 leaves are eight directed outer-ring reversals in 3DFACE and TRACE: six state observations and two reader pairs. Independent classification retains exact type, signed zero and every unrelated field; it diagnoses the residual without relaxing the checker.
+
+The first build failed with E0061. The next consumer build passed in 0.770 seconds; the final three-consumer build passed in 10.397 seconds. First native/reader/checker times were 1.466/0.214/0.032 seconds; final times were 0.865/0.164/0.032 seconds, with checker exit one. Loader checks retain six OBJ and nine DXF tests, followed by the current nine-test DXF run (3.733 seconds). These tests do not establish full consuming parity.
+
+The archive retains both full native reports, all saved IGZs and actual reader records, failed comparisons, owner/root/independent diagnostics, build and test logs/receipts, and the original source winding witness. Each executed stage is bound to historical runtime, consumer and helper Git bytes. The final binary digest is authenticated against the current file. Canonical frozen source bytes are referenced, not duplicated; there were no additional source captures.
+
+Reported native guards establish their operational assertions. The baseline checker failure prevents claiming its 18 proposed corruption controls as accepted. The local actual menu repair at `4d64e0d3` is present in this workflow; the older `6fe9c26e` CI run does not prove that menu path. This packet makes no GPU, whole-heap, full-format or broad P22 promotion claim. Picker executables and generated configuration are excluded, and nothing was purged.

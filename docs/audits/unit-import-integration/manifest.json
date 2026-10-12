@@ -1,0 +1,874 @@
+{
+  "archive": "records.zip",
+  "archive_sha256": "b76c88dca41805e6f6cc642f4f2f8844a9c9ceaee3db602ee2e330dd488f44c2",
+  "members": [
+    {
+      "path": "source-law/source-law-diagnostic.json",
+      "size": 2288,
+      "sha256": "b05daaefa6021fac941760f081f9a07aa1e8383ce26558978b6995f5784f3a6f"
+    },
+    {
+      "path": "source-law/winding-witness.json",
+      "size": 3170,
+      "sha256": "2a487ecbab0fc5c8898ccbfeaafc78cb859888267d08bc1413deac68eab6cb13"
+    },
+    {
+      "path": "unit-build-r1/build.log",
+      "size": 28303,
+      "sha256": "6ca940a185b13565259cc526aae77c6e340ed8fc86675c67e212034ff7cce75c"
+    },
+    {
+      "path": "unit-build-r1/receipt.json",
+      "size": 409,
+      "sha256": "97324281f54e9aec582ce78332cf7851fed695d3dad0fb98e4a3c5a867a30230"
+    },
+    {
+      "path": "unit-build-r2/build.log",
+      "size": 27691,
+      "sha256": "f6a414239a93a0be6a5de31150939e1a8b7a6e9c7d6c8b0377c6706cb26de48e"
+    },
+    {
+      "path": "unit-build-r2/receipt.json",
+      "size": 268,
+      "sha256": "c564e36ea12d51e9e733503cf6c35aa69dae3bff148e756aece52de3a1661159"
+    },
+    {
+      "path": "unit-build-r3/build.log",
+      "size": 33928,
+      "sha256": "fa667593277635930c59e2f84863d549bed26eb0e258ae98749122adadfa655e"
+    },
+    {
+      "path": "unit-build-r3/receipt.json",
+      "size": 357,
+      "sha256": "9e1aa7c0864b0c9439bb05f20ffdb8753e19b9df34c8bc6d0cef0704bf6a7a03"
+    },
+    {
+      "path": "unit-loader-checks-r1/dxf.log",
+      "size": 15018,
+      "sha256": "cfd90948ad2fb348c9b2ea45c88a40717a4b99db56f9c0678298334b7d99e71a"
+    },
+    {
+      "path": "unit-loader-checks-r1/obj.log",
+      "size": 15033,
+      "sha256": "b29b33e9a9968fc238a20039a623e4f5cf1753bbaab0e8162b8046fc8e2d3e76"
+    },
+    {
+      "path": "unit-loader-checks-r1/receipt.json",
+      "size": 571,
+      "sha256": "5db6fa871978b0262cd0569ffda864d7fe42ff6f1faf9c139396e9e344940dc0"
+    },
+    {
+      "path": "unit-loader-checks-r2/dxf.log",
+      "size": 15116,
+      "sha256": "bc3c8dfab628cac5aedb76d0e5c0a64fe000e8863a63a6ffb9477c7a05257eb4"
+    },
+    {
+      "path": "unit-loader-checks-r2/receipt.json",
+      "size": 251,
+      "sha256": "d1885ceb067946ea21079c22bc089013432ef28651592d5a1fc68e3380f7dbb3"
+    },
+    {
+      "path": "unit-native-r1/checker.log",
+      "size": 107,
+      "sha256": "ed2c7ffcaa01f4d7c841fb5dcae6b2eeab09b140acb6babc9033a160ee761cf7"
+    },
+    {
+      "path": "unit-native-r1/comparison.json",
+      "size": 113,
+      "sha256": "9d9facaa78a00136fa807ad7489734c60e461eba3ad587a21eb9f80be4bcce59"
+    },
+    {
+      "path": "unit-native-r1/independent-all-field-diagnostic.json",
+      "size": 17261,
+      "sha256": "cf3dd78e72951616afc67acb57265b8653e74b724a2c112eabce121f8d96c863"
+    },
+    {
+      "path": "unit-native-r1/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-3dface-saved.igz",
+      "size": 5722,
+      "sha256": "d4ae2468b4f6cfddf23ca7f9701d7b44eda9df421069b2da3c99ad02e44532fc"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-block-leaf-saved.igz",
+      "size": 6316,
+      "sha256": "4a671f5c49bd429f21bf50cde1458e68484a561c20b8393e04a7aa2b7acc4640"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-face-block-saved.igz",
+      "size": 6188,
+      "sha256": "e4f0ba197134f1a92099c98e5a83c8bdf9064aa09d85fd1595e57b16ddaef4a2"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-solid-saved.igz",
+      "size": 5722,
+      "sha256": "f35a2cab4ce4b7716eb5b2f039597a52ff2781200d6c7d388ba1cf2f47e759e9"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-trace-saved.igz",
+      "size": 5722,
+      "sha256": "296ff35c587bb69057ff486ea18abf1b14c15fce24064369bb2b436b1c356ae6"
+    },
+    {
+      "path": "unit-native-r1/native/native-unit-import.json",
+      "size": 585272,
+      "sha256": "b98b5e9a456e4502c36aac04560d442faa04b92057350c2a107ea76165b2da4e"
+    },
+    {
+      "path": "unit-native-r1/native/obj-root-saved.igz",
+      "size": 4856,
+      "sha256": "3139d14ccb1da67c427c2be3fb1c1a399781dc89233149920f9327af0f2de30d"
+    },
+    {
+      "path": "unit-native-r1/native/obj-texture-leaf-saved.igz",
+      "size": 1291,
+      "sha256": "a29114e613fc66899453bc65a00af3519aa890e507bdd1522f33b955a05cdf59"
+    },
+    {
+      "path": "unit-native-r1/native/reopens-unit-import.json",
+      "size": 184646,
+      "sha256": "783e750ee73cf39237d3b8120ede8f1d50b88dc20691e17910a8350f2787699c"
+    },
+    {
+      "path": "unit-native-r1/owner-diagnostic.json",
+      "size": 9197,
+      "sha256": "db859349f7cfc94e8f030f8a56ef24316dffcfd29db98085e3e20e37b3322730"
+    },
+    {
+      "path": "unit-native-r1/reader.log",
+      "size": 27,
+      "sha256": "bff5f4975e05e2c9a8a504b49c0627e7bc0202c13d92beb6acc78fc8387d935e"
+    },
+    {
+      "path": "unit-native-r1/receipt.json",
+      "size": 1101,
+      "sha256": "0cab215bab1c12a0d4fca16983b3b05d5530ed4169532ea3da74b06076493678"
+    },
+    {
+      "path": "unit-native-r2/checker.log",
+      "size": 110,
+      "sha256": "5d135733cca8356c62b1afc6a285384a2f713746d9d639259718bb22d826ee2c"
+    },
+    {
+      "path": "unit-native-r2/comparison.json",
+      "size": 116,
+      "sha256": "8f34551c47ef1b35404be38bc35adbb3fe4c2790ecb1f3785d48a85bef2585f8"
+    },
+    {
+      "path": "unit-native-r2/independent-ring-only-classification.json",
+      "size": 5806,
+      "sha256": "3a95a1dc4bb11506bfe9f6400426237181fe7e4eaf7d7ab2e7600d82b6418229"
+    },
+    {
+      "path": "unit-native-r2/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-3dface-saved.igz",
+      "size": 5723,
+      "sha256": "09c91f33bfa3d225d81af03b6a1179a5514c9a424779b3e790dd2c83163be058"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-block-leaf-saved.igz",
+      "size": 6359,
+      "sha256": "e6e868dbcadfd3c94da07eda209a852d85fc79e845b997d44ba9b50b205f7742"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-face-block-saved.igz",
+      "size": 6189,
+      "sha256": "84327961393315f40a23537bab44e844786898c84d45d0c81e051d39a7ace2a2"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-solid-saved.igz",
+      "size": 5723,
+      "sha256": "b84a48d49c7b130d0efa49d1a70f57c3550b60ceedf71582aa1071d01925e58b"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-trace-saved.igz",
+      "size": 5723,
+      "sha256": "67adf4ece83252ac33b0791a48582c2b3affc9a763e0d8e5be9d39f72eeedffb"
+    },
+    {
+      "path": "unit-native-r2/native/native-unit-import.json",
+      "size": 586065,
+      "sha256": "c1c0eb8cd45208d0bdb2b367608704a8cfa1e6c5440619bd98c10dbd2c33a788"
+    },
+    {
+      "path": "unit-native-r2/native/obj-root-saved.igz",
+      "size": 4856,
+      "sha256": "656e26c63a201d0e1259ea144861c0911ebd88fe1ac7be62ff4a8a436c242b19"
+    },
+    {
+      "path": "unit-native-r2/native/obj-texture-leaf-saved.igz",
+      "size": 1290,
+      "sha256": "8e1923a5b092874bdd7ffbd1653092ddb4bec821e8762582438c43081dbd8737"
+    },
+    {
+      "path": "unit-native-r2/native/reopens-unit-import.json",
+      "size": 184645,
+      "sha256": "a405a294edf1068b4454649c6ab8d74e68627c98d92adc6a5a4e909fc2ef024d"
+    },
+    {
+      "path": "unit-native-r2/reader.log",
+      "size": 27,
+      "sha256": "bff5f4975e05e2c9a8a504b49c0627e7bc0202c13d92beb6acc78fc8387d935e"
+    },
+    {
+      "path": "unit-native-r2/receipt.json",
+      "size": 1101,
+      "sha256": "66f1d264f102390c038fabe2182d0847a497b7cee9c684c889fde7810111d837"
+    },
+    {
+      "path": "unit-native-r2/root-full-diagnostic.json",
+      "size": 4401,
+      "sha256": "32d2cb0079730edaa136158ebee36d6c176dec8b13b93f38351acc78ac77ac6d"
+    }
+  ],
+  "origins": [
+    {
+      "path": "unit-native-r1/checker.log",
+      "origin": "/tmp/ingetrazo-unit-native-r1/checker.log",
+      "size": 107,
+      "sha256": "ed2c7ffcaa01f4d7c841fb5dcae6b2eeab09b140acb6babc9033a160ee761cf7"
+    },
+    {
+      "path": "unit-native-r1/comparison.json",
+      "origin": "/tmp/ingetrazo-unit-native-r1/comparison.json",
+      "size": 113,
+      "sha256": "9d9facaa78a00136fa807ad7489734c60e461eba3ad587a21eb9f80be4bcce59"
+    },
+    {
+      "path": "unit-native-r1/independent-all-field-diagnostic.json",
+      "origin": "/tmp/ingetrazo-unit-native-r1/independent-all-field-diagnostic.json",
+      "size": 17261,
+      "sha256": "cf3dd78e72951616afc67acb57265b8653e74b724a2c112eabce121f8d96c863"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-3dface-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/dxf-3dface-saved.igz",
+      "size": 5722,
+      "sha256": "d4ae2468b4f6cfddf23ca7f9701d7b44eda9df421069b2da3c99ad02e44532fc"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-block-leaf-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/dxf-block-leaf-saved.igz",
+      "size": 6316,
+      "sha256": "4a671f5c49bd429f21bf50cde1458e68484a561c20b8393e04a7aa2b7acc4640"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-face-block-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/dxf-face-block-saved.igz",
+      "size": 6188,
+      "sha256": "e4f0ba197134f1a92099c98e5a83c8bdf9064aa09d85fd1595e57b16ddaef4a2"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-solid-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/dxf-solid-saved.igz",
+      "size": 5722,
+      "sha256": "f35a2cab4ce4b7716eb5b2f039597a52ff2781200d6c7d388ba1cf2f47e759e9"
+    },
+    {
+      "path": "unit-native-r1/native/dxf-trace-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/dxf-trace-saved.igz",
+      "size": 5722,
+      "sha256": "296ff35c587bb69057ff486ea18abf1b14c15fce24064369bb2b436b1c356ae6"
+    },
+    {
+      "path": "unit-native-r1/native/native-unit-import.json",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/native-unit-import.json",
+      "size": 585272,
+      "sha256": "b98b5e9a456e4502c36aac04560d442faa04b92057350c2a107ea76165b2da4e"
+    },
+    {
+      "path": "unit-native-r1/native/obj-root-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/obj-root-saved.igz",
+      "size": 4856,
+      "sha256": "3139d14ccb1da67c427c2be3fb1c1a399781dc89233149920f9327af0f2de30d"
+    },
+    {
+      "path": "unit-native-r1/native/obj-texture-leaf-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/obj-texture-leaf-saved.igz",
+      "size": 1291,
+      "sha256": "a29114e613fc66899453bc65a00af3519aa890e507bdd1522f33b955a05cdf59"
+    },
+    {
+      "path": "unit-native-r1/native/reopens-unit-import.json",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native/reopens-unit-import.json",
+      "size": 184646,
+      "sha256": "783e750ee73cf39237d3b8120ede8f1d50b88dc20691e17910a8350f2787699c"
+    },
+    {
+      "path": "unit-native-r1/native.log",
+      "origin": "/tmp/ingetrazo-unit-native-r1/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "unit-native-r1/owner-diagnostic.json",
+      "origin": "/tmp/ingetrazo-unit-native-r1/owner-diagnostic.json",
+      "size": 9197,
+      "sha256": "db859349f7cfc94e8f030f8a56ef24316dffcfd29db98085e3e20e37b3322730"
+    },
+    {
+      "path": "unit-native-r1/reader.log",
+      "origin": "/tmp/ingetrazo-unit-native-r1/reader.log",
+      "size": 27,
+      "sha256": "bff5f4975e05e2c9a8a504b49c0627e7bc0202c13d92beb6acc78fc8387d935e"
+    },
+    {
+      "path": "unit-native-r1/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-native-r1/receipt.json",
+      "size": 1101,
+      "sha256": "0cab215bab1c12a0d4fca16983b3b05d5530ed4169532ea3da74b06076493678"
+    },
+    {
+      "path": "unit-native-r2/checker.log",
+      "origin": "/tmp/ingetrazo-unit-native-r2/checker.log",
+      "size": 110,
+      "sha256": "5d135733cca8356c62b1afc6a285384a2f713746d9d639259718bb22d826ee2c"
+    },
+    {
+      "path": "unit-native-r2/comparison.json",
+      "origin": "/tmp/ingetrazo-unit-native-r2/comparison.json",
+      "size": 116,
+      "sha256": "8f34551c47ef1b35404be38bc35adbb3fe4c2790ecb1f3785d48a85bef2585f8"
+    },
+    {
+      "path": "unit-native-r2/independent-ring-only-classification.json",
+      "origin": "/tmp/ingetrazo-unit-native-r2/independent-ring-only-classification.json",
+      "size": 5806,
+      "sha256": "3a95a1dc4bb11506bfe9f6400426237181fe7e4eaf7d7ab2e7600d82b6418229"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-3dface-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/dxf-3dface-saved.igz",
+      "size": 5723,
+      "sha256": "09c91f33bfa3d225d81af03b6a1179a5514c9a424779b3e790dd2c83163be058"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-block-leaf-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/dxf-block-leaf-saved.igz",
+      "size": 6359,
+      "sha256": "e6e868dbcadfd3c94da07eda209a852d85fc79e845b997d44ba9b50b205f7742"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-face-block-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/dxf-face-block-saved.igz",
+      "size": 6189,
+      "sha256": "84327961393315f40a23537bab44e844786898c84d45d0c81e051d39a7ace2a2"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-solid-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/dxf-solid-saved.igz",
+      "size": 5723,
+      "sha256": "b84a48d49c7b130d0efa49d1a70f57c3550b60ceedf71582aa1071d01925e58b"
+    },
+    {
+      "path": "unit-native-r2/native/dxf-trace-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/dxf-trace-saved.igz",
+      "size": 5723,
+      "sha256": "67adf4ece83252ac33b0791a48582c2b3affc9a763e0d8e5be9d39f72eeedffb"
+    },
+    {
+      "path": "unit-native-r2/native/native-unit-import.json",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/native-unit-import.json",
+      "size": 586065,
+      "sha256": "c1c0eb8cd45208d0bdb2b367608704a8cfa1e6c5440619bd98c10dbd2c33a788"
+    },
+    {
+      "path": "unit-native-r2/native/obj-root-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/obj-root-saved.igz",
+      "size": 4856,
+      "sha256": "656e26c63a201d0e1259ea144861c0911ebd88fe1ac7be62ff4a8a436c242b19"
+    },
+    {
+      "path": "unit-native-r2/native/obj-texture-leaf-saved.igz",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/obj-texture-leaf-saved.igz",
+      "size": 1290,
+      "sha256": "8e1923a5b092874bdd7ffbd1653092ddb4bec821e8762582438c43081dbd8737"
+    },
+    {
+      "path": "unit-native-r2/native/reopens-unit-import.json",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native/reopens-unit-import.json",
+      "size": 184645,
+      "sha256": "a405a294edf1068b4454649c6ab8d74e68627c98d92adc6a5a4e909fc2ef024d"
+    },
+    {
+      "path": "unit-native-r2/native.log",
+      "origin": "/tmp/ingetrazo-unit-native-r2/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "unit-native-r2/reader.log",
+      "origin": "/tmp/ingetrazo-unit-native-r2/reader.log",
+      "size": 27,
+      "sha256": "bff5f4975e05e2c9a8a504b49c0627e7bc0202c13d92beb6acc78fc8387d935e"
+    },
+    {
+      "path": "unit-native-r2/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-native-r2/receipt.json",
+      "size": 1101,
+      "sha256": "66f1d264f102390c038fabe2182d0847a497b7cee9c684c889fde7810111d837"
+    },
+    {
+      "path": "unit-native-r2/root-full-diagnostic.json",
+      "origin": "/tmp/ingetrazo-unit-native-r2/root-full-diagnostic.json",
+      "size": 4401,
+      "sha256": "32d2cb0079730edaa136158ebee36d6c176dec8b13b93f38351acc78ac77ac6d"
+    },
+    {
+      "path": "unit-build-r1/build.log",
+      "origin": "/tmp/ingetrazo-unit-build-r1/build.log",
+      "size": 28303,
+      "sha256": "6ca940a185b13565259cc526aae77c6e340ed8fc86675c67e212034ff7cce75c"
+    },
+    {
+      "path": "unit-build-r1/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-build-r1/receipt.json",
+      "size": 409,
+      "sha256": "97324281f54e9aec582ce78332cf7851fed695d3dad0fb98e4a3c5a867a30230"
+    },
+    {
+      "path": "unit-build-r2/build.log",
+      "origin": "/tmp/ingetrazo-unit-build-r2/build.log",
+      "size": 27691,
+      "sha256": "f6a414239a93a0be6a5de31150939e1a8b7a6e9c7d6c8b0377c6706cb26de48e"
+    },
+    {
+      "path": "unit-build-r2/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-build-r2/receipt.json",
+      "size": 268,
+      "sha256": "c564e36ea12d51e9e733503cf6c35aa69dae3bff148e756aece52de3a1661159"
+    },
+    {
+      "path": "unit-build-r3/build.log",
+      "origin": "/tmp/ingetrazo-unit-build-r3/build.log",
+      "size": 33928,
+      "sha256": "fa667593277635930c59e2f84863d549bed26eb0e258ae98749122adadfa655e"
+    },
+    {
+      "path": "unit-build-r3/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-build-r3/receipt.json",
+      "size": 357,
+      "sha256": "9e1aa7c0864b0c9439bb05f20ffdb8753e19b9df34c8bc6d0cef0704bf6a7a03"
+    },
+    {
+      "path": "unit-loader-checks-r1/dxf.log",
+      "origin": "/tmp/ingetrazo-unit-loader-checks-r1/dxf.log",
+      "size": 15018,
+      "sha256": "cfd90948ad2fb348c9b2ea45c88a40717a4b99db56f9c0678298334b7d99e71a"
+    },
+    {
+      "path": "unit-loader-checks-r1/obj.log",
+      "origin": "/tmp/ingetrazo-unit-loader-checks-r1/obj.log",
+      "size": 15033,
+      "sha256": "b29b33e9a9968fc238a20039a623e4f5cf1753bbaab0e8162b8046fc8e2d3e76"
+    },
+    {
+      "path": "unit-loader-checks-r1/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-loader-checks-r1/receipt.json",
+      "size": 571,
+      "sha256": "5db6fa871978b0262cd0569ffda864d7fe42ff6f1faf9c139396e9e344940dc0"
+    },
+    {
+      "path": "unit-loader-checks-r2/dxf.log",
+      "origin": "/tmp/ingetrazo-unit-loader-checks-r2/dxf.log",
+      "size": 15116,
+      "sha256": "bc3c8dfab628cac5aedb76d0e5c0a64fe000e8863a63a6ffb9477c7a05257eb4"
+    },
+    {
+      "path": "unit-loader-checks-r2/receipt.json",
+      "origin": "/tmp/ingetrazo-unit-loader-checks-r2/receipt.json",
+      "size": 251,
+      "sha256": "d1885ceb067946ea21079c22bc089013432ef28651592d5a1fc68e3380f7dbb3"
+    }
+  ],
+  "git_bindings": [
+    {
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "ac47a132703ea0cb92987773170ff5e34ec0c448bee895c6da65f4438081d4aa"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "dc8814c0f008bf2d3c054654e6f21303b2b8e77ed4b15dbbd5da1bc258ead6a8"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "3a5a9850f2d26041ac2e359343f791d5974649b560db2c1c0cde3f1876c01ac5"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/scene.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/containers.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "b2ca4f256b31fc60efc4377bb0775c88f3e988cf1f34c7832df6d98a462ec0eb"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/change_axes.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "5045f7db3afecc255b21748f0594d0fe1bd097344f5fb5efb7afd02f3a14d726"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "881178352193d786bb607feffb330fa6f3ba6398e12ba5b4b33d6689476a5784"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_material.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "4d6e198ff8bf51ed1315470936055c2c1d1f35de6b65bff344023bdad0bac8c4"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_blocks.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "c3b4673231a4a0f39068078c5500521cd8b743f3ad7daf3e8fedca290b50bc52"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "3447faa06624b44d396ca1ae941716f149c525b9ca14e2cc2f63350f9f5775f0"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_spline.rs",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "8e90f87b47a513b3933e7fe119700ad840881cbbe7e13d3ed54862f80c447077"
+    },
+    {
+      "path": "scripts/check-unit-import.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "19b446efcba7513a98535a9825e66819d5b8c3e7c4c884f7f4427eb92e8f226b"
+    },
+    {
+      "path": "scripts/reference-unit-import-reopens.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "5b90fbd46fac5c28669ab51396e31f53856c9140614c316ec107e50177a27ec6"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "b4ec33802e13905801c883e7ba17590ea6bde7755bbc1f285e0a17c5afc4143f"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "dc8814c0f008bf2d3c054654e6f21303b2b8e77ed4b15dbbd5da1bc258ead6a8"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "3a5a9850f2d26041ac2e359343f791d5974649b560db2c1c0cde3f1876c01ac5"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/scene.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/containers.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "b2ca4f256b31fc60efc4377bb0775c88f3e988cf1f34c7832df6d98a462ec0eb"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/change_axes.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "5045f7db3afecc255b21748f0594d0fe1bd097344f5fb5efb7afd02f3a14d726"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "881178352193d786bb607feffb330fa6f3ba6398e12ba5b4b33d6689476a5784"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_material.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "4d6e198ff8bf51ed1315470936055c2c1d1f35de6b65bff344023bdad0bac8c4"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_blocks.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "c3b4673231a4a0f39068078c5500521cd8b743f3ad7daf3e8fedca290b50bc52"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "3447faa06624b44d396ca1ae941716f149c525b9ca14e2cc2f63350f9f5775f0"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_spline.rs",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "8e90f87b47a513b3933e7fe119700ad840881cbbe7e13d3ed54862f80c447077"
+    },
+    {
+      "path": "scripts/check-unit-import.py",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "19b446efcba7513a98535a9825e66819d5b8c3e7c4c884f7f4427eb92e8f226b"
+    },
+    {
+      "path": "scripts/reference-unit-import-reopens.py",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "5b90fbd46fac5c28669ab51396e31f53856c9140614c316ec107e50177a27ec6"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "revision": "87bf81620ae85ac357f9eb8b5846dc5662f52ba1",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "b59adc634e1b33a5125e77907c2d5e75270f5aa13a2353eb5eddd744c15289b5"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "e33358b45b8d9ef9d92ed5d50d632d9889bb951c13d60208624ebb8efd32077e"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "3a5a9850f2d26041ac2e359343f791d5974649b560db2c1c0cde3f1876c01ac5"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/scene.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/containers.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "b2ca4f256b31fc60efc4377bb0775c88f3e988cf1f34c7832df6d98a462ec0eb"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/change_axes.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "5045f7db3afecc255b21748f0594d0fe1bd097344f5fb5efb7afd02f3a14d726"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "881178352193d786bb607feffb330fa6f3ba6398e12ba5b4b33d6689476a5784"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_material.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "4d6e198ff8bf51ed1315470936055c2c1d1f35de6b65bff344023bdad0bac8c4"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_blocks.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "b9808de659519adfafdfc505d6602209d23fec910755a11cb3d6abe63f82282c"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "3447faa06624b44d396ca1ae941716f149c525b9ca14e2cc2f63350f9f5775f0"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_spline.rs",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "8e90f87b47a513b3933e7fe119700ad840881cbbe7e13d3ed54862f80c447077"
+    },
+    {
+      "path": "scripts/check-unit-import.py",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "19b446efcba7513a98535a9825e66819d5b8c3e7c4c884f7f4427eb92e8f226b"
+    },
+    {
+      "path": "scripts/reference-unit-import-reopens.py",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "5b90fbd46fac5c28669ab51396e31f53856c9140614c316ec107e50177a27ec6"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "b4ec33802e13905801c883e7ba17590ea6bde7755bbc1f285e0a17c5afc4143f"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "dc8814c0f008bf2d3c054654e6f21303b2b8e77ed4b15dbbd5da1bc258ead6a8"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "3a5a9850f2d26041ac2e359343f791d5974649b560db2c1c0cde3f1876c01ac5"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/scene.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/containers.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "b2ca4f256b31fc60efc4377bb0775c88f3e988cf1f34c7832df6d98a462ec0eb"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/change_axes.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "5045f7db3afecc255b21748f0594d0fe1bd097344f5fb5efb7afd02f3a14d726"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "881178352193d786bb607feffb330fa6f3ba6398e12ba5b4b33d6689476a5784"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_material.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "4d6e198ff8bf51ed1315470936055c2c1d1f35de6b65bff344023bdad0bac8c4"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_blocks.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "c3b4673231a4a0f39068078c5500521cd8b743f3ad7daf3e8fedca290b50bc52"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "3447faa06624b44d396ca1ae941716f149c525b9ca14e2cc2f63350f9f5775f0"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_spline.rs",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "8e90f87b47a513b3933e7fe119700ad840881cbbe7e13d3ed54862f80c447077"
+    },
+    {
+      "path": "scripts/check-unit-import.py",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "19b446efcba7513a98535a9825e66819d5b8c3e7c4c884f7f4427eb92e8f226b"
+    },
+    {
+      "path": "scripts/reference-unit-import-reopens.py",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "5b90fbd46fac5c28669ab51396e31f53856c9140614c316ec107e50177a27ec6"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "revision": "e305e0ce794d7597d408571b10412b072d50884e",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    }
+  ],
+  "final_revision": "c5d04a1d15aef6add5ae365e8623f297e3612a76",
+  "binary_sha256": "42c2a28ceb472f0c6458e937486abb712ee26d905743d50d487ce9a2cfdfd865",
+  "source_references": {
+    "source-records.zip": "abd934d0ed81afed0917ad3baf5b7e6f9f761d1fea57bdd2080e0142d74ec92e",
+    "source-manifest.json": "5eb3f6973b9ab1e0bb12699799630362a3dee0a816e87a3a6ba29e6f548aba92"
+  },
+  "strict_pass": false,
+  "exact_states": 41,
+  "states": 47,
+  "exact_readers": 5,
+  "readers": 7,
+  "directed_ring_reversals": 8,
+  "leaf_differences": 32,
+  "negative_controls_accepted": 0,
+  "excluded_paths": [
+    "/tmp/ingetrazo-unit-native-r1/native/picker/kdialog",
+    "/tmp/ingetrazo-unit-native-r1/native/shared-config/settings.json",
+    "/tmp/ingetrazo-unit-native-r2/native/picker/kdialog",
+    "/tmp/ingetrazo-unit-native-r2/native/shared-config/settings.json"
+  ],
+  "purged": false
+}
