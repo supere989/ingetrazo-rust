@@ -897,7 +897,7 @@ fn probe(app: &IngeTrazoApp, o: Owner, p: DVec2) -> Result<(bool, bool, bool), S
     }
     let b = bounds(app, o)?;
     let r = geometry(app, o)?;
-    let hit = p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h;
+    let hit = p.x >= b.x && p.x < b.x + b.w && p.y >= b.y && p.y < b.y + b.h;
     let handle =
         o.category != 3 && (p.x - (r.x + r.w)).abs() <= 3. && (p.y - (r.y + r.h)).abs() <= 3.;
     Ok((hit, handle, false))
@@ -1274,6 +1274,8 @@ fn finish_grab(app: &mut IngeTrazoApp) -> Result<(), String> {
             }
         }
     }
+    let unmoved=group.peers.iter().all(|p|p.at==p.current);
+    if unmoved {set(app,vec![group.pressed],Some(group.pressed))?;}
     app.finish_composer_edit();
     revalidate(app);
     Ok(())
@@ -1523,7 +1525,9 @@ pub(super) fn input(
                             .iter()
                             .position(|(o, _, _)| is_selected(app, *o))
                             .unwrap_or(hits.len() - 1);
-                        set(app, vec![hits[(old + 1) % hits.len()].0], None)?;
+                        let target=hits[(old+1)%hits.len()].0;
+                        let members=expand_groups(app,vec![target],target)?;
+                        set(app,members,Some(target))?;
                         app.composer_state.selection.ctrl = true;
                         return Ok(true);
                     }
@@ -1657,6 +1661,10 @@ pub(crate) fn edit_primary(app: &mut IngeTrazoApp, fields: &Value) -> Result<(),
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect::<serde_json::Map<_, _>>();
     if changed.is_empty() {
+        if let Some((true, f)) = raw_slot(primary.category) {
+            super::annotation_authoring::admit(native)?;
+            app.remember_annotation_candidate(f, native);
+        }
         return Ok(());
     }
     let s = active(app)?;
@@ -1684,8 +1692,12 @@ pub(crate) fn edit_primary(app: &mut IngeTrazoApp, fields: &Value) -> Result<(),
             Record::Typed { native, .. } | Record::Raw { value: native, .. } => native,
         };
         let applied = if owner == primary { map } else { &changed };
-        for (k, v) in applied {
-            value[k] = v.clone();
+        if matches!(owner.category, 7 | 8 | 9 | 10 | 12 | 13) {
+            super::annotation_authoring::patch(&mut value, &Value::Object(applied.clone()))?;
+        } else {
+            for (k, v) in applied {
+                value[k] = v.clone();
+            }
         }
         let candidate = if raw_slot(owner.category).is_some() {
             Record::Raw {
@@ -1708,6 +1720,11 @@ pub(crate) fn edit_primary(app: &mut IngeTrazoApp, fields: &Value) -> Result<(),
         keys.sort();
         signature.push((owner.id, keys));
         candidates.push((owner, candidate));
+    }
+    if let Some((true, f)) = raw_slot(primary.category) {
+        if let Some((_, Record::Raw { value, .. })) = candidates.first() {
+            app.remember_annotation_candidate(f, value);
+        }
     }
     let combine = app.scene.sheets[s].edit_signature.as_ref() == Some(&signature);
     if !combine {
@@ -1740,6 +1757,7 @@ pub(crate) fn edit_primary(app: &mut IngeTrazoApp, fields: &Value) -> Result<(),
     }
     app.scene.sheets[s].edit_signature = Some(signature);
     revalidate(app);
+    if matches!(primary.category,7|8|9|10|12|13){app.composer_state.annotation_authoring.draft=None;}
     Ok(())
 }
 fn observe(ui: &egui::Ui, id: &str, r: egui::Rect) {

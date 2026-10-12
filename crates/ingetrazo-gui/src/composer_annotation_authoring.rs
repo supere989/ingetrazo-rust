@@ -176,7 +176,7 @@ pub(super) fn admit(v: &Value) -> Result<(), String> {
     }
     Ok(())
 }
-fn patch(v: &mut Value, fields: &Value) -> Result<(), String> {
+pub(super) fn patch(v: &mut Value, fields: &Value) -> Result<(), String> {
     for (k, x) in fields.as_object().ok_or("Invalid annotation edit")? {
         v[k] = x.clone();
     }
@@ -230,8 +230,10 @@ impl IngeTrazoApp {
     }
     pub(super) fn set_annotation_cohort(&mut self, members: Vec<Owner>, primary: Option<Owner>) {
         multi::external_members(self, members);
+        if self.composer_state.annotation_authoring.selected != primary {
+            self.composer_state.annotation_authoring.draft = None;
+        }
         self.composer_state.annotation_authoring.selected = primary;
-        self.composer_state.annotation_authoring.draft = None;
     }
     pub(super) fn sheet_annotation_bounds(&self, owner: Owner) -> Result<[f64; 4], String> {
         handles::bounds(self, owner)
@@ -419,6 +421,32 @@ impl IngeTrazoApp {
     pub fn composer_annotation_preview_stats(&self) -> (u64, u64, usize) {
         self.composer_state.annotation_authoring.canvas.stats()
     }
+    pub(super) fn remember_annotation_candidate(&mut self, family: usize, candidate: &Value) {
+        if family == 0 {
+            self.composer_state.annotation_authoring.last_cota =
+                preferences::remember(&mut self.document_session.preferences, &candidate);
+            self.persist_preferences();
+        }
+        if family == 4 {
+            for k in [
+                "text",
+                "symbol",
+                "datum_m",
+                "decimals",
+                "size_mm",
+                "line_mm",
+                "mirror",
+                "stroke_mm",
+            ] {
+                if let Some(v) = candidate.get(k) {
+                    self.composer_state
+                        .annotation_authoring
+                        .last_level
+                        .insert(k.into(), v.clone());
+                }
+            }
+        }
+    }
     pub fn edit_composer_annotation(&mut self, fields: Value) -> Result<(), String> {
         if self.composer_state.selection.cohort_mode
             && super::selection::primary(self)
@@ -457,30 +485,7 @@ impl IngeTrazoApp {
             .cloned()
             .collect::<Vec<_>>();
         keys.sort();
-        if family == 0 {
-            self.composer_state.annotation_authoring.last_cota =
-                preferences::remember(&mut self.document_session.preferences, &candidate);
-            self.persist_preferences();
-        }
-        if family == 4 {
-            for k in [
-                "text",
-                "symbol",
-                "datum_m",
-                "decimals",
-                "size_mm",
-                "line_mm",
-                "mirror",
-                "stroke_mm",
-            ] {
-                if let Some(v) = candidate.get(k) {
-                    self.composer_state
-                        .annotation_authoring
-                        .last_level
-                        .insert(k.into(), v.clone());
-                }
-            }
-        }
+        self.remember_annotation_candidate(family, &candidate);
         if unchanged {
             return Ok(());
         }
