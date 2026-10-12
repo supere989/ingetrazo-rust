@@ -138,7 +138,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .as_ref()
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
-            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle|ToolType::Move|ToolType::Scale);
+            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle|ToolType::Move|ToolType::Scale|ToolType::Image);
             app.snap_engine.note_model_revision(app.model_revision);
             let snap_res=if !app.active_tool.uses_snap(){ingetrazo_core::snap::SnapResult::default()}else if screen_drawing{
                 let context=ingetrazo_core::snap_screen::ScreenSnapContext{
