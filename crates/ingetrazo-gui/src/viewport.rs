@@ -15,8 +15,16 @@ use ingetrazo_tools::base::{ToolContext, ToolType};
 use crate::app::IngeTrazoApp;
 
 pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
-    let (rect, response) =
-        ui.allocate_exact_size(ui.available_size(), egui::Sense::click_and_drag());
+    // Native render targets use whole physical pixels. Share their exact bounds
+    // with interaction, projection and camera aspect instead of fractional panel edges.
+    let available = ui.available_rect_before_wrap();
+    let density = ui.ctx().pixels_per_point();
+    let align = |p: egui::Pos2| egui::pos2(
+        (p.x * density).round() / density,
+        (p.y * density).round() / density,
+    );
+    let rect = egui::Rect::from_min_max(align(available.min), align(available.max));
+    let response = ui.allocate_rect(rect, egui::Sense::click_and_drag());
 
     // Update camera aspect ratio
     if rect.width() > 1.0 && rect.height() > 1.0 {
