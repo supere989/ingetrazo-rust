@@ -224,12 +224,13 @@ run([binaries/(consumers[20]+suffix), obj_raw, "--obj-raw-fusion"], "obj-raw-fus
 run([sys.executable, repo/"scripts/reference-obj-raw-fusion-reopens.py", obj_raw], "obj-raw-fusion/reopen.log", requires=["obj-raw-fusion/runtime.log"])
 run([sys.executable, repo/"scripts/check-obj-raw-fusion.py", obj_raw], "obj-raw-fusion/acceptance.json", requires=["obj-raw-fusion/runtime.log", "obj-raw-fusion/reopen.log"])
 
-# Reuse the same context consumer and authenticated source packages for both DXF subsets.
+# Reuse the same context consumer and authenticated source packages for all DXF subsets.
 dxf_archives = {}
 dxf_results = {}
 for lane, package, mode, reader, checker in [
     ("dxf-entities", "dxf-legacy-polylines", "--dxf-entities", "reference-dxf-entities-reopens.py", "check-dxf-entities.py"),
     ("dxf-curves", "dxf-curves", "--dxf-curves", "reference-dxf-curves-reopens.py", "check-dxf-source-curves.py"),
+    ("dxf-splines", "dxf-splines", "--dxf-splines", "reference-dxf-splines-reopens.py", "check-dxf-source-splines.py"),
 ]:
     folder = out/lane
     members = [row["path"] for row in json.loads((repo/"docs/audits"/package/"source-manifest.json").read_text())["entries"]]
