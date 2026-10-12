@@ -87,6 +87,7 @@ jobs:
           cargo run --locked -p ingetrazo-formats --example native_font_resource_probe -- /System/Library/Fonts/Supplemental/Arial.ttf > docs/audits/paper-font-native-ci/font-resource.log 2>&1
       - name: Build combined native macOS GUI with Apple SDK
         id: nativebuild
+        if: ${{ !cancelled() }}
         run: |
           mkdir -p docs/audits/metal-combined-gui-ci
           if [[ "$GITHUB_REF" != refs/heads/review/metal-* ]]; then
