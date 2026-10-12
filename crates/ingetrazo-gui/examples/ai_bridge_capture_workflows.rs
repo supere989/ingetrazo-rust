@@ -70,7 +70,7 @@ mod fixture {
             .iter()
             .map(|p| {
                 let mut v =
-                    json!({"point":p.point.to_array(),"normal":p.normal.to_array(),"uid":p.id});
+                    json!({"point":p.point.to_array(),"normal":p.normal.to_array(),"uid":p.native_uid()});
                 if !p.name.is_empty() {
                     v["name"] = json!(p.name);
                 }
