@@ -162,6 +162,9 @@ impl Renderer {
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
+    // macOS geometry/codec diagnostic: Linux Sans Serif is not a Mac font oracle.
+    // Default acceptance still requires every image, including text.
+    let skip_text = args.iter().any(|v| v == "--skip-text");
     let source = Path::new(&args[0]);
     let out = Path::new(&args[1]);
     std::fs::create_dir_all(out)?;
@@ -188,6 +191,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut results = Vec::new();
     for (input, original) in &inputs {
         for row in original["images"].as_array().ok_or("images")? {
+            if skip_text && row["case"] == "text" { continue; }
             if let Some(scene) = row["scene"].as_str() {
                 app.mark_document_clean();
                 app.open_document(&input.join(scene));
@@ -376,7 +380,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("native.json"),
         serde_json::to_vec_pretty(
-            &serde_json::json!({"images":results,"controls":controls,"lazy_readback_refused":refused,"unsupported_preserved":true,"stale_target_refused":true,"modal_input_owned":true,"no_temps":no_temps,"scope":"Actual App path/DPI preparation and cached native physical CAD GPU render/readback; no desktop chooser or full painter claim"}),
+            &serde_json::json!({"text_scope":if skip_text {"excluded-platform-font-diagnostic"} else {"included"},"images":results,"controls":controls,"lazy_readback_refused":refused,"unsupported_preserved":true,"stale_target_refused":true,"modal_input_owned":true,"no_temps":no_temps,"scope":"Actual App path/DPI preparation and cached native physical CAD GPU render/readback; no desktop chooser or full painter claim"}),
         )?,
     )?;
     Ok(())

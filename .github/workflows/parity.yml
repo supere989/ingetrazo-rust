@@ -91,7 +91,19 @@ jobs:
           if [[ "$GITHUB_REF" != refs/heads/review/metal-* ]]; then
             cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
           fi
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+      - uses: actions/setup-python@v5
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        with:
+          python-version: "3.13"
+      - name: Replay frozen figure exports on native macOS
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: python3 scripts/replay-gltf-figures.py target/debug/examples/gltf_rich docs/audits/metal-combined-gui-ci/gltf-figures > docs/audits/metal-combined-gui-ci/gltf-figures-replay.log 2>&1
+      - name: Strict native Metal physical sheet geometry and codec diagnostic
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: |
+          python3 -m pip install PySide6_Essentials==6.12.0
+          python3 scripts/replay-sheet-images.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker docs/audits/metal-combined-gui-ci/sheet-images --skip-text > docs/audits/metal-combined-gui-ci/sheet-images-replay.log 2>&1
       - name: Native default sky profile cache refusal and ownership
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
@@ -290,7 +302,7 @@ jobs:
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         run: |
-          cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
+          cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example sheet_image_workflows --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
         run: |

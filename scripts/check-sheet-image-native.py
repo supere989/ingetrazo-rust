@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Strict retained physical source images versus actual native output; no tolerance."""
-import json,sys,hashlib,struct
+import argparse,json,sys,hashlib,struct
 from pathlib import Path
 from PySide6.QtGui import QImage
 class Image:
@@ -29,13 +29,16 @@ def physical(path):
   if tag==218:break
   at+=length+2
  raise AssertionError('Missing physical image metadata')
-def check(source,native,out,views=None):
+def check(source,native,out,views=None,skip_text=False):
  original=json.loads((source/'source.json').read_text());record=json.loads((native/'native.json').read_text())
  inputs=[(source,row)for row in original['images']]
  expected_names=NAMES.copy()
  if views is not None:
   addendum=json.loads((views/'source.json').read_text());names=['view-current','view-saved','view-cropped','view-hidden-thin'];assert [r['case']for r in addendum['images']]==names;expected_names+=names;inputs.extend((views,row)for row in addendum['images'])
  assert [v['case']for v in original['images']]==NAMES
+ if skip_text:
+  expected_names.remove("text");inputs=[(folder,row)for folder,row in inputs if row["case"]!="text"]
+  assert record["text_scope"]=="excluded-platform-font-diagnostic"
  assert [v['case']for v in record['images']]==expected_names
  comparisons=[]
  for (input,expected),actual in zip(inputs,record['images']):
@@ -54,7 +57,8 @@ def check(source,native,out,views=None):
    file=image['file'];assert physical(source/file)==physical(native/file)
    a=Image.open(source/file).convert('RGB');b=Image.open(native/file).convert('RGB');assert a.size==b.size and a.tobytes()==b.tobytes()
  assert all(record[k] is True for k in ['lazy_readback_refused','unsupported_preserved','stale_target_refused','modal_input_owned','no_temps'])
- report={'comparisons':comparisons,'exact_images':sum(v['exact']for v in comparisons),'images':len(expected_names),'scope':'Strict actual physical image bytes; JPEG encoder mismatch remains a failure, not tolerated. No full painter/desktop claim.'}
+ report={'comparisons':comparisons,'exact_images':sum(v['exact']for v in comparisons),'images':len(expected_names),'text_scope':'excluded-platform-font-diagnostic'if skip_text else 'included','scope':'Strict actual physical image bytes; JPEG encoder mismatch remains a failure, not tolerated. No full painter/desktop claim.'}
  out.write_text(json.dumps(report,indent=2)+'\n');return report
 if __name__=='__main__':
- report=check(Path(sys.argv[1]),Path(sys.argv[2]),Path(sys.argv[3]),Path(sys.argv[4])if len(sys.argv)>4 else None);print(json.dumps(report));sys.exit(0 if report['exact_images']==report['images']else 1)
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('source',type=Path);parser.add_argument('native',type=Path);parser.add_argument('output',type=Path);parser.add_argument('views',type=Path,nargs='?');parser.add_argument('--skip-text',action='store_true',help='Diagnostic geometry/codec scope only; does not establish platform font parity')
+ args=parser.parse_args();report=check(args.source,args.native,args.output,args.views,args.skip_text);print(json.dumps(report));sys.exit(0 if report['exact_images']==report['images']else 1)
