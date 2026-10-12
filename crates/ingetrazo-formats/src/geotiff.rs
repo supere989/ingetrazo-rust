@@ -1310,7 +1310,7 @@ fn jpeg_block(
         .largest_block_bytes
         .max(data.len() + merged.capacity() + out.capacity() + raw.capacity() + work);
     let cmyk = matches!(
-        color,
+        color as u32,
         turbojpeg_sys::TJCS_TJCS_CMYK | turbojpeg_sys::TJCS_TJCS_YCCK
     );
     let format = if cmyk {
