@@ -1,0 +1,18 @@
+{
+  "revision": "a57d9f0df2a8ed97ab230870d565321b5ba43637",
+  "expected_refusal": "Prebuilt executable required",
+  "startup_authentication_passed": true,
+  "source_captures": 0,
+  "native_replays": 0,
+  "scripts": {
+    "replay-unit-import.py": "5af626c1e0c66dc4c5e6f08a0c8359116540f41697ac02e7ddd6ec808ad324ca",
+    "reference-unit-import-reopens.py": "5b90fbd46fac5c28669ab51396e31f53856c9140614c316ec107e50177a27ec6"
+  },
+  "result": {
+    "passed": false,
+    "fresh_source_captures": 0,
+    "strict_winding_exemptions": 0,
+    "steps": [],
+    "error": "AssertionError('Prebuilt executable required')"
+  }
+}
