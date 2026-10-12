@@ -34,6 +34,34 @@ impl Viewport {
             last_route_reason: None,
         }
     }
+    /// Prepare a requested capture target on the actual live World/Adapter.
+    /// The returned Arc owns its target; the ordinary frame remains retained
+    /// and is restored on every path. No document or camera publication occurs.
+    pub(crate) fn prepare_capture(
+        &mut self,
+        app: &IngeTrazoApp,
+        extent: (u32, u32),
+        logical_height: f32,
+    ) -> Result<Arc<Prepared>, String> {
+        if extent.0 < 64 || extent.1 < 64 || extent.0 > 4096 || extent.1 > 4096 {
+            return Err("Metal capture extent outside source admission".into());
+        }
+        let live_frame = self.frame.take();
+        let live_unsupported = self.unsupported.take();
+        let live_reason = self.last_route_reason.take();
+        let result = self.prepare(app, extent, logical_height)
+            .and_then(|accepted| {
+                if accepted {
+                    self.frame.take().ok_or_else(|| "Metal capture prepared no owned target".into())
+                } else {
+                    Err("Metal capture target owner unavailable".into())
+                }
+            });
+        self.frame = live_frame;
+        self.unsupported = live_unsupported;
+        self.last_route_reason = live_reason;
+        result
+    }
     pub(crate) fn catalog_builds(&self) -> u64 {
         self.adapter.catalog_builds
     }
