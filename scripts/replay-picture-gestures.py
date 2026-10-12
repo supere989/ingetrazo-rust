@@ -22,7 +22,7 @@ def main():
     env=dict(os.environ,QT_QPA_PLATFORM='offscreen',INGETRAZO_STATE_DIR=str(out/'state'),XDG_CONFIG_HOME=str(out/'config'),XDG_DATA_HOME=str(out/'data'),XDG_CACHE_HOME=str(out/'cache'))
     result={'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),'binary_sha256':digest(binary),'source_pin':pin,'source_archive_sha256':manifest['archive_sha256'],'fresh_source_captures':0,'commands':[],'result':'incomplete'}
     try:
-        for label,argv in [('native',[binary,source,native]),('reader',[sys.executable,repo/'scripts/reference-picture-gestures-reopens.py',source,native]),('checker',[sys.executable,repo/'scripts/check-picture-gestures.py',source,native,out/'comparison.json'])]:
+        for label,argv in [('native',[binary,source,native]),('reader',[sys.executable,repo/'scripts/reference-picture-gesture-reopens.py',source,native]),('checker',[sys.executable,repo/'scripts/check-picture-gestures.py',source,native,out/'comparison.json'])]:
             command=list(map(str,argv));started=time.monotonic()
             with (out/(label+'.log')).open('w')as stdout,(out/(label+'.stderr')).open('w')as stderr:
                 run=subprocess.run(command,cwd=source,env=env,stdout=stdout,stderr=stderr,timeout=180)

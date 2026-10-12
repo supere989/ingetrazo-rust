@@ -59,6 +59,8 @@ for r in recipes:
   scene.add_edge(QVector3D(-2,0,0),QVector3D(2,0,0))
   initial['frames']=[dict(uid='drawing',x_mm=20.,y_mm=20.,w_mm=140.,h_mm=100.,scale_n=100.,view_key='std:top',style='vectorial',locked=True,z=0.)]
  scene.compositions=[Composicion.from_dict(initial)];inputfile=name+'-input.igz';igz.save_scene(scene,out/inputfile)
+ if name=='unselected-drag':
+  data=(out/inputfile).read_bytes();doc=json.loads(data)if data[:2]!=b'PK'else json.loads(zipfile.ZipFile(out/inputfile).read('document.json'));c=doc['scene']['compositions'][0];c['vendor_gesture_sheet']={'unicode':'café','flag':True,'value':None};c['images'][0]['vendor_gesture_picture']={'opaque':[1,'one',None,False]};(out/inputfile).write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n')
  window=ProbeComposer(host);windows.append((window,host));window._auto_render=False;window._auto_timer.stop();window._set_tool_mode('select');window.resize(1100,850);window.show();flush();view=window._view;view.setTransform(QTransform().scale(2.,2.));flush()
  if r.get('selected')is not None:
   model=window.comp.images[r['selected']];next(it for it in window.canvas.items()if isinstance(it,ImageItem)and it.model is model).force_select();flush()
