@@ -3,6 +3,8 @@ use super::IngeTrazoApp;
 use glam::DVec2;
 use serde_json::{json, Value};
 use uuid::Uuid;
+#[path = "composer_annotation_preferences.rs"]
+mod preferences;
 pub(super) const FAMILIES: [&str; 6] = [
     "cotas",
     "cotas_ang",
@@ -223,6 +225,15 @@ impl IngeTrazoApp {
     pub fn activate_composer_annotation(&mut self, family: usize) -> Result<(), String> {
         active(self)?;
         FAMILIES.get(family).ok_or("Unknown annotation family")?;
+        if self
+            .composer_state
+            .annotation_authoring
+            .last_cota
+            .is_empty()
+        {
+            self.composer_state.annotation_authoring.last_cota =
+                preferences::load(&self.document_session.preferences);
+        }
         self.finish_composer_edit();
         self.composer_state.text_tool = false;
         self.composer_state.shape_tool = None;
@@ -268,37 +279,18 @@ impl IngeTrazoApp {
         raw_bytes(before)?;
         let mut candidate = before.clone();
         patch(&mut candidate, &fields)?;
-        if candidate == *before {
-            return Ok(());
-        }
+        let unchanged = candidate == *before;
         let mut keys = fields
             .as_object()
             .unwrap()
-            .iter()
-            .filter(|(k, v)| before.get(*k) != Some(*v))
-            .map(|(k, _)| k.clone())
+            .keys()
+            .cloned()
             .collect::<Vec<_>>();
         keys.sort();
         if family == 0 {
-            for k in [
-                "text_mm",
-                "decimals",
-                "ends",
-                "stroke_mm",
-                "color",
-                "offset_mm",
-                "text_color",
-                "text_bg",
-                "text_bg_opacity",
-                "units",
-            ] {
-                if let Some(v) = candidate.get(k) {
-                    self.composer_state
-                        .annotation_authoring
-                        .last_cota
-                        .insert(k.into(), v.clone());
-                }
-            }
+            self.composer_state.annotation_authoring.last_cota =
+                preferences::remember(&mut self.document_session.preferences, &candidate);
+            self.persist_preferences();
         }
         if family == 4 {
             for k in [
@@ -318,6 +310,9 @@ impl IngeTrazoApp {
                         .insert(k.into(), v.clone());
                 }
             }
+        }
+        if unchanged {
+            return Ok(());
         }
         let n = self
             .composer_state
@@ -500,8 +495,9 @@ impl IngeTrazoApp {
                 v["y_mm"] = json!(p[0].y.min(p[1].y));
                 v["w_mm"] = json!(w);
                 v["h_mm"] = json!(h);
-                v["bx_mm"] = json!(w + 7.2);
-                v["by_mm"] = json!(-7.2 * 0.9);
+                let bubble = (number(&v, "size_mm", 3.) * 2.4).max(3.);
+                v["bx_mm"] = json!(w + bubble);
+                v["by_mm"] = json!(-bubble * 0.9);
                 let count = self.scene.sheets[s]
                     .native_document
                     .get("llamadas")
@@ -649,7 +645,7 @@ fn choices(k: &str) -> &'static [&'static str] {
             "ft-in-frac",
         ],
         "ends" => &["arrow", "tick", "none"],
-        "text_pos" => &["above", "centered", "below", "aside", "aside_below"],
+        "text_pos" => &["above"],
         "axis" => &["", "h", "v"],
         "text_along" => &["middle", "start", "end"],
         "text_align" => &["aligned", "horizontal"],
@@ -685,7 +681,9 @@ pub(super) fn properties(app: &mut IngeTrazoApp, ui: &mut egui::Ui, s: usize) {
         .as_ref()
         .is_none_or(|(o, _)| *o != owner)
     {
-        app.composer_state.annotation_authoring.draft = Some((owner, actual.clone()));
+        let mut draft = actual.clone();
+        normalize_property_draft(f, &mut draft);
+        app.composer_state.annotation_authoring.draft = Some((owner, draft));
     }
     let mut changed = false;
     let mut delete = false;
@@ -1810,3 +1808,51 @@ const KNOWN_FIELDS: &[&str] = &[
     "z",
     "z_m",
 ];
+
+// Qt QDoubleSpinBox stores rounded widget values during blocked selection setup;
+// its next real property callback publishes those values into the model.
+fn normalize_property_draft(f: usize, v: &mut Value) {
+    for (k, _) in property_fields(f) {
+        if let Some(n) = v.get(*k).and_then(Value::as_f64) {
+            // Pinned radial callbacks throw before editing. The independently declared
+            // corrected text workflow retains radius/angle; numeric edits remain explicit.
+            if f == 2 {
+                continue;
+            }
+            let decimals = if *k == "decimals" {
+                0
+            } else if matches!(*k, "z_m" | "datum_m") {
+                3
+            } else {
+                2
+            };
+            let n = format!("{n:.decimals$}").parse::<f64>().unwrap_or(n);
+            let (lo, hi) = match *k {
+                "sep_mm" => (-100., 100.),
+                "radius_mm" => (2., 300.),
+                "text_mm" => (1., 10.),
+                "size_mm" => {
+                    if f == 4 {
+                        (1., 12.)
+                    } else {
+                        (1.5, 10.)
+                    }
+                }
+                "size_pt" => (4., 72.),
+                "stroke_mm" => (0.1, 1.5),
+                "decimals" => (0., 4.),
+                "z_m" | "datum_m" => (-100000., 100000.),
+                "line_mm" => (2., 200.),
+                _ => (-1000000., 1000000.),
+            };
+            v[*k] = if *k == "decimals" {
+                json!(n.clamp(lo, hi) as i64)
+            } else {
+                json!(n.clamp(lo, hi))
+            };
+        }
+    }
+    if f == 0 {
+        v["text_pos"] = json!("above");
+    }
+}
