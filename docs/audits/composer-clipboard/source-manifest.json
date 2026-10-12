@@ -1,0 +1,99 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_revision": "33f0e186c67a982b1f5f99c904afd1baa4d78115",
+  "cases": 6,
+  "states": 68,
+  "original_readers": 6,
+  "source_capture_invocations": 1,
+  "source_callback_errors": 6,
+  "archive_sha256": "54e35a5640aaa5265672e4fb0a3eea4e5d09c9c7566d023ba5ff4265413cd640",
+  "members": {
+    "original-clipboard.json": {
+      "size": 878265,
+      "sha256": "dc899f630c5d6525d4f8b02e89634a8dfb817ccaddf0fc85ed30093907cf8c22"
+    },
+    "original-reopens.json": {
+      "size": 47594,
+      "sha256": "eb6727a83cb18bbb3dd693b0e02f485845e0255a2870053b6fd3363e179cc5eb"
+    },
+    "model-defaults.json": {
+      "size": 7277,
+      "sha256": "6976f7bf38a82b6037db4ae98c7f1c11443b87509e5fc0fa77599230b8b802ad"
+    },
+    "fixture.png": {
+      "size": 100,
+      "sha256": "c968eca4fcd6db211bd26814897242ab7f599f55ceae330787bb0d12c0e0ad95"
+    },
+    "text-copy-cut-history-input.igz": {
+      "size": 1891,
+      "sha256": "68065b244602b8c16a9ba1b761ae44d3ac93839ec2e0727836705cda8343a711"
+    },
+    "text-copy-cut-history-original.igz": {
+      "size": 2495,
+      "sha256": "a403f6d890faeb41a7e93469964f0bd5bbfb81a4104ce91ddfb7bf671465ec0e"
+    },
+    "bound-cohort-input.igz": {
+      "size": 5580,
+      "sha256": "7c082a1184354897c0e34a22f7e4775c5a5808cec684593be5d96c556acda8df"
+    },
+    "bound-cohort-original.igz": {
+      "size": 14130,
+      "sha256": "fcff5ff6db53a693efc9eb1a2b49256ad42322a446720931cdb45a8a8f8fe1b0"
+    },
+    "cross-sheet-bindings-input.igz": {
+      "size": 7478,
+      "sha256": "6445f5a3f3672ff4b32bbe1a8ad39f436b47539f7b8540dd054f517f43c7f796"
+    },
+    "cross-sheet-bindings-original.igz": {
+      "size": 8930,
+      "sha256": "aa812991fa6310169e94b315bd06127865a18c2cc18ec7076a6d195a9d41d5fd"
+    },
+    "title-replace-window-input.igz": {
+      "size": 4935,
+      "sha256": "16585fd2b03ef395f28f71897305f7ed36e37bab33cbf3abc6bd694be1d0de7a"
+    },
+    "title-replace-window-original.igz": {
+      "size": 5008,
+      "sha256": "950f78738edb430280e60f87848ce412cb01c240a03bc10839899b8bb94de535"
+    },
+    "all-fifteen-input.igz": {
+      "size": 12016,
+      "sha256": "8c60d669bf5a23a7f5f8d4843592908b8c94d47501979dfae9031540f523b403"
+    },
+    "all-fifteen-original.igz": {
+      "size": 21342,
+      "sha256": "1123d1cc5d6c70af3151533335012b7d2d2b6267a095b7921c309648a2270589"
+    },
+    "locked-hidden-copy-input.igz": {
+      "size": 1888,
+      "sha256": "575b067418d274b39259c0c7db6050e689456ab4d62a7f43714ec7db20bc266d"
+    },
+    "locked-hidden-copy-original.igz": {
+      "size": 1888,
+      "sha256": "575b067418d274b39259c0c7db6050e689456ab4d62a7f43714ec7db20bc266d"
+    },
+    "capture/capture.json": {
+      "size": 281,
+      "sha256": "738aa2e1d1f10f3d4e592dd58c93110a4a0839ec3f04c500e9cf29c299eb1bf9"
+    },
+    "capture/capture.log": {
+      "size": 41,
+      "sha256": "dc3042ab23867dc67f9503a3a117c84ca1ed1a285f5c9b9d43be05f7d0233ac3"
+    },
+    "capture/capture.stderr": {
+      "size": 2580,
+      "sha256": "ead8933b1d7f78ee46c329e44dcd2a220fae92b91d7bcaa3a8de392e4a2698d4"
+    }
+  },
+  "sources": [
+    {
+      "path": "scripts/reference-composer-clipboard.py",
+      "sha256": "8b377a93fcb67d4e90cf90eb0ab844e68c8d19e67e7293966c95c9c4be9c37e5"
+    }
+  ],
+  "scope": "Actual Copy/Cut/Paste keys, literal ordered clipboard, complete states/save. Random UUIDs require strict relational identity bijections; differing Qt selection iteration/z order remains explicit, never sorted away. No profile painting claim.",
+  "source_noops": [
+    "locked-hidden-copy has no selected item; Copy/Paste remain no-ops.",
+    "text-copy-cut-history Cut follows history-cleared selection; cross-sheet-bindings provides operative Text+Cota Cut."
+  ]
+}
