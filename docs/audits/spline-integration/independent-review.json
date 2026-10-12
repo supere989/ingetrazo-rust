@@ -1,0 +1,36 @@
+{
+  "runtime_commit": "c0c7a9f39d2dd0087a212d098ff331a080fc27e0",
+  "crates_tree": "fe575ff04e8f53b4638c3e57ca9455b98717a9d7",
+  "method": "Independent read-only canonical member hashes and raw byte comparisons, current binary/crates-tree/source-archive bindings, literal archived source/native states and reader pairs. No tests/builds/replays/source captures.",
+  "authenticated": {
+    "archive_sha256": "d793cdef24ea4f7199bd374e6a77e7a3dde3a1c9c76d117839ce8f881b03dca8",
+    "new_records": 98,
+    "new_raw_bytes": 13712544,
+    "byte_identical_reused_source_records": 122,
+    "source_archives": 3,
+    "raw_files_fully_covered": 220,
+    "current_binary_sha256": "4795f07877398b9c34bb7f3ae77ea1b9cb9f1e13b0ca9fb1b6396332cc3522af",
+    "current_crates_tree_matches": true,
+    "original_pin_clean": "6be29fe437a7cd992d4e079f71720821b25216b9"
+  },
+  "literal_results": {
+    "straight": {
+      "states": 56,
+      "reader_pairs": 8,
+      "reported_negatives": 16
+    },
+    "curves": {
+      "states": 84,
+      "reader_pairs": 12,
+      "reported_negatives": 36
+    },
+    "splines": {
+      "states": 105,
+      "reader_pairs": 15,
+      "reported_negatives": 45
+    }
+  },
+  "receipt_scope": "Single existing context build8.577s plus three affected lanes7.538s reported pass; zero fresh original captures/broad local repeats. Execution was not repeated by reviewer.",
+  "disposition": "Accepted, no blocking integration/evidence defect found.",
+  "boundaries": "Actual corrected Apple math execution remains pending. Source-invalid revision policy, unexercised large banded fits, INSERT and broader DXF/face-fusion claims remain explicit; P22 stays Implemented."
+}
