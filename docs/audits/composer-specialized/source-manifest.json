@@ -1,0 +1,165 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "cba2ee8197da6fa26f177b5d9bdcae5b17434d8447687590257245e0e9df2ef7",
+  "members": {
+    "angular-radius-input.igz": {
+      "size": 1035,
+      "sha256": "13cfeeb1d9c33b6fe3d9ce0c36b725a1ce05d361f9233f6535e1ddf3a73b0c51"
+    },
+    "angular-radius-original.igz": {
+      "size": 1034,
+      "sha256": "4b12a30b9702460f69fd30180fbfa65ef636f3d053878f184471322d2ed203b1"
+    },
+    "baseline-fresh-and-seeded-input.igz": {
+      "size": 345,
+      "sha256": "207d1a09dc78c04d92aad4587ec48d3479e09acdfdd49830f727472ba17248e7"
+    },
+    "baseline-fresh-and-seeded-original.igz": {
+      "size": 4073,
+      "sha256": "dea8286bd948afa71bb3f9e513e39f7e3735e6473c8f62c60c7a66ebc83ee196"
+    },
+    "callout-bubble-and-box-input.igz": {
+      "size": 953,
+      "sha256": "2265284deef873e9448b8ef812f9bbd1fbf4a84ddb0ba7c729458c62653fa1b3"
+    },
+    "callout-bubble-and-box-original.igz": {
+      "size": 953,
+      "sha256": "76820abb0ed5de34d9a08258a6dfd4cb07cf9a5d7b7eea06298d4751bdfa3a23"
+    },
+    "chain-anchored-undo-input.igz": {
+      "size": 3413,
+      "sha256": "8ac6369a54cd851695441f04c3136b120ab7d46e4134f20e35d6f13a01bd5421"
+    },
+    "chain-anchored-undo-original.igz": {
+      "size": 6644,
+      "sha256": "829d7bbf117aa469ec21ce077be0ae6dbfaada70243de89211df1bda745dcf43"
+    },
+    "chain-fresh-jog-input.igz": {
+      "size": 335,
+      "sha256": "cc6ca483215a70eb569c0a88ddae6bff662b758b3237dd0dabab51af60df7e21"
+    },
+    "chain-fresh-jog-original.igz": {
+      "size": 5013,
+      "sha256": "ad9365e41d4a467b0e51291fbb3870c4f02f18253f17d647f0f9ea8b7634c976"
+    },
+    "chain-seeded-and-switch-input.igz": {
+      "size": 1442,
+      "sha256": "441f342074a6ba54eba63f9d85cf783232a4ace5115b23a38bca679b8c427c28"
+    },
+    "chain-seeded-and-switch-original.igz": {
+      "size": 5140,
+      "sha256": "86bcf52f8f43e48a8b676ee001920b4abd30511aeae03766e1133d29a4af47e6"
+    },
+    "label-leaders-input.igz": {
+      "size": 1457,
+      "sha256": "03551361e3bf8d817c06117fcaef1dc25303021955c63b4a670c92cd776e69ae"
+    },
+    "label-leaders-original.igz": {
+      "size": 1295,
+      "sha256": "6f7c977becaa47308a9fd59f42b36fadc165c9c7f43ab064937a4dd4987a46ce"
+    },
+    "label-wrap-width-input.igz": {
+      "size": 1460,
+      "sha256": "dd40f65b70d6ee4d2ea088093e2353a3b1084dab626a068c02ea8379eceeb767"
+    },
+    "label-wrap-width-original.igz": {
+      "size": 1459,
+      "sha256": "bc671417fbe7ca65e1281c25b626cb401ae3fd23f7b3c947d6fb46bd43f423f3"
+    },
+    "linear-handles-input.igz": {
+      "size": 1426,
+      "sha256": "bcf724f3b293c4d568b619f634b56e0c4cc49e6c426d67ddfe1a7022913aded2"
+    },
+    "linear-handles-original.igz": {
+      "size": 1287,
+      "sha256": "686b23af0447ff548f6333057a52a1e97017659098ff7b2981f28432226018d0"
+    },
+    "locked-hidden-handle-admission-input.igz": {
+      "size": 3148,
+      "sha256": "64c2a7d124b359cad8a3e25b143f341bf35131a00e63438965f69e5d1f1bf0d7"
+    },
+    "locked-hidden-handle-admission-original.igz": {
+      "size": 3148,
+      "sha256": "dd115504d2bcfc2ea000b3245c9cda9a86bec27929d5dc0e33c19aed0888bec1"
+    },
+    "multi-box-admission-input.igz": {
+      "size": 5241,
+      "sha256": "678fb58c727eff39e3842db5e530182b7dec6b34bd14c8247fc294d3b038b842"
+    },
+    "multi-box-admission-original.igz": {
+      "size": 5241,
+      "sha256": "678fb58c727eff39e3842db5e530182b7dec6b34bd14c8247fc294d3b038b842"
+    },
+    "multi-ctrl-properties-input.igz": {
+      "size": 3595,
+      "sha256": "65ba5b694b03e8d3cbfd8f93de6f0bdf86c69884723f6dd83afaebc689c03bdd"
+    },
+    "multi-ctrl-properties-original.igz": {
+      "size": 3595,
+      "sha256": "2cb2b31f1f0d9953c3484bf3b98feb793df18b9d2b486866a849d34f101581be"
+    },
+    "multi-group-move-delete-input.igz": {
+      "size": 3914,
+      "sha256": "6d4136e523d1d80ec3f131e2988a200852a9f1b373745237dd5fbd95175d527f"
+    },
+    "multi-group-move-delete-original.igz": {
+      "size": 3632,
+      "sha256": "38a99ab39fd7dcf360bdf06a5e316abd68a1a980f778ca66925f2def4b02b396"
+    },
+    "radial-endpoint-input.igz": {
+      "size": 1113,
+      "sha256": "00c5a5be7c2c1829b2b0688a016113a3749989dcc35e6ed91ae734e0b6825d44"
+    },
+    "radial-endpoint-original.igz": {
+      "size": 1110,
+      "sha256": "a42365901dc5711b13096fd333b6d1d6c3524df79565347cf1b7ccf9fcaf51de"
+    },
+    "original-specialized.json": {
+      "size": 1238535,
+      "sha256": "824902348717d8f54063612b7b27d9ab37134f6dcc67cae9c4b4b5ed176292e7"
+    },
+    "original-reopens.json": {
+      "size": 40678,
+      "sha256": "81d16d6deb0c248a592fe1f4072e21e1ab0da997aad88d5f45d228414a0ecddb"
+    },
+    "callback-errors.json": {
+      "size": 5397,
+      "sha256": "322a92bec4195379d56b31c0d3ed0316313596763bea81ed594315092f33d9fd"
+    },
+    "ingetrazo-composer-specialized-source.log": {
+      "size": 44,
+      "sha256": "27cd4f5e3b24fb39e29faad3c42c750eb250fba298a368aa35f614654f0e826d"
+    },
+    "ingetrazo-composer-specialized-source.stderr": {
+      "size": 6266,
+      "sha256": "c565ff093dbf0331ff406dae34986c4272716f7dbadc92a2c8c2d01d7a61e39a"
+    }
+  },
+  "sources": [
+    {
+      "path": "scripts/reference-composer-specialized.py",
+      "commit": "9cf744b25949490ac229355023f04d4bb3c89b06",
+      "sha256": "49416dde0b99e31904956dfdc71bbac797266c1ffca4a768a05bc4453871f385"
+    },
+    {
+      "path": "scripts/reference-composer-specialized-reopens.py",
+      "commit": "9cf744b25949490ac229355023f04d4bb3c89b06",
+      "sha256": "7026568638e4f3a018780ffac9a2210022616be26666ea45533942e4df063545"
+    },
+    {
+      "path": "scripts/check-composer-specialized.py",
+      "commit": "ee60a5a7453aaa49b40dedf48e7112297244468b",
+      "sha256": "6c8182001bcf9674344782abea33024055af6a91b909219e82f0313451db2a8f"
+    },
+    {
+      "path": "docs/audits/composer-specialized/fixture-contract.json",
+      "commit": "d6849d08843c9aef0f0a469c2081f7a92bf00c12",
+      "sha256": "06baafcb01501e7bf8a1324492bfa9b9544bcfdf2ef4e89949f9f53d333246e7"
+    }
+  ],
+  "cases": 14,
+  "states": 220,
+  "original_reader_pairs": 14,
+  "source_captures": 1,
+  "source_radial_population_exceptions": 10
+}
