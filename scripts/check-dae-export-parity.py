@@ -78,6 +78,46 @@ def decode_xml(file,root=None):
   path=safe(file.parent,locator);sidecars.append({'file':locator,'encoded_sha256':digest(path.read_bytes())if path.is_file()else None,'missing':not path.is_file()})
  return {'xml':canonical,'sidecars':sidecars,'triangles':triangles},timestamps
 
+def scene_schema(scene):
+ assert type(scene)is dict and set(scene)=={'active','loose','groups','layers','units','datum'},'reader scene inventory'
+ def mesh(m):
+  assert type(m)is dict and set(m)=={'points','edges','faces'},'reader mesh inventory'
+  assert all(type(m[k])is list for k in ['points','edges','faces'])
+  def point(p):assert type(p)is list and len(p)==3 and all(type(v)is float and math.isfinite(v)for v in p),'reader point type'
+  for p in m['points']:point(p)
+  for e in m['edges']:
+   assert type(e)is dict and set(e)=={'points','soft','hidden'}and type(e['points'])is list and len(e['points'])==2
+   for p in e['points']:point(p)
+   assert type(e['soft'])is bool and type(e['hidden'])is bool
+  for f in m['faces']:
+   assert type(f)is dict and set(f)=={'outer','holes','attrs'}and type(f['outer'])is list and len(f['outer'])>=3 and type(f['holes'])is list and type(f['attrs'])is dict
+   for p in f['outer']:point(p)
+   for ring in f['holes']:
+    assert type(ring)is list and len(ring)>=3
+    for p in ring:point(p)
+  return len(m['faces'])
+ faces=mesh(scene['active'])+mesh(scene['loose'])
+ def group(g):
+  assert type(g)is dict and set(g)=={'name','layer','local_matrix','billboard','mesh','children'}
+  assert type(g['name'])is str and (g['layer']is None or type(g['layer'])is str)
+  assert type(g['local_matrix'])is list and len(g['local_matrix'])==16 and all(type(v)is float and math.isfinite(v)for v in g['local_matrix'])
+  assert type(g['children'])is list
+  return mesh(g['mesh'])+sum(group(c)for c in g['children'])
+ assert type(scene['groups'])is list and type(scene['layers'])is list and all(type(v)is str for v in scene['layers'])and type(scene['units'])is str
+ assert scene['datum']is None or type(scene['datum'])is dict
+ faces+=sum(group(g)for g in scene['groups']);assert faces>0,'joint empty reader geometry'
+def reader_schema(value):
+ assert type(value)is dict and set(value)=={'scene','sidecars'},'reader inventory'
+ scene_schema(value['scene']);assert type(value['sidecars'])is list
+ for item in value['sidecars']:
+  assert type(item)is dict and set(item)=={'file','resource'}and type(item['file'])is str
+  r=item['resource'];assert type(r)is dict and type(r.get('missing'))is bool
+  if r['missing']:assert r=={'encoded_sha256':None,'missing':True}
+  else:
+   assert set(r)=={'encoded_sha256','missing','pixels','rgba_sha256'}
+   assert all(type(r[k])is str and len(r[k])==64 and all(c in '0123456789abcdef'for c in r[k])for k in ['encoded_sha256','rgba_sha256'])
+   assert type(r['pixels'])is list and len(r['pixels'])==2 and all(type(v)is int and v>0 for v in r['pixels'])
+
 def compare(source,native,source_dir,native_dir,reopens):
  assert source['source_pin']==native['source_pin']==PIN
  assert [c['name']for c in source['cases']]==[c['name']for c in native['cases']]==CASES
@@ -101,6 +141,8 @@ def compare(source,native,source_dir,native_dir,reopens):
  assert len(reopens)==len(rows)
  assert [(r['case'],r['phase'])for r in reopens]==[(r['case'],r['phase'])for r in rows]
  for row in reopens:
+  assert set(row)=={'case','phase','original','native','saved_original','saved_native'}
+  reader_schema(row['original']);reader_schema(row['native']);scene_schema(row['saved_original']);scene_schema(row['saved_native'])
   exact(row['original'],row['native'],'reader '+row['case'])
   exact(row['saved_original'],row['saved_native'],'saved IGZ '+row['case'])
  for report,field in [(source,'source_timestamps'),(native,'native_timestamps')]:
@@ -126,6 +168,11 @@ def main():
   for name,mutate in [('empty-cases',lambda n:n.update(cases=[])),('empty-states',lambda n:n.update(states=[])),('wrong-pin',lambda n:n.update(source_pin='wrong')),('numeric-control',lambda n:n['controls'].update({next(iter(n['controls'])):1})),('false-control',lambda n:n['controls'].update({next(iter(n['controls'])):False})),('truncated-states',lambda n:n['states'].pop()),('duplicate-case',lambda n:n['cases'].append(n['cases'][0])),('changed-outcome',lambda n:n['states'][0].update(outcome='corrupt'))]:
    candidate=copy.deepcopy(native);mutate(candidate)
    try:compare(source,candidate,args.source,args.native,readers)
+   except (AssertionError,KeyError,ValueError,TypeError):probes.append(name)
+   else:raise AssertionError('negative escaped: '+name)
+  for name,mutation in [('joint-empty-reader-observations',lambda rows:[r.update(original={},native={},saved_original={},saved_native={})for r in rows]),('missing-reader-scene-key',lambda rows:[r['original']['scene'].pop('active')for r in rows])]:
+   wrong=copy.deepcopy(readers);mutation(wrong)
+   try:compare(source,native,args.source,args.native,wrong)
    except (AssertionError,KeyError,ValueError,TypeError):probes.append(name)
    else:raise AssertionError('negative escaped: '+name)
   for case in source['cases']:
