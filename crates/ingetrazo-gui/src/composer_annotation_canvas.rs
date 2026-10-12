@@ -15,6 +15,7 @@ use std::{
 const ENTRY_BYTES: usize = 32 * 1024 * 1024;
 const CACHE_BYTES: usize = 64 * 1024 * 1024;
 const MAX_PARTS: usize = 10000;
+const MAX_ENTRIES: usize = 10000;
 type Key = (usize, usize);
 #[derive(Clone)]
 struct Part {
@@ -92,7 +93,7 @@ impl Cache {
             // Publish only a fully admitted entry. Failure retains previous resources.
             let entry = prepare(draws, fonts, factory, density, phase, anchor, ppp)?;
             let prior = self.items.get(&key).map_or(0, |e| e.bytes);
-            while self.items.len() - usize::from(self.items.contains_key(&key)) >= 128
+            while self.items.len() - usize::from(self.items.contains_key(&key)) >= MAX_ENTRIES
                 || self.bytes - prior + entry.bytes > CACHE_BYTES
             {
                 let Some(victim) = self.items.keys().copied().find(|k| *k != key) else {
@@ -402,5 +403,50 @@ mod tests {
                 "fractional pixel movement needs new coverage"
             );
         });
+    }
+    #[test]
+    fn dense_page_keeps_idle_geometry_within_byte_budget() {
+        let ctx = egui::Context::default();
+        let backend = ingetrazo_render::cad_callback::Factory::default();
+        let factory = Factory::MetalProducer(backend.clone());
+        let mut cache = Cache::default();
+        let mut fonts = CanvasPainter::default();
+        let draws = line(20.);
+        // More ordinary annotations than the former 128-entry ceiling must fit
+        // without cold raster work on every traversal of a visible page.
+        let mut cold = None;
+        for pass in 0..3 {
+            let _ = ctx.run(egui::RawInput::default(), |ctx| {
+                let painter = ctx.layer_painter(egui::LayerId::background());
+                for i in 0..256 {
+                    cache
+                        .paint(
+                            &painter,
+                            &factory,
+                            &mut fonts,
+                            (0, i),
+                            &draws,
+                            2.,
+                            Pos2::new(50. + (i % 16) as f32 * 30., 50. + (i / 16) as f32 * 30.),
+                        )
+                        .unwrap();
+                }
+            });
+            let metrics = backend.metrics();
+            let observed = (
+                cache.stats().0,
+                cache.stats().2,
+                metrics.handles,
+                metrics.updates,
+            );
+            if pass == 0 {
+                cold = Some(observed);
+            } else {
+                assert_eq!(Some(observed), cold, "warm dense page rebuilt geometry");
+            }
+            assert!(cache.stats().2 <= CACHE_BYTES);
+        }
+        assert_eq!(cache.stats().0, 256);
+        assert_eq!(cache.stats().1, 768);
     }
 }
