@@ -322,7 +322,7 @@ impl crate::IngeTrazoApp {
                 } else {
                     "Engineering Python command completed without history change"
                 };
-                self.console_logs.push(message.into());
+                if receipt.error.is_none() { self.console_logs.push(message.into()); }
                 if !receipt.stdout.is_empty() { self.console_logs.push(receipt.stdout); }
                 if !receipt.stderr.is_empty() { self.console_logs.push(receipt.stderr); }
                 if let Some(error) = receipt.error {
