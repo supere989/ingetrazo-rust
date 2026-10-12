@@ -241,6 +241,22 @@ fn run() -> Result<(), String> {
             {
                 return Err(format!("Warm allocation changed: {name}"));
             }
+            let mut diagnostic_controls=serde_json::Value::Null;
+            if reflected_mode && name=="closed" {
+                let held=prepare(&mut world,&mut adapter,&scene)?;
+                let ticket={let mut ledger=metal.budget.lock().map_err(|_|"Diagnostic budget lock")?;
+                    let heap=&ledger.heaps[0];let available=heap.limit-heap.committed-heap.reserved;
+                    ledger.reserve(0,available)?};
+                let refusal=prepare(&mut world,&mut adapter,&scene).err();
+                metal.budget.lock().map_err(|_|"Diagnostic budget lock")?.cancel(ticket)?;
+                if refusal.is_none(){return Err("Pinned-target budget refusal did not occur".into());}
+                let retained=held.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
+                if retained!=bytes{return Err("Held diagnostic frame changed after refused target allocation".into());}
+                let foreign=NativeMetal::new()?;
+                if world.set_sample_count(&foreign,4).is_ok(){return Err("Foreign diagnostic context admitted".into());}
+                if world.enable_source_resolve_prototype(&metal).is_ok(){return Err("Warm resolve mode replacement admitted".into());}
+                diagnostic_controls=serde_json::json!({"budget_refusal":refusal,"held_pixels_preserved":true,"foreign_owner_rejected":true,"warm_mode_rejected":true});
+            }
             let mut production_toggle=serde_json::Value::Null;
             if name=="closed" && !reflected_mode{
                 let mut production=World::default();let mut production_adapter=Adapter::default();
@@ -283,7 +299,7 @@ fn run() -> Result<(), String> {
             if cuts_off_stats.section_contour_pipeline_builds!=fill_off.section_contour_pipeline_builds||cuts_off_stats.geometry_uploads!=fill_off.geometry_uploads||cuts_off_stats.target_allocations!=fill_off.target_allocations{return Err(format!("Cuts-off rebuilt geometry/target/pipeline: {name}"));}
 
             drop(repeated);
-            rows.push(serde_json::json!({"case":name,"production_toggle":production_toggle,"resolve_pipeline_builds_before":before.source_resolve_pipeline_builds,"resolve_pipeline_builds_after":after.source_resolve_pipeline_builds,"resolve_prototype":resolve_diagnostics,"candidate_changed_pixels_from_reference":changed_pixels,"reference_sample_positions":reference_diagnostics,"programmed_sample_positions_top_origin":programmed_positions,"width":800,"height":600,"warm_frames":3,"contours_enabled":true,"fill_off_contours_enabled":true,"cuts_off_contours_enabled":false,"section_contour_pipeline_builds_before":before.section_contour_pipeline_builds,"section_contour_pipeline_builds_after":after.section_contour_pipeline_builds,"fill_off_contour_pipeline_builds":fill_off.section_contour_pipeline_builds,"cuts_off_contour_pipeline_builds":cuts_off_stats.section_contour_pipeline_builds,"target_allocations_before":before.target_allocations,"target_allocations_after":after.target_allocations,"geometry_uploads_before":before.geometry_uploads,"geometry_uploads_after":after.geometry_uploads,"section_fill_uploads_before":before.section_fill_uploads,"section_fill_uploads_after":after.section_fill_uploads,"section_fill_upload_bytes_before":before.section_fill_upload_bytes,"section_fill_upload_bytes_after":after.section_fill_upload_bytes}));
+            rows.push(serde_json::json!({"case":name,"diagnostic_controls":diagnostic_controls,"production_toggle":production_toggle,"resolve_pipeline_builds_before":before.source_resolve_pipeline_builds,"resolve_pipeline_builds_after":after.source_resolve_pipeline_builds,"resolve_prototype":resolve_diagnostics,"candidate_changed_pixels_from_reference":changed_pixels,"reference_sample_positions":reference_diagnostics,"programmed_sample_positions_top_origin":programmed_positions,"width":800,"height":600,"warm_frames":3,"contours_enabled":true,"fill_off_contours_enabled":true,"cuts_off_contours_enabled":false,"section_contour_pipeline_builds_before":before.section_contour_pipeline_builds,"section_contour_pipeline_builds_after":after.section_contour_pipeline_builds,"fill_off_contour_pipeline_builds":fill_off.section_contour_pipeline_builds,"cuts_off_contour_pipeline_builds":cuts_off_stats.section_contour_pipeline_builds,"target_allocations_before":before.target_allocations,"target_allocations_after":after.target_allocations,"geometry_uploads_before":before.geometry_uploads,"geometry_uploads_after":after.geometry_uploads,"section_fill_uploads_before":before.section_fill_uploads,"section_fill_uploads_after":after.section_fill_uploads,"section_fill_upload_bytes_before":before.section_fill_upload_bytes,"section_fill_upload_bytes_after":after.section_fill_upload_bytes}));
             drop(adapter);
             drop(world);
         }

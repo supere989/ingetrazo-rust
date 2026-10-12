@@ -223,7 +223,7 @@ impl World {
     }
     /// Cold diagnostic configuration only. Does not alter the production default.
     pub fn enable_source_resolve_prototype(&mut self,metal:&NativeMetal)->Result<(),String>{
-        if !self.targets.is_empty(){return Err("Source resolve prototype requires no existing targets".into());}
+        if !self.targets.is_empty()||self.reflected_diagnostic{return Err("Source resolve prototype requires cold, unreflected World".into());}
         self.validate_context_owner(metal)?;
         if self.samples.max(1)!=4{return Err("Source resolve prototype requires configured four samples".into());}
         let pipeline=super::world_resolve::Pipeline::new(metal)?;

@@ -20,10 +20,9 @@
   ],
   "frozen_inputs": "Reuse canonical document-annotation and native section/CGL source fixtures; exact member inventory pending consumer review",
   "remaining_draft_work": [
-    "independent static review and compiler checking by root",
-    "source frozen per-sample/selected-depth comparison and asymmetric/winding/UV gates",
-    "explicit budget/foreign-owner refusal controls",
-    "document-annotation consumer integration without production admission"
+    "independent static review before root-only build",
+    "strict existing source comparator on actual native Metal outputs",
+    "separate documentannotation consumer gate including source depth query and full overlay/UV/winding fixtures"
   ],
   "prohibited": [
     "production policy waiver",
@@ -36,6 +35,7 @@
     "command": "native_metal_section_resolve OUTPUT --reflected-diagnostic",
     "scope": "Reuse unchanged ten native recipes and frozen original section source comparator; no source recapture",
     "outputs": "Original native reference and reflected candidate rawRGBA; sample JSON per case with 16 RGBA float-bit values and 16 depth float-bit values at retained four source diagnostic pixels; warm/cache receipts",
-    "acceptance": "Actual Metal strict source image comparison remains external and mandatory; no success inferred from mathematical pattern eligibility"
+    "acceptance": "Actual Metal strict source image comparison remains external and mandatory; no success inferred from mathematical pattern eligibility",
+    "controls": "Pinned-target budget admission refusal retaining held GPU frame pixels; foreign context rejection; incompatible samples and warm mode replacement refusal; three warm frames without target/pipeline/geometry rebuild; fill/cuts off route controls"
   }
 }
