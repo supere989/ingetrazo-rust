@@ -108,8 +108,14 @@ impl Plan {
         text: impl AsRef<str>,
         size: f64,
     ) -> Result<(), String> {
-        let text=text.as_ref();
-        if self.text_bytes.checked_add(text.len()).is_none_or(|n|n>MAX_TEXT_BYTES){return Err("Frame annotation text budget exceeded".into());}
+        let text = text.as_ref();
+        if self
+            .text_bytes
+            .checked_add(text.len())
+            .is_none_or(|n| n > MAX_TEXT_BYTES)
+        {
+            return Err("Frame annotation text budget exceeded".into());
+        }
         self.push(Primitive::Text {
             at,
             angle,
@@ -197,7 +203,7 @@ pub(crate) fn plan(
             .try_reserve(path.points.len() + 1)
             .map_err(|_| "Frame path allocation refused")?;
         for p in &path.points {
-            points.push(project.point(ground(source_point(*p))?)?);
+            points.push(project.overlay_point(ground(source_point(*p))?)?);
         }
         if path.closed && points.len() > 2 {
             points.push(points[0]);
@@ -237,10 +243,10 @@ pub(crate) fn plan(
             hidden: false,
         };
         let (ap, bp, value) = model::dimension_geometry(input);
-        let a = project.point(input.a.as_dvec3())?;
-        let b = project.point(input.b.as_dvec3())?;
-        let a2 = project.point(ap.as_dvec3())?;
-        let b2 = project.point(bp.as_dvec3())?;
+        let a = project.overlay_point(input.a.as_dvec3())?;
+        let b = project.overlay_point(input.b.as_dvec3())?;
+        let a2 = project.overlay_point(ap.as_dvec3())?;
+        let b2 = project.overlay_point(bp.as_dvec3())?;
         out.line(a, a2)?;
         out.line(b, b2)?;
         out.line(a2, b2)?;
@@ -274,8 +280,9 @@ pub(crate) fn plan(
         if !view.is_layer_visible(label.layer.as_deref()) {
             continue;
         }
-        let a = project.point(source_point(label.anchor))?;
-        let p = project.point((label.anchor.as_vec3() + label.offset.as_vec3()).as_dvec3())?;
+        let a = project.overlay_point(source_point(label.anchor))?;
+        let p =
+            project.overlay_point((label.anchor.as_vec3() + label.offset.as_vec3()).as_dvec3())?;
         out.line(a, p)?;
         let mut lines = model::splitlines(&label.text, MAX_PRIMITIVES)?;
         if lines.is_empty() {
@@ -408,13 +415,13 @@ fn chainages(
         }
         for s in stations {
             let (x, y) = nodes.point(s, &mut station_cursor);
-            let here = p.point(ground(source_point(DVec3::new(x, y, 0.)))?)?;
+            let here = p.overlay_point(ground(source_point(DVec3::new(x, y, 0.)))?)?;
             let ahead = s + 0.5 <= length;
             let (x, y) = nodes.point(
                 if ahead { s + 0.5 } else { (s - 0.5).max(0.) },
                 &mut tangent_cursor,
             );
-            let q = p.point(ground(source_point(DVec3::new(x, y, 0.)))?)?;
+            let q = p.overlay_point(ground(source_point(DVec3::new(x, y, 0.)))?)?;
             let (dx, dy) = if ahead {
                 (q[0] - here[0], q[1] - here[1])
             } else {
@@ -462,7 +469,7 @@ fn sections(
     for x in [lo.x, hi.x] {
         for y in [lo.y, hi.y] {
             for z in [lo.z, hi.z] {
-                let q = p.point(source_point(DVec3::new(x, y, z)))?;
+                let q = p.overlay_point(source_point(DVec3::new(x, y, z)))?;
                 for i in 0..2 {
                     low[i] = low[i].min(q[i]);
                     high[i] = high[i].max(q[i]);
@@ -487,8 +494,8 @@ fn sections(
         let d = n.cross(p.forward());
         let d = d / d.length().max(1e-12);
         let o = source_point(sp.point);
-        let a = p.point(o)?;
-        let b = p.point(source_point(o + d))?;
+        let a = p.overlay_point(o)?;
+        let b = p.overlay_point(source_point(o + d))?;
         let dx = b[0] - a[0];
         let dy = b[1] - a[1];
         let length = dx.hypot(dy);
@@ -526,7 +533,7 @@ fn sections(
             ta = ta.max(u.min(v));
             tb = tb.min(u.max(v));
         }
-        let q = p.point(source_point(o - n))?;
+        let q = p.overlay_point(source_point(o - n))?;
         let ax = q[0] - a[0];
         let ay = q[1] - a[1];
         let len = ax.hypot(ay);

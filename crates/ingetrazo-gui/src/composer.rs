@@ -1415,7 +1415,6 @@ impl IngeTrazoApp {
     /// Prepare every page before opening the destination. Unsupported visible
     /// painters report an error rather than silently exporting incomplete sheets.
     pub fn export_composer_pdf(&mut self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
-        self.refresh_composer_frame_anchors()?;
         let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
         let scene=&self.scene;let camera=&self.camera;let compute=&mut self.composer_compute;let document=self.clipboard_document;let revision=self.model_revision;
         let text_resources=&self.composer_state.paper_text;

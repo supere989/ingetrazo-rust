@@ -570,7 +570,6 @@ impl crate::app::IngeTrazoApp {
     ) -> Option<Result<(Request, Plan), String>> {
         let request = self.sheet_image.pending.take()?;
         Some((|| {
-            self.refresh_composer_frame_anchors()?;
             let sheet = self
                 .scene
                 .sheets

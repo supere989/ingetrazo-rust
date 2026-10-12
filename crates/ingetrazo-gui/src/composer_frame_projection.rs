@@ -113,6 +113,18 @@ impl Projector {
     pub(crate) fn point(&self, p: DVec3) -> Result<[f64; 2], String> {
         self.camera_to_local(self.camera_point(p))
     }
+    /// Original compute_annotations projects one NumPy row at a time. Its
+    /// three-term dot accumulates with FMA; the batched HLR/anchor projection
+    /// retains its existing arithmetic. Keep this boundary local to overlays.
+    pub(crate) fn overlay_point(&self, point: DVec3) -> Result<[f64; 2], String> {
+        let d = point - self.basis.eye;
+        let dot = |v: DVec3| d.z.mul_add(v.z, d.y.mul_add(v.y, d.x * v.x));
+        self.camera_to_local([
+            dot(self.basis.right),
+            dot(self.basis.up),
+            dot(self.basis.forward),
+        ])
+    }
     pub(crate) fn page_point(&self, p: DVec3) -> Result<[f64; 2], String> {
         let q = self.point(p)?;
         Ok([self.frame.rect.x + q[0], self.frame.rect.y + q[1]])
