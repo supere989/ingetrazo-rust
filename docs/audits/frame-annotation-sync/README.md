@@ -1,0 +1,11 @@
+# Frame annotation source contract
+
+One unchanged original application capture records eight cohorts, 58 states and eight original saved-file reopens. Frame properties and body drags use Qt widgets and pointer events; cota creation uses three actual clicks with operative item/history admission. Model movement uses the original MoveVerticesCommand and normal model-change callback. Layer and style initialization are declared fixture actions.
+
+Stored sheet anchors and model ViewFrame overlay tuples are separate observations. The capture covers imported cota/label/level anchors, actual cota anchor acquisition, frame movement/scale/rotation/view changes, model Undo/Redo, orphan/tolerance boundaries, dimensions/text opt-in, paths/chainage, section traces and saved-view visibility. Perspective observations call the unchanged semantic projection functions; they do not claim offscreen GL Update or physical pixel acceptance. Fast20k snaps, relief-backed overlays, generic label/level anchored creation and specialized handles remain outside this finite corpus.
+
+The source callbacks reported no errors. Every state is independently JSON-owned, and frame observation verifies camera, layer, section, geographic visibility, display style and shadow restoration. Geographic objects are absent in these fixtures, so that visibility check records the literal empty inventory.
+
+The strict checker requires the exact eight-case/58-phase inventory, source/native records and tuple order, history counts and eight original-reader pairs. JSON numeric integer/float spelling is equivalent; values, signed zero, booleans, other types, keys and list order remain strict. The native idle/invalidation and actual ingress flags are required literal true and must be supported by the native consumer. Native acceptance remains pending the shared build and replay.
+
+Run the prebuilt native consumer as `frame_annotation_sync SOURCE NATIVE`, then the pinned source Python reader `scripts/reference-frame-annotation-sync-reopens.py SOURCE NATIVE` and checker `scripts/check-frame-annotation-sync.py SOURCE NATIVE COMPARISON`. Replay authenticates this archive and never reruns the producer.

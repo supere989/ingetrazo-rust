@@ -1,0 +1,139 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "producer_commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
+  "archive_sha256": "58129332210e10503c48b77806fa54b2e2738388d0c7eb427d04ae65f191d463",
+  "members": [
+    {
+      "path": "anchor-tolerance-and-orphans-input.igz",
+      "size": 9137,
+      "sha256": "aa006aadedc3646029afae55962136bba52579c6c1d65ab051ccf3d6de367121"
+    },
+    {
+      "path": "anchor-tolerance-and-orphans-original.igz",
+      "size": 9149,
+      "sha256": "294cb073061d2e7f889623fc5d0278cc1e2e8a0703e175e5be081e753c5c44e3"
+    },
+    {
+      "path": "anchored-frame-transforms-input.igz",
+      "size": 9116,
+      "sha256": "5093c8a57a4a8bdd7caf6afd52b894929b5adf72f42c952e810b7fe27c97f3ce"
+    },
+    {
+      "path": "anchored-frame-transforms-original.igz",
+      "size": 10366,
+      "sha256": "baf52ddfb6e3791fe240d4f542b25c31319cc718ebe209d9fb854a8ff4297ea5"
+    },
+    {
+      "path": "anchored-model-history-input.igz",
+      "size": 9113,
+      "sha256": "ef353470beb9aa63bcef9b27fce3b41dccefe4bedc386b5b160cea3dca148883"
+    },
+    {
+      "path": "anchored-model-history-original.igz",
+      "size": 9399,
+      "sha256": "1e22f2b906f870d9ab6ddff036e3b06184915ebd91954310bffba90e5f7af929"
+    },
+    {
+      "path": "label-leaders-and-level-input.igz",
+      "size": 9114,
+      "sha256": "8df34857630d9e4097d74476d323624a88afd4c31575ceb8a6876fb28f5c23e2"
+    },
+    {
+      "path": "label-leaders-and-level-original.igz",
+      "size": 9160,
+      "sha256": "becc27665bfa27cd40c05fcdc031d96c81ada953fae9ae24aefcdf0821bffcd7"
+    },
+    {
+      "path": "model-dimensions-and-text-input.igz",
+      "size": 5115,
+      "sha256": "01db014e6cd61e42db2444b5211db207b8f2efbc2434cdd57586d6c9de94c2ae"
+    },
+    {
+      "path": "model-dimensions-and-text-original.igz",
+      "size": 5113,
+      "sha256": "ac28985241241c5fd605e03f56463659049130fb2a5745211fc2ea2f12772de2"
+    },
+    {
+      "path": "paths-and-chainage-input.igz",
+      "size": 5843,
+      "sha256": "eb77d1c11d7738ceba5767ff391f02c0ef2249c895673aff5a181f73098f8a3d"
+    },
+    {
+      "path": "paths-and-chainage-original.igz",
+      "size": 5842,
+      "sha256": "b4d036a89871258fc8f0d5150417f7b65b83e63ced611c9417ed2592a3876d15"
+    },
+    {
+      "path": "saved-view-and-perspective-input.igz",
+      "size": 9757,
+      "sha256": "34e10d16b5d88435cbba33606590e47b646557c5235ca4ba083ad3c2698107d9"
+    },
+    {
+      "path": "saved-view-and-perspective-original.igz",
+      "size": 9894,
+      "sha256": "232bf25045864ce4b15863d128a7110a7a58b538b2c592b805da736c47112912"
+    },
+    {
+      "path": "section-traces-input.igz",
+      "size": 5996,
+      "sha256": "1204498f3b6752b322311321240a2382e27b398e16152265fcfa913f1ffa91ac"
+    },
+    {
+      "path": "section-traces-original.igz",
+      "size": 5996,
+      "sha256": "2379b8f73fa2d7031d53ff3e3529bcb2e6d68696699700d4251a315dfa790d45"
+    },
+    {
+      "path": "original-frame-annotations.json",
+      "size": 791294,
+      "sha256": "5be84ea92a4411010f87f34f30acb4cd5ffc44383c37fe04a45328bfc6e9e426"
+    },
+    {
+      "path": "original-reopens.json",
+      "size": 67271,
+      "sha256": "3f287a18489843802a58a108a3b45ad7e34fcd0ca25bf9cebe86a9165acb2c03"
+    },
+    {
+      "path": "ingetrazo-frame-annotation-sync-source.log",
+      "size": 41,
+      "sha256": "54daaba065c5b6e5d10bccb9a154c0378bd6b4c3daebd6c311dd8f4130fcf6b9"
+    },
+    {
+      "path": "ingetrazo-frame-annotation-sync-source.stderr",
+      "size": 1292,
+      "sha256": "c25db0588077b8fce3dfe53d2a680ed9c5d40ebfa065ea30af38b0888f55e7b5"
+    }
+  ],
+  "sources": [
+    {
+      "path": "scripts/reference-frame-annotation-sync.py",
+      "commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
+      "sha256": "521b9e6bb0fe573f737a3acb6342274dbaaeac98e153c38cac1c47eb805be88d"
+    },
+    {
+      "path": "scripts/frame_annotation_observations.py",
+      "commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
+      "sha256": "0c436c86c34ca2d9fc3e10cfbc5774e6a0780d43cbf049a58af2d614503d67d5"
+    },
+    {
+      "path": "scripts/reference-frame-annotation-sync-reopens.py",
+      "commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
+      "sha256": "ebebefa22e44cc9cd323df94ae6bf88fc474f496d6e4e6933ca8032a1754f87a"
+    },
+    {
+      "path": "scripts/check-frame-annotation-sync.py",
+      "commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
+      "sha256": "446dd1cc9b7ad7c673a1bdfc76f8228e22a2a3aed031b61ea3f5c1eac6ec5bc2"
+    },
+    {
+      "path": "docs/audits/frame-annotation-sync/fixture-contract.json",
+      "commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
+      "sha256": "c45c2ed16da986ff6165e656a4e77ece545d45efae89655a40045385c47265d4"
+    }
+  ],
+  "cases": 8,
+  "states": 58,
+  "original_reader_pairs": 8,
+  "capture_attempts": 1,
+  "source_callback_errors": 0
+}
