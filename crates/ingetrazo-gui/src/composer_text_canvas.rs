@@ -289,3 +289,18 @@ fn thin_line_sample(line:[f64;3],width:f64,color:[f32;4],clip:[i64;4])->Result<O
 pub(super) fn run_native_font_tiles(root: &std::path::Path) -> Result<(), String> {
     native_font_probe::run(root)
 }
+
+#[cfg(test)] mod physical_glyph_clip_tests {
+ use super::*;
+ #[test] fn glyph_presence_clip_intersects_masks_before_testing_presence() {
+  let pixel=vec![30,36,44,128];
+  let sample=||Sample{x:0,y:0,image:GlyphImage{pixels:Arc::new(pixel.clone()),left:0,top:0,width:1,height:1,bytes:4},clip:[0,0,1,1]};
+  let mask=vec![ingetrazo_render::qt_gray::Span{x:0,y:0,len:1,coverage:1}];
+  let single=CanvasPainter::physical_clip_glyph(sample(),std::slice::from_ref(&mask)).unwrap();
+  assert_eq!(&*single.image.pixels,&pixel,"nonzero clip must retain glyph bytes");
+  let combined=CanvasPainter::physical_clip_glyph(sample(),&[mask.clone(),mask.clone()]).unwrap();
+  assert_eq!(&*combined.image.pixels,&vec![0;4],"rounded clip intersection is empty");
+  let decoration=CanvasPainter::physical_clip_sample(sample(),&[mask]).unwrap();
+  assert_eq!(&*decoration.image.pixels,&vec![0,0,0,1],"nonglyph samples retain fractional coverage");
+ }
+}
