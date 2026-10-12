@@ -836,7 +836,10 @@ fn scene_from_xml_policy(
     let mut ids = HashMap::new();
     for el in root.descendants().filter(|n| n.is_element()) {
         if let Some(id) = el.attribute("id") {
-            if ids.insert(id, el).is_some() {
+            // Pinned _Dae.__init__ (dae.py297-301) uses last-definition
+            // assignment, including unreferenced visual node IDs. This is
+            // explicit App policy; the retained general loader still refuses.
+            if ids.insert(id, el).is_some() && !source_policy {
                 return Err(invalid("duplicate XML identity"));
             }
         }
