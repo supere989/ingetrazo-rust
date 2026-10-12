@@ -1,4 +1,6 @@
-//! Cold orthomosaic import. One lazy persistent worker, no frame file I/O or Scene copy.
+//! Cold orthomosaic import. One lazy worker; no frame file I/O or worker Scene copy.
+//! Publication retains the existing required Add history snapshot. The configured
+//! CPU byte limit admits TIFF decoding only; libwebp picture/work is separate.
 use crate::IngeTrazoApp;
 use glam::DVec3;
 use ingetrazo_core::{
@@ -178,7 +180,7 @@ fn memory_limit() -> Result<usize, String> {
         Ok(Limits::default().memory_bytes),
         |v| {
             v.parse::<usize>()
-                .map_err(|_| "Invalid orthomosaic CPU byte budget".into())
+                .map_err(|_| "Invalid orthomosaic decoder byte budget".into())
         },
     )
 }
@@ -230,7 +232,7 @@ impl IngeTrazoApp {
         }
         let budget = memory_limit()?;
         if budget == 0 {
-            return Err("Orthomosaic CPU byte budget is zero".into());
+            return Err("Orthomosaic decoder byte budget is zero".into());
         }
         let state = &mut self.geotiff_import;
         if state.service.is_none() {
@@ -372,11 +374,7 @@ impl IngeTrazoApp {
             }
         }
         let encoded_bytes = prepared.encoded.len();
-        self.scene
-            .embedded_textures
-            .entry(resource.clone())
-            .or_insert(prepared.encoded);
-        self.add_image_plane(plane);
+        self.add_prepared_image_plane(plane, prepared.encoded);
         if fresh {
             self.scene.tile_layer = capture;
             self.camera = camera.clone();

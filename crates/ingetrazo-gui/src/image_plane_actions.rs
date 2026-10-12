@@ -169,6 +169,15 @@ impl IngeTrazoApp {
                 image.path = key;
             }
         }
+        self.publish_added_image_plane(image);
+    }
+    /// The required history snapshot precedes registration of the new buffer.
+    pub(crate) fn add_prepared_image_plane(&mut self, image: ImagePlane, encoded: Vec<u8>) {
+        self.save_undo_state();
+        self.scene.embedded_textures.entry(image.path.clone()).or_insert(encoded);
+        self.publish_added_image_plane(image);
+    }
+    fn publish_added_image_plane(&mut self, image: ImagePlane) {
         let mut made_layer = false;
         if let Some(name) = &image.layer {
             if !self.scene.layers.iter().any(|l| &l.name == name) {
