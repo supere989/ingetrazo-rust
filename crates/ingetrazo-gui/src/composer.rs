@@ -108,8 +108,8 @@ impl ComposerState {
    #[cfg(test)]{self.edit_snapshots+=1;}
   }
  }
- pub fn arm_text(&mut self){self.annotation_authoring.armed=None;self.annotation_authoring.points.clear();self.legend_authoring.armed=false;self.legend_authoring.pending=None;self.text_tool=true;self.shape_tool=None;self.shape_start=None;}
- pub fn arm_shape(&mut self,kind:&str){self.annotation_authoring.armed=None;self.annotation_authoring.points.clear();self.legend_authoring.armed=false;self.legend_authoring.pending=None;self.text_tool=false;self.shape_tool=Some(kind.into());self.shape_start=None;}
+ pub fn arm_text(&mut self){self.annotation_authoring.ignore_release=false;self.annotation_authoring.armed=None;self.annotation_authoring.points.clear();self.legend_authoring.armed=false;self.legend_authoring.pending=None;self.text_tool=true;self.shape_tool=None;self.shape_start=None;}
+ pub fn arm_shape(&mut self,kind:&str){self.annotation_authoring.ignore_release=false;self.annotation_authoring.armed=None;self.annotation_authoring.points.clear();self.legend_authoring.armed=false;self.legend_authoring.pending=None;self.text_tool=false;self.shape_tool=Some(kind.into());self.shape_start=None;}
 }
 impl IngeTrazoApp {
  pub fn place_composer_shape(&mut self,kind:&str,start:glam::DVec2,end:glam::DVec2)->Result<uuid::Uuid,String>{
@@ -127,7 +127,7 @@ impl IngeTrazoApp {
  }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){
   if let Some(sheet)=self.scene.active_sheet_index.and_then(|i|self.scene.sheets.get(i)){
@@ -146,6 +146,7 @@ impl IngeTrazoApp {
   }else if let Some(object)=target.native_document.as_object_mut(){object.remove("border");}
  }
  pub fn finish_composer_edit(&mut self){
+  self.composer_state.annotation_authoring.ignore_release=false;
   self.composer_state.annotation_authoring.grab=None;
   self.composer_state.legend_authoring.grab=None;
   self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;
@@ -171,6 +172,7 @@ impl IngeTrazoApp {
   if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();
  }
  pub fn cancel_composer_edit(&mut self){
+  self.composer_state.annotation_authoring.ignore_release=false;
   self.composer_state.annotation_authoring.grab=None;
   self.composer_state.legend_authoring.grab=None;
   self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;

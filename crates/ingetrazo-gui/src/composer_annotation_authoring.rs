@@ -1487,6 +1487,16 @@ pub(super) fn input(
     let mut owned = app.composer_state.annotation_authoring.armed.is_some()
         || app.composer_state.annotation_authoring.grab.is_some();
     for e in events {
+        if matches!(
+            &e,
+            egui::Event::PointerButton {
+                button: egui::PointerButton::Primary,
+                pressed: true,
+                ..
+            }
+        ) {
+            app.composer_state.annotation_authoring.ignore_release = false;
+        }
         match e {
             egui::Event::PointerButton {
                 pos,
@@ -1672,6 +1682,7 @@ pub(super) fn input(
                 }
             }
             egui::Event::PointerGone => {
+                app.composer_state.annotation_authoring.ignore_release = false;
                 if app.composer_state.annotation_authoring.grab.is_some() {
                     app.finish_composer_edit();
                     owned = true;
