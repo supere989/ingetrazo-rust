@@ -13,6 +13,7 @@ unsafe extern "C" {
         density_unit: u32,
         density_x: u32,
         density_y: u32,
+        quality: u32,
         write: unsafe extern "C" fn(*mut c_void, *const u8, usize) -> c_int,
         opaque: *mut c_void,
         error: *mut c_char,
@@ -87,6 +88,47 @@ pub(crate) fn encode<W: Write>(
     } else {
         (2, (dpm + 50) / 100)
     };
+    encode_pixels(writer, width, height, unit, density, 92, true, provider)
+}
+/// Original QPdfEngine's explicit quality94 RGB image stream. Alpha is emitted
+/// separately as the PDF mask; the JPEG writer receives straight source RGB.
+pub(crate) fn encode_picture<W: Write>(
+    writer: &mut W,
+    width: u32,
+    height: u32,
+    rgba: &[u8],
+) -> Result<(), String> {
+    let bytes = u64::from(width)
+        .checked_mul(u64::from(height))
+        .and_then(|n| n.checked_mul(4))
+        .filter(|n| *n <= 256 * 1024 * 1024)
+        .ok_or("PDF picture JPEG byte budget exceeded")?;
+    if width == 0 || height == 0 || width > 65535 || height > 65535 || bytes != rgba.len() as u64 {
+        return Err("PDF picture JPEG inventory invalid".into());
+    }
+    encode_pixels(writer, width, height, 1, 96, 94, false, |y, rows| {
+        let a = y as usize * width as usize * 4;
+        let b = a + rows as usize * width as usize * 4;
+        let mut out = Vec::new();
+        out.try_reserve_exact(b - a)
+            .map_err(|_| "PDF picture row allocation failed")?;
+        out.extend_from_slice(&rgba[a..b]);
+        Ok(out)
+    })
+}
+fn encode_pixels<W: Write>(
+    writer: &mut W,
+    width: u32,
+    height: u32,
+    unit: u32,
+    density: u32,
+    quality: u32,
+    opaque: bool,
+    mut provider: impl FnMut(u32, u32) -> Result<Vec<u8>, String>,
+) -> Result<(), String> {
+    if !matches!(quality, 92 | 94) {
+        return Err("Unsupported native JPEG quality".into());
+    }
     let mut output_state = Output {
         writer,
         error: None,
@@ -99,6 +141,7 @@ pub(crate) fn encode<W: Write>(
             unit,
             density,
             density,
+            quality,
             output::<W>,
             (&mut output_state as *mut Output<'_, W>).cast(),
             error.as_mut_ptr(),
@@ -117,7 +160,7 @@ pub(crate) fn encode<W: Write>(
         let rows = (height - y).min(8);
         let rgba = provider(y, rows)?;
         if rgba.len() != width as usize * rows as usize * 4
-            || rgba.chunks_exact(4).any(|p| p[3] != 255)
+            || (opaque && rgba.chunks_exact(4).any(|p| p[3] != 255))
         {
             return Err("JPEG requires exact opaque native rows".into());
         }

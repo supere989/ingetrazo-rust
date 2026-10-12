@@ -45,6 +45,7 @@ pub struct TextDraw {
 }
 #[derive(Clone, Debug)]
 pub struct Draw {
+    pub picture: Option<ingetrazo_core::paper_picture::Picture>,
     pub rotation_deg: f64,
     pub origin_mm: [f64; 2],
     pub text: Option<TextDraw>,

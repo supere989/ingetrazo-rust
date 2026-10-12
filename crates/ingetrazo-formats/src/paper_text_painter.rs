@@ -159,7 +159,7 @@ impl Painter {
             .map_err(|_| "Paper background draw allocation failed")?;
         draws.insert(
             0,
-            Draw { rotation_deg:0.,
+            Draw {picture:None, rotation_deg:0.,
                 origin_mm: style.origin_mm,
                 path: vec![
                     PathOp::Move([x0, y0]),
@@ -285,7 +285,7 @@ impl Painter {
                 draws
                     .try_reserve(1)
                     .map_err(|_| "Paper text draw allocation failed")?;
-                draws.push(Draw { rotation_deg:0.,
+                draws.push(Draw {picture:None, rotation_deg:0.,
                     origin_mm: style.origin_mm,
                     text: Some(TextDraw {
                         rotation_deg: 0.,

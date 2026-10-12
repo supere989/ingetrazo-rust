@@ -5,7 +5,7 @@ fn page() -> Page {
         size_mm: [210., 297.],
         media_box_points: None,
         origin_mm: [0., 0.],
-        draws: vec![Draw { rotation_deg:0.,
+        draws: vec![Draw {picture:None, rotation_deg:0.,
             origin_mm: [0., 0.],
             even_odd: false,
             path: vec![

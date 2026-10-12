@@ -12,7 +12,7 @@ pub(crate) struct LegendDraws {
 }
 fn rectangle(origin: [f64; 2], r: [f64; 4], fill: Option<[f32; 4]>, stroke: Option<f64>) -> Draw {
     let [x, y, w, h] = r;
-    Draw {
+    Draw {picture:None,
         origin_mm: origin,
         path: vec![
             PathOp::Move([x, y]),

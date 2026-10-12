@@ -171,3 +171,5 @@ pub mod annotation_query;
 
 /// Shared cold source billboard geometry for direct native backends.
 pub mod billboards;
+
+pub mod paper_picture;

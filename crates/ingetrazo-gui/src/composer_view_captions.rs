@@ -22,7 +22,7 @@ fn path(
     fill: Option<[f32; 4]>,
     stroke: Option<([f32; 4], f64)>,
 ) -> Draw {
-    Draw {
+    Draw {picture:None,
         origin_mm: origin,
         path: ops,
         fill,

@@ -85,7 +85,7 @@ fn main() {
                         width_px: t,
                     });
                 }
-                draws.push(Draw { rotation_deg:0.,
+                draws.push(Draw {picture:None, rotation_deg:0.,
                     origin_mm: [20., 30.],
                     text: Some(TextDraw {
                         rotation_deg: 0.,

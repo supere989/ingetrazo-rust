@@ -22,7 +22,7 @@ fn draw(
     fill: Option<[f32; 4]>,
     stroke: Option<([f32; 4], f64)>,
 ) -> Draw {
-    Draw { rotation_deg:0.,
+    Draw {picture:None, rotation_deg:0.,
         origin_mm: origin,
         path,
         fill,

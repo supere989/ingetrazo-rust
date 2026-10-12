@@ -44,7 +44,7 @@ fn main() {
         size_mm: [210., 297.],
         media_box_points: Some([595., 842.]),
         origin_mm: [42. * 25.4 / 300.; 2],
-        draws: vec![Draw { rotation_deg:0.,
+        draws: vec![Draw {picture:None, rotation_deg:0.,
             origin_mm: [-0., 5.678901234567],
             even_odd: true,
             path,

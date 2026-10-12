@@ -68,7 +68,7 @@ fn main() {
                 }
             })
             .collect();
-        let draw = Draw { rotation_deg:0.,
+        let draw = Draw {picture:None, rotation_deg:0.,
             origin_mm: [20., 30.],
             text: Some(TextDraw {
                         rotation_deg: 0.,

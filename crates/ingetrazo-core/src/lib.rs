@@ -83,3 +83,5 @@ pub mod sun;
 pub mod autofold;
 
 mod camera_cursor;
+
+pub mod paper_picture;
