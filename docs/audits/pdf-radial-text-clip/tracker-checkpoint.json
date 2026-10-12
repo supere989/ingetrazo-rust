@@ -1,0 +1,5 @@
+{
+  "classification": "P29 Partial; counts and gates unchanged",
+  "current_claim": "Physical six-family annotations:20/20PNG,20/20JPEG,19/20PDF,20original-readerpairs,25rejectingcontrols; strictFAIL radial-fit3pixels/max1. Default radial PDF closed;zero source recaptures;softwareVulkan/Linux only.",
+  "evidence": "docs/audits/pdf-radial-text-clip/README.md"
+}

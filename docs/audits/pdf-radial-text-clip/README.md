@@ -1,0 +1,5 @@
+The actual frozen replay now matches all 20 PNGs, all 20 JPEGs and 19 of 20 PDFs, with 20 original-reader pairs and 25 rejecting controls. The default radial PDF pixel is closed. Radial-fit remains a strict failure at three pixels with maximum channel difference one; no tolerance or source replacement was introduced.
+
+The PDF-only change follows Qt text-rectangle containment in unscaled layout coordinates and emits the actual rotated clip through the existing vector clipping path. Raster output is unchanged. Executed runtime `bcc2b7defcb7de30222a4342fd2f8b54770bb4d5`; native replay 18.511 seconds, original reader 0.155 seconds, checker 1.345 seconds with exit one. No new source capture occurred.
+
+The archive retains current changed outputs, complete reports, logs, receipts and executed code. Byte-identical prior payloads are referenced by exact member digest in the authenticated PDF-alpha archive instead of copied. Prior failures remain in that archive. This is software Vulkan/Linux evidence, without a hardware or native Mac acceptance claim.
