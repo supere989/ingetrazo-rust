@@ -133,7 +133,7 @@ pub(super) fn label(
         };
         out.rectangle(
             [-0.5, top, ink_width + 1., (bottom - top).max(1.)],
-            opacity(color(background)?, n(value, "bg_opacity", 1.)?),
+            opacity(color(background)?, n(value, "bg_opacity", 1.)?, pdf),
         );
     }
     text(

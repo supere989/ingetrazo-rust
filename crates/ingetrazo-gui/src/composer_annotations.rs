@@ -159,8 +159,12 @@ fn option<'a>(v: &'a Value, k: &str, d: &'a str) -> Result<&'a str, String> {
 fn color(s: &str) -> Result<[f32; 4], String> {
     Ok(ingetrazo_core::sheet_color::parse_sheet_color(s)?.map(|q| q as f32 / 255.))
 }
-fn opacity(mut c: [f32; 4], a: f64) -> [f32; 4] {
-    c[3] = ((a.clamp(0., 1.) * 65535.).round() / 65535.) as f32;
+fn opacity(mut c: [f32; 4], a: f64, pdf: bool) -> [f32; 4] {
+    let alpha = (a.clamp(0., 1.) * 65535.).round();
+    // Qt PDF addBrushPattern reads QColor::alpha(), then writes alpha/255.
+    // Its raster painter instead retains QColor's16-bit brush precision.
+    c[3] = if pdf { ((alpha + 128.) / 257.).floor() as f32 / 255. }
+           else { (alpha / 65535.) as f32 };
     c
 }
 fn rect(r: [f64; 4]) -> Vec<PathOp> {
@@ -616,7 +620,7 @@ fn cota(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), Str
             [-width / 2., r[1] - 0.4, width, r[3] + 0.8],
             offset,
             rotation,
-            opacity(color(bg)?, n(v, "text_bg_opacity", 1.)?),
+            opacity(color(bg)?, n(v, "text_bg_opacity", 1.)?, pdf),
             pdf,
         );
     }
@@ -711,7 +715,7 @@ fn angular(o: &mut Output, v: &Value, p: &mut Painter) -> Result<(), String> {
         let w = label.chars().count() as f64 * size * 0.62 + 2.;
         o.rectangle(
             [lx - w / 2., ly - size * 0.75, w, size * 1.5],
-            opacity(color(bg)?, n(v, "text_bg_opacity", 1.)?),
+            opacity(color(bg)?, n(v, "text_bg_opacity", 1.)?, pdf),
         );
     }
     text(
@@ -809,7 +813,7 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
             [-width / 2., r[1] - 0.4, width, r[3] + 0.8],
             anchor,
             deg,
-            opacity(color(bg)?, n(v, "text_bg_opacity", 1.)?),
+            opacity(color(bg)?, n(v, "text_bg_opacity", 1.)?, pdf),
             pdf,
         );
     }
@@ -916,3 +920,17 @@ pub(crate) fn authoring_label_ink_width(sheet:&Sheet,v:&Value,p:&mut Painter,con
 }
 
 pub(crate) fn authoring_radial_label(v:&Value)->Result<String,String>{let r=n(v,"radius_mm",15.)?.abs();let diameter=s(v,"kind","radius")?=="diameter";length(v,if diameter{2.*r}else{r},Some(if diameter{"Ø"}else{"R"}))}
+
+#[cfg(test)]
+mod source_pdf_alpha_tests {
+    use super::opacity;
+    #[test]
+    fn source_pdf_brush_alpha_keeps_raster_precision_separate() {
+        let color = [225f32 / 255., 221f32 / 255., 164f32 / 255., 1.];
+        assert_eq!(opacity(color, 0.65, true)[3], 166f32 / 255.);
+        assert_eq!(opacity(color, 0.65, false)[3], (42598f64 / 65535.) as f32);
+        for alpha in [0., 1.] {
+            assert_eq!(opacity(color, alpha, true), opacity(color, alpha, false));
+        }
+    }
+}

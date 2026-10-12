@@ -1,0 +1,49 @@
+{
+  "qt_version": "6.12.0",
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qpdf.cpp",
+      "sha256": "adad5cce03ecbd446ba49ba0a4a693ba7c4836917d08761c03a971ab31b2f458",
+      "inspected_file": "/tmp/annotation-qpdf-6.12.cpp",
+      "references": [
+        {
+          "line": 3075,
+          "signature": "int QPdfEnginePrivate::addConstantAlphaObject",
+          "excerpt": "int QPdfEnginePrivate::addConstantAlphaObject(int brushAlpha, int penAlpha)\n{\n    if (brushAlpha == 255 && penAlpha == 255)\n        return 0;\n    uint object = alphaCache.value(std::pair<uint, uint>(brushAlpha, penAlpha), 0);\n    if (!object) {\n        object = addXrefEntry(-1);\n        QByteArray alphaDef;\n        QPdf::ByteStream s(&alphaDef);\n        s << \"<<\\n/ca \" << (brushAlpha/qreal(255.)) << '\\n';\n        s << \"/CA \" << (penAlpha/qreal(255.)) << \"\\n>>\";\n    "
+        },
+        {
+          "line": 3125,
+          "signature": "addConstantAlphaObject(qRound(brush.color().alpha()",
+          "excerpt": "addConstantAlphaObject(qRound(brush.color().alpha() * opacity),\n                                               qRound(pen.color().alpha() * opacity));\n\n    int imageObject = -1;\n    QByteArray pattern = QPdf::patternForBrush(brush);\n    if (pattern.isEmpty()) {\n        if (brush.style() != Qt::TexturePattern)\n            return 0;\n        QImage image = brush.textureImage();\n        bool bitmap = true;\n        const bool lossless = q->painter()->testRenderHint(QPain"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/gui/painting/qcolor.cpp",
+      "sha256": "e6b011aca6fab0ed8bc010fe45c84a2bbf9462cbcd9e61afbb083b1b2ee8906c",
+      "inspected_file": "/tmp/annotation-qcolor-6.12.cpp",
+      "references": [
+        {
+          "line": 1627,
+          "signature": "int QColor::alpha() const",
+          "excerpt": "int QColor::alpha() const noexcept\n{\n    if (cspec == ExtendedRgb)\n        return qRound(float(castF16(ct.argbExtended.alphaF16)) * 255);\n    return qt_div_257(ct.argb.alpha);\n}\n\n\n/*!\n    Sets the alpha of this color to \\a alpha. Integer alpha is specified in the\n    range 0-255.\n\n    \\sa alpha(), alphaF(), {QColor#Alpha-Blended Drawing}{Alpha-Blended Drawing}\n*/\n\nvoid QColor::setAlpha(int alpha)\n{\n    alpha = qColorClampToIntRange(alpha, __func__);\n\n    if (cspec ="
+        }
+      ]
+    }
+  ],
+  "frozen_source": {
+    "archive": "docs/audits/sheet-annotations/source-records.zip",
+    "member": "radial-fit.pdf",
+    "sha256": "809d593c6de4774064bcd01764d6079d2b887f2cd965bc17db40a8ab409f8b97",
+    "graphics_state": "/ca 0.650980392"
+  },
+  "before_native": {
+    "runtime": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+    "sha256": "4148c24a93bce2f92f3fb674850348ab098d81dd0186cfe3a18d3fce5f0bcfc0",
+    "graphics_state": "/ca 0.6500038"
+  },
+  "authored_alpha": 0.65,
+  "QColor_alpha16": 42598,
+  "source_pdf_alpha8": 166,
+  "scope": "Only annotationbackgroundbrush PDF preparation chooses QColoralpha8 policy. PNG/JPEG retains existing16-bit premultiplication. No genericPDF/geometry/opacity normalization; opaque cotas_rad-default1pixel gap is separate andunchanged. ActualfrozenPDFreplay required."
+}
