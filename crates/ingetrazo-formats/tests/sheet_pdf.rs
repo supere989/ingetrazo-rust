@@ -61,10 +61,10 @@ fn shape_sheet() -> ingetrazo_core::composition::Sheet {
 fn visible_unsupported_items_refuse_but_hidden_items_do_not() {
     use ingetrazo_formats::sheet_pdf_shapes::prepare;
     let mut sheet = shape_sheet();
-    sheet.native_document = serde_json::json!({"images":[{"hidden":true}]});
+    sheet.native_document = serde_json::json!({"perfiles":[{"hidden":true}]});
     assert!(prepare(&sheet).is_ok());
-    sheet.native_document["images"][0]["hidden"] = serde_json::json!(false);
-    assert!(prepare(&sheet).err().unwrap().contains("images"));
+    sheet.native_document["perfiles"][0]["hidden"] = serde_json::json!(false);
+    assert!(prepare(&sheet).err().unwrap().contains("perfiles"));
     assert!(prepare(&ingetrazo_core::composition::Sheet::default()).is_err());
 }
 #[test]
