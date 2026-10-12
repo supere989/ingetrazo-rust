@@ -57,6 +57,7 @@ impl IngeTrazoApp {
             .position(|i| matches!(i,SheetItem::ViewFrame(f) if f.id==frame))
             .ok_or("Missing frame")?;
         self.enter_composer_sheet(s);
+        self.scene.active_sheet_index = Some(s);
         self.finish_composer_edit();
         self.begin_composer_edit();
         self.scene.sheets[s].remove_item(index);
@@ -78,6 +79,7 @@ impl IngeTrazoApp {
             .position(|i| matches!(i,SheetItem::ViewFrame(f) if f.id==frame))
             .ok_or("Missing frame")?;
         self.enter_composer_sheet(s);
+        self.scene.active_sheet_index = Some(s);
         self.composer_state.annotation_authoring.selected = None;
         self.composer_state.picture_authoring.selected = None;
         self.composer_state.legend_authoring.selected = None;
@@ -147,6 +149,7 @@ impl IngeTrazoApp {
             return Ok(false);
         }
         self.enter_composer_sheet(s);
+        self.scene.active_sheet_index = Some(s);
         if finish {
             self.finish_composer_edit();
         }
