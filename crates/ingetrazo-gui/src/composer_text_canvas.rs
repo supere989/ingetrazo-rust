@@ -10,7 +10,7 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
 #[path="composer_text_ordered.rs"] mod ordered;
 #[derive(Clone)]struct Tile{factory_identity:Option<(u8,usize)>,ordered:Option<ordered::Ordered>,draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
-#[derive(Clone,Default)]pub(super) struct CanvasPainter {
+#[derive(Clone,Default)]pub(crate) struct CanvasPainter {
  context:Option<(u64,u64,uuid::Uuid)>,layouts:HashMap<uuid::Uuid,Layout>,layout_bytes:usize,layout_order:VecDeque<uuid::Uuid>,font_refs:HashMap<FontKey,(usize,usize)>,font_bytes:usize,
  glyphs:HashMap<GlyphKey,GlyphImage>,order:VecDeque<GlyphKey>,glyph_bytes:usize,
  tiles:HashMap<uuid::Uuid,Tile>,tile_order:VecDeque<uuid::Uuid>,tile_bytes:usize,pub tile_builds:u64,
@@ -21,6 +21,37 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
 }
 impl std::fmt::Debug for CanvasPainter{fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("CanvasPainter").field("stats",&self.stats()).finish()}}
 impl CanvasPainter {
+ /// Physical export reuses source glyph coverage and decoration producers;
+ /// positions stay double until the existing QFixed/raster cache boundary.
+ pub(crate) fn physical_records(&mut self,draws:&[Draw],density:f64)->Result<Vec<(Arc<ingetrazo_render::cad2d::Geometry>,Arc<[ingetrazo_render::cad2d::Batch]>)>,String>{
+  if !density.is_finite()||density<=0.{return Err("Invalid physical text density".into());}
+  let mut samples=Vec::new();let mut extent=None;let mut working=0;
+  for draw in draws{
+   let pos=draw.origin_mm.map(|v|v*density);
+   let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);
+   let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
+   let mut clip=[i64::MIN/2,i64::MIN/2,i64::MAX/2,i64::MAX/2];
+   if let Some(path)=&draw.clip{let mut bounds=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in path{if let PathOp::Move(p)|PathOp::Line(p)=op{let q=[pos[0]+p[0]*density,pos[1]+p[1]*density];bounds[0]=bounds[0].min(q[0]);bounds[1]=bounds[1].min(q[1]);bounds[2]=bounds[2].max(q[0]);bounds[3]=bounds[3].max(q[1]);}else if !matches!(op,PathOp::Close){return Err("Physical text clip is not a source rectangle".into());}}clip=[bounds[0].floor()as i64,bounds[1].floor()as i64,bounds[2].ceil()as i64,bounds[3].ceil()as i64];}
+   let Some(text)=&draw.text else{
+    let mut rect=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];for op in &draw.path{if let PathOp::Move(p)|PathOp::Line(p)=op{let q=[pos[0]+p[0]*density,pos[1]+p[1]*density];rect[0]=rect[0].min(q[0]);rect[1]=rect[1].min(q[1]);rect[2]=rect[2].max(q[0]);rect[3]=rect[3].max(q[1]);}else if !matches!(op,PathOp::Close){return Err("Physical text decoration lacks exact coverage painter".into());}}
+    if let Some(sample)=rectangle_sample(rect,rgba,clip)?{include_sample(&mut samples,&mut extent,&mut working,sample)?;}continue;
+   };
+   let scale=text.scale_mm*density;
+   for glyph in &text.glyphs{
+    let x=pos[0]+glyph.position_px[0]*scale;let y=pos[1]+glyph.position_px[1]*scale;
+    let count=text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?;
+    let(fx,fy,phase)=device_position_with_count((x*64.)as i64,(y*64.)as i64,count);
+    let image=self.image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color)?;
+    let sample=Sample{x:fx as i64+i64::from(image.left),y:fy as i64-i64::from(image.top),image,clip};
+    include_sample(&mut samples,&mut extent,&mut working,sample)?;
+   }
+   for decoration in &text.decorations{let[x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[pos[0]+x0*scale,pos[1]+y0*scale-half,pos[0]+x1*scale,pos[1]+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],pos[1]+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working,sample)?;}}
+  }
+  let factory=crate::composer_backend::Factory::MetalProducer(Default::default());
+  let ordered=ordered::Ordered::build(&samples,[0;2],[0.;2],1.,&factory,ingetrazo_render::cad2d::Pose{scale:[1.;2],translation:[0.;2]})?;
+  Ok(ordered.records())
+ }
+
  pub fn stats(&self)->[u64;5]{[self.layouts.len()as u64,self.glyphs.len()as u64,self.glyph_bytes as u64,self.layout_builds,self.raster_builds]}
  pub fn ordered_stats(&self)->[u64;4]{[self.ordered_builds,self.ordered_items as u64,self.ordered_parts as u64,self.ordered_bytes as u64]}
  fn retire_tile(&mut self,id:uuid::Uuid){if let Some(old)=self.tiles.remove(&id){self.tile_bytes-=old.bytes;if let Some(ordered)=old.ordered{self.ordered_items-=1;self.ordered_parts-=ordered.part_count();self.ordered_bytes-=ordered.bytes;}}}

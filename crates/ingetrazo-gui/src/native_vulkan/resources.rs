@@ -207,6 +207,23 @@ impl Resources {
   result
  }
  /// Actual GPU-to-host copy; works for unmappable discrete device-local memory.
+ /// Cached direct readback destination; actual native requirements are charged
+ /// before allocation by the existing resource ledger.
+ pub(crate) fn paper_readback_buffer(&mut self,bytes:u64)->Result<BufferId,String>{
+  if bytes==0||bytes>8*1024*1024{return Err("Paper readback extent exceeds 8 MiB".into());}
+  self.allocate(bytes,vk::BufferUsageFlags::TRANSFER_DST,vk::MemoryPropertyFlags::HOST_VISIBLE)
+ }
+ /// # Safety
+ /// The caller must have observed successful completion of every GPU write to
+ /// this buffer and encoded TRANSFER_WRITE→HOST_READ before that completion.
+ pub(crate) unsafe fn read_completed_paper_buffer(&self,id:BufferId,out:&mut [u8])->Result<(),String>{
+  self.lifetime.check()?;let buffer=self.buffers.get(&id).ok_or("Unknown paper readback buffer")?;
+  if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_VISIBLE)||out.len()as u64!=buffer.logical_bytes{return Err("Paper readback extent/visibility mismatch".into());}
+  let pointer=unsafe{self.device.map_memory(buffer.memory,0,buffer.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
+  let result=(||{if !buffer.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT){unsafe{self.device.invalidate_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(buffer.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())?;}
+   unsafe{std::ptr::copy_nonoverlapping(pointer.cast::<u8>(),out.as_mut_ptr(),out.len());}Ok(())})();
+  unsafe{self.device.unmap_memory(buffer.memory);}result
+ }
  pub fn readback_buffer(&mut self,context:&super::VulkanContext,id:BufferId)->Result<Vec<u8>,String> {
   let source=self.buffers.get(&id).ok_or("Unknown GPU readback buffer")?;if !source.usage.contains(vk::BufferUsageFlags::TRANSFER_SRC){return Err("GPU buffer was not created for readback".into());}let bytes=source.logical_bytes;let handle=source.handle;
   self.read_chunks(context,bytes,4,|device,command,destination,offset,length|unsafe {

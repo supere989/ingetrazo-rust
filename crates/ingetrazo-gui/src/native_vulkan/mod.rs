@@ -1,4 +1,5 @@
 pub mod cad2d;
+pub mod sheet_image;
 pub mod resize;
 pub mod headless;
 mod source_depth;
@@ -185,6 +186,7 @@ pub struct System {
     pub memory_budget: std::sync::Arc<budget::VulkanBudget>,
     pub world: Option<world::World>,
     pub cad2d: Option<cad2d::Renderer>,
+    sheet_image:Option<sheet_image::Exporter>,
     annotation_cad:Option<cad2d::Renderer>,
     annotation_viewport:Option<annotation_viewport::ViewportAnnotations>,
     annotation_prepare_error:Option<String>,
@@ -338,7 +340,7 @@ impl System {
             pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
-            annotation_timing,world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_font_refusal_for_probe:false,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
+            annotation_timing,world:None,cad2d:None,sheet_image:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_font_refusal_for_probe:false,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
             native_world,world_presented:false,
             textures_to_free: None,
             close_requested: false,
@@ -768,6 +770,7 @@ impl System {
         self.vulkan_context.lifetime.drain_graphics()
     }
     fn clean_gpu(&mut self){
+        self.sheet_image.take();
         if self.exited{return;}
         if !self.wait_gpu_completion(){drop(self.annotation_timing.take());return;}
         if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
@@ -1335,6 +1338,9 @@ fn create_vulkan_render_pass(
     format: vk::Format,
     integer_cad:bool,stencil_format:Option<vk::Format>,
 ) -> Result<vk::RenderPass, Box<dyn Error>> {
+    create_render_pass_with_final_layout(device,format,integer_cad,stencil_format,vk::ImageLayout::PRESENT_SRC_KHR)
+}
+fn create_render_pass_with_final_layout(device:&Device,format:vk::Format,integer_cad:bool,stencil_format:Option<vk::Format>,final_layout:vk::ImageLayout)->Result<vk::RenderPass,Box<dyn Error>>{
     log::debug!("Creating vulkan render pass");
     let mut attachment_descs = vec![vk::AttachmentDescription::default()
         .format(format)
@@ -1342,7 +1348,7 @@ fn create_vulkan_render_pass(
         .load_op(vk::AttachmentLoadOp::CLEAR)
         .store_op(vk::AttachmentStoreOp::STORE)
         .initial_layout(vk::ImageLayout::UNDEFINED)
-        .final_layout(vk::ImageLayout::PRESENT_SRC_KHR)];
+        .final_layout(final_layout)];
 
     if let Some(format)=stencil_format{attachment_descs.push(vk::AttachmentDescription::default().format(format).samples(vk::SampleCountFlags::TYPE_1).load_op(vk::AttachmentLoadOp::DONT_CARE).store_op(vk::AttachmentStoreOp::DONT_CARE).stencil_load_op(vk::AttachmentLoadOp::CLEAR).stencil_store_op(vk::AttachmentStoreOp::DONT_CARE).initial_layout(vk::ImageLayout::UNDEFINED).final_layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL));}
     let stencil_ref=vk::AttachmentReference::default().attachment(1).layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
@@ -1478,6 +1484,7 @@ impl App for crate::IngeTrazoApp {
         app
     }
     fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
+        if !_resize{if let Some(request)=self.prepare_sheet_image_request(&system.egui_ctx){let result=(||{let(request,plan)=request?;if system.sheet_image.is_none(){system.sheet_image=Some(sheet_image::Exporter::new(&system.vulkan_context,system.memory_budget.clone())?);}system.sheet_image.as_mut().unwrap().save(&system.vulkan_context,&plan,&request.path)})();self.sheet_image_result(result);}}
         // Collect a stable slot before UI/tool dispatch. A tool can acquire or
         // cancel during ctx.run; resolving this slot after post-UI preparation
         // preserves current-frame membership without capturing an old handle.

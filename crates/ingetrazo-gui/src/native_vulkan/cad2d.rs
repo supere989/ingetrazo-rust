@@ -130,6 +130,7 @@ impl Handle {
         }
         .into()
     }
+    pub(crate) fn record_paper(&self,info:&egui::PaintCallbackInfo,device:&Device,command:vk::CommandBuffer)->Result<(),String>{self.inner.paint(info,device,command).map_err(|e|e.to_string())}
     /// Cold producer admission: Rust-visible callback/state records (including
     /// inline Ready storage) and distinct resolved palette payloads. Geometry,
     /// batch/range owners, shared pipeline/counters, Arc allocator headers and

@@ -4,9 +4,20 @@
 //! Ordered segments preserve source repeated-pixel SourceOver; no pixel image.
 use std::collections::BTreeMap;
 use crate::qt_gray::{PathContour,Segment,Span};
-struct Writer{spans:Vec<Span>,limit:usize,work:usize,opacity:i64,dash:bool,pattern_offset:i64}
+// Literal QCosmeticStroker::clipLine operation order. The extra pixel bounds
+// are deviceRect.left/top-1 and right/bottom+2 (width/height+1).
+fn clip_line(a:&mut [f64;2],b:&mut [f64;2],size:[u32;2])->bool{
+ if size.contains(&0)||a.iter().chain(b.iter()).any(|v|!v.is_finite()){return false;}
+ let min=[-1.;2];let max=[f64::from(size[0])+1.,f64::from(size[1])+1.];
+ if a[0]<min[0]{if b[0]<=min[0]{return false;}a[1]+=(b[1]-a[1])/(b[0]-a[0])*(min[0]-a[0]);a[0]=min[0];}else if a[0]>max[0]{if b[0]>=max[0]{return false;}a[1]+=(b[1]-a[1])/(b[0]-a[0])*(max[0]-a[0]);a[0]=max[0];}
+ if b[0]<min[0]{b[1]+=(b[1]-a[1])/(b[0]-a[0])*(min[0]-b[0]);b[0]=min[0];}else if b[0]>max[0]{b[1]+=(b[1]-a[1])/(b[0]-a[0])*(max[0]-b[0]);b[0]=max[0];}
+ if a[1]<min[1]{if b[1]<=min[1]{return false;}a[0]+=(b[0]-a[0])/(b[1]-a[1])*(min[1]-a[1]);a[1]=min[1];}else if a[1]>max[1]{if b[1]>=max[1]{return false;}a[0]+=(b[0]-a[0])/(b[1]-a[1])*(max[1]-a[1]);a[1]=max[1];}
+ if b[1]<min[1]{b[0]+=(b[0]-a[0])/(b[1]-a[1])*(min[1]-b[1]);b[1]=min[1];}else if b[1]>max[1]{b[0]+=(b[0]-a[0])/(b[1]-a[1])*(max[1]-b[1]);b[1]=max[1];}true
+}
+struct Writer{spans:Vec<Span>,limit:usize,work:usize,opacity:i64,dash:bool,pattern_offset:i64,custom_pattern:Option<[Vec<i64>;2]>,device:Option<[u32;2]>}
 impl Writer{
  fn line(&mut self,a:[f64;2],b:[f64;2],mut begin:bool,mut end:bool)->Result<(),String>{
+  let(mut a,mut b)=(a,b);if let Some(size)=self.device{if !clip_line(&mut a,&mut b,size){return Ok(());}}
   if a.iter().chain(b.iter()).any(|x|!x.is_finite()||x.abs()>1_000_000.){return Err("Cosmetic input outside finite bounded coordinates".into());}
   let fixed=|x:f64|(x*64.)as i64;let(mut x1,mut y1,mut x2,mut y2)=(fixed(a[0]),fixed(a[1]),fixed(b[0]),fixed(b[1]));
   // Qt selects the major axis after F26Dot6 conversion, including fixed-grid ties.
@@ -17,10 +28,11 @@ impl Writer{
   let mut minor=(y1-32)*1024-((((x1&63)-32)*inc)>>6);if begin{x1-=32;minor-=inc>>1;}if end{x2+=32;}
   // Qt DashLine [4,2] in F26Dot6. Each independent drawLine resets
   // patternOffset, and reversed major-axis traversal uses [2,4].
-  let pattern=if reversed{[128i64,384]}else{[256i64,384]};
-  let mut dash_offset=if reversed{384-self.pattern_offset-(x2-x1)-((x1&63)-32)}else{self.pattern_offset-((x1&63)-32)}.rem_euclid(384);
-  if self.dash{self.pattern_offset=(self.pattern_offset+x2-x1).rem_euclid(384);}
-  let mut dash_index=usize::from(dash_offset>=pattern[0]);
+  let default_pattern=if reversed{[128i64,384]}else{[256i64,384]};
+  let pattern=self.custom_pattern.as_ref().map_or(&default_pattern[..],|p|p[usize::from(reversed)].as_slice());let pattern_length=*pattern.last().unwrap();
+  let mut dash_offset=if reversed{pattern_length-self.pattern_offset-(x2-x1)-((x1&63)-32)}else{self.pattern_offset-((x1&63)-32)}.rem_euclid(pattern_length);
+  if self.dash{self.pattern_offset=(self.pattern_offset+x2-x1).rem_euclid(pattern_length);}
+  let mut dash_index=0;while dash_index+1<pattern.len()&&dash_offset>=pattern[dash_index]{dash_index+=1;}
   let start=x1>>6;let finish=x2>>6;let mut pixels=BTreeMap::new();
   for major in start..=finish{
    self.work+=1;if self.work>self.limit.saturating_mul(8){return Err("Cosmetic edge work admission exceeded".into());}
@@ -28,7 +40,7 @@ impl Writer{
    let base=minor>>16;let fraction=(minor>>8)&255;
    let dash_on=!self.dash||((dash_index+usize::from(!reversed))&1)!=0;
    for(row,cov)in[(base,255-fraction),(base+1,fraction)]{if !dash_on{continue;}let coverage=(((cov*covered)>>6)*self.opacity>>8)as u8;if coverage!=0{let(x,y)=if vertical{(row,major)}else{(major,row)};if pixels.len()>=self.limit.saturating_mul(16)&&!pixels.contains_key(&(y,x)){return Err("Cosmetic temporary pixel admission exceeded".into());}pixels.insert((y,x),coverage);}}
-   dash_offset+=64;if dash_offset>=pattern[dash_index]{dash_index=(dash_index+1)%2;}dash_offset%=384;
+   dash_offset+=64;if dash_offset>=pattern[dash_index]{dash_index=(dash_index+1)%pattern.len();}dash_offset%=pattern_length;
    minor+=inc;
   }
   // Sorting unique pixels within one segment does not reorder any overlap.
@@ -48,16 +60,37 @@ impl Writer{
 }
 /// Solid antialiased pen, physical points and width <=1; no dash or clipLine policy.
 pub fn rasterize_path(path:&PathContour,closed:bool,width:f64,limit:usize)->Result<Vec<Span>,String>{
+ rasterize_path_with_caps(path,closed,width,true,limit)
+}
+/// Literal QCosmeticStroker::drawCaps = capStyle != Qt::FlatCap. RoundCap
+/// and SquareCap share its half-pixel endpoint extension; FlatCap omits it.
+pub fn rasterize_path_with_caps(path:&PathContour,closed:bool,width:f64,draw_caps:bool,limit:usize)->Result<Vec<Span>,String>{
+ rasterize_path_device(path,closed,width,draw_caps,None,limit)
+}
+/// Qt clips to the original physical image before F26Dot6; tiling must not
+/// substitute tile bounds or change the interpolation/phase of cropped lines.
+pub fn rasterize_path_device(path:&PathContour,closed:bool,width:f64,draw_caps:bool,device:Option<[u32;2]>,limit:usize)->Result<Vec<Span>,String>{
  if !width.is_finite()||!(0. ..=1.).contains(&width)||limit==0||path.segments.len()>limit{return Err("Invalid cosmetic pen admission".into());}
- let opacity=if width==0.{256}else{(width*256.)as i64};let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity,dash:false,pattern_offset:0};let mut current=path.start;
- for(i,segment)in path.segments.iter().enumerate(){let begin=!closed&&i==0;let end=!closed&&i+1==path.segments.len();match segment{Segment::Line(to)=>{writer.line(current,*to,begin,end)?;current=*to;},Segment::Cubic{control1,control2,to}=>{writer.cubic([current,*control1,*control2,*to],6,begin,end)?;current=*to;}}}
+ let opacity=if width==0.{256}else{(width*256.)as i64};let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity,dash:false,pattern_offset:0,custom_pattern:None,device};let mut current=path.start;
+ for(i,segment)in path.segments.iter().enumerate(){let begin=draw_caps&&!closed&&i==0;let end=draw_caps&&!closed&&i+1==path.segments.len();match segment{Segment::Line(to)=>{writer.line(current,*to,begin,end)?;current=*to;},Segment::Cubic{control1,control2,to}=>{writer.cubic([current,*control1,*control2,*to],6,begin,end)?;current=*to;}}}
  Ok(writer.spans)
+}
+/// Source custom cosmetic pen pattern (in QPen width units, intentionally
+/// not scaled by the device transform). Each independent drawLine resets it.
+pub fn rasterize_custom_line(a:[f64;2],b:[f64;2],width:f64,draw_caps:bool,pen_pattern:&[f64],limit:usize)->Result<Vec<Span>,String>{
+ rasterize_custom_line_device(a,b,width,draw_caps,pen_pattern,None,limit)
+}
+pub fn rasterize_custom_line_device(a:[f64;2],b:[f64;2],width:f64,draw_caps:bool,pen_pattern:&[f64],device:Option<[u32;2]>,limit:usize)->Result<Vec<Span>,String>{
+ if !width.is_finite()||!(0. ..=1.).contains(&width)||limit==0||pen_pattern.is_empty()||pen_pattern.len()>1024||pen_pattern.len()%2!=0||pen_pattern.iter().any(|v|!v.is_finite()||*v<=0.){return Err("Invalid source custom cosmetic pattern".into());}
+ let cumulative=|reverse:bool|{let mut total=0i64;(0..pen_pattern.len()).map(|i|{let i=if reverse{pen_pattern.len()-1-i}else{i};total+=((pen_pattern[i]*64.)as i64).clamp(1,65536);total}).collect::<Vec<_>>()};
+ let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity:if width==0.{256}else{(width*256.)as i64},dash:true,pattern_offset:0,custom_pattern:Some([cumulative(false),cumulative(true)]),device};
+ writer.line(a,b,draw_caps,draw_caps)?;Ok(writer.spans)
 }
 /// Continuous source cosmetic DashLine path; device [4,2] pattern carries across
 /// segments and source cubic subdivisions. Existing independent-line API resets.
 pub fn rasterize_dashed_path(path:&PathContour,closed:bool,width:f64,limit:usize)->Result<Vec<Span>,String>{
  if !width.is_finite()||!(0. ..=1.).contains(&width)||limit==0||path.segments.len()>limit{return Err("Invalid cosmetic dashed path admission".into());}
- let opacity=if width==0.{256}else{(width*256.)as i64};let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity,dash:true,pattern_offset:0};let mut current=path.start;
+ let opacity=if width==0.{256}else{(width*256.)as i64};let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity,dash:true,pattern_offset:0,custom_pattern:None,device:None};let mut current=path.start;
  for(i,s)in path.segments.iter().enumerate(){let begin=!closed&&i==0;let end=!closed&&i+1==path.segments.len();match s{Segment::Line(to)=>{writer.line(current,*to,begin,end)?;current=*to;},Segment::Cubic{control1,control2,to}=>{writer.cubic([current,*control1,*control2,*to],6,begin,end)?;current=*to;}}}
  Ok(writer.spans)
 }
@@ -66,7 +99,7 @@ pub fn rasterize_dashed_path(path:&PathContour,closed:bool,width:f64,limit:usize
 /// restart is intentional; this does not turn a closed path into one dash run.
 pub fn rasterize_dashed_line(a:[f64;2],b:[f64;2],limit:usize)->Result<Vec<Span>,String>{
  if limit==0{return Err("Invalid cosmetic dash admission".into());}
- let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity:256,dash:true,pattern_offset:0};
+ let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity:256,dash:true,pattern_offset:0,custom_pattern:None,device:None};
  writer.line(a,b,true,true)?;Ok(writer.spans)
 }
 /// Qt rough floating device clip before fixed-point dash initialization,

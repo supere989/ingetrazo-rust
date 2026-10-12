@@ -75,6 +75,7 @@ fn run_inner(
     Ok(())
 }
 struct State {
+    sheet_image:Option<crate::sheet_image::MetalExporter>,
     painter: EguiPainter,
     gpu: MetalPresentation,
     input: egui_winit::State,
@@ -134,6 +135,7 @@ impl Host {
             state.app.update_ui(ctx);
             if let Some(probe) = self.probe.as_ref() { probe.paint_raw_swatch(ctx); }
         });
+        if let Some(request)=state.app.prepare_sheet_image_request(&self.ctx){let result=(||{let(request,plan)=request?;if state.sheet_image.is_none(){state.sheet_image=Some(crate::sheet_image::MetalExporter::new(state.gpu.shared_metal())?);}state.sheet_image.as_mut().unwrap().save(&plan,&request.path)})();state.app.sheet_image_result(result);}
         if let Some(probe) = self.probe.as_mut() {
             probe.observe(&state.app, &output.shapes, state.gpu.counters().0);
         }
@@ -296,6 +298,7 @@ impl ApplicationHandler for Host {
             if let Some(probe) = self.probe.as_mut() { probe.setup_raw_swatch(&self.ctx)?; }
             let pointer_modifiers = crate::pointer_modifiers::install(&self.ctx);
             Ok(State {
+                sheet_image:None,
                 painter,
                 gpu,
                 input,

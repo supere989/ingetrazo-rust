@@ -85,6 +85,8 @@ impl Ordered {
    for (batch,color)in part.batches.iter().zip(colors.iter()){let color=color.bytes();for row in &source.rows()[batch.first as usize/6..(batch.first+batch.count)as usize/6]{let y=i64::from(row.y)+i64::from(shift[1]);if y<0||y>=size[1]as i64{continue;}for x in i64::from(row.x)+i64::from(shift[0])..i64::from(row.x+row.len)+i64::from(shift[0]){if x>=0&&x<size[0]as i64{let index=(y as usize*size[0]+x as usize)*4;super::source_over(&mut frame[index..index+4],&color);}}}}
   }Ok(frame)
  }
+ pub(super) fn records(&self)->Vec<(Arc<Geometry>,Arc<[Batch]>)>{self.parts.iter().map(|p|(p.geometry.clone(),p.batches.clone())).collect()}
+
  pub fn part_count(&self)->usize{self.parts.len()}
  pub fn paint(&self,painter:&egui::Painter,pose:Pose)->Result<(),String>{
   for part in &self.parts{part.geometry.validate_ordered_pose(pose,painter.ctx().pixels_per_point())?;}

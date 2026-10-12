@@ -29,6 +29,16 @@ pub fn convex_bevel_outline(points:&[DVec2],radius:f64)->Result<Vec<Vec<DVec2>>,
 fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32,phase:DVec2)->Result<(Arc<Geometry>,Arc<[Batch]>,Vec<(usize,bool)>),String>{
  if !zoom.is_finite()||zoom<=0.||!pixels_per_point.is_finite()||pixels_per_point<=0.{return Err("Invalid composer CAD scale".into());}
  let density=zoom*pixels_per_point;if !density.is_finite(){return Err("Composer CAD scale overflow".into());}
+ build_density(ctx,shape,f64::from(density),phase,Some((zoom,pixels_per_point)))
+}
+/// Physical export keeps the source's double DPI transform and immutable global
+/// pixel spans. Integer tile translations never rerasterize an authored path.
+pub(crate) fn physical_shape(ctx:&egui::Context,shape:&SheetShape,density:f64,origin_mm:DVec2)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{
+ if !density.is_finite()||density<=0.||!origin_mm.is_finite(){return Err("Invalid physical sheet transform".into());}
+ let (geometry,batches,_)=build_density(ctx,shape,density,origin_mm*density,None)?;
+ Ok((geometry,batches))
+}
+fn build_density(ctx:&egui::Context,shape:&SheetShape,density:f64,phase:DVec2,canvas:Option<(f32,f32)>)->Result<(Arc<Geometry>,Arc<[Batch]>,Vec<(usize,bool)>),String>{
  let commands=shape.paint_commands(100_000)?;
  let palette=crate::composer::precise_shape_palette(&commands)?;
  let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();let mut ordered_draws=Vec::new();let mut all_span_paths=true;let mut source_spans=Vec::new();
@@ -64,28 +74,28 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    // Exact convex outlines and source round caps. Other curves, clipped
    // strokes/nonconvex and cosmetic strokes remain on the prior tessellator.
    let eligible_outline=straight_outline.as_ref().filter(|points|fill||(width>0.&&f64::from(width)<minimum_edge(points)));
-   let thin=!fill&&command.stroke.as_ref().is_some_and(|(_,w)|*w*f64::from(density)<=1.);
+   let thin=!fill&&command.stroke.as_ref().is_some_and(|(_,w)|*w*density<=1.);
    if thin||eligible_outline.is_some()||(closed_curve.is_some()&&(fill||width>0.))||(!fill&&width>0.&&exact_line.is_some()) {
     let radius=command.stroke.as_ref().map(|(_,w)|*w).unwrap_or(0.)/2.;
     let spans=if thin{
      use ingetrazo_render::qt_gray::{PathContour,Segment};let mut path=if let Some(path)=&closed_curve{path.clone()}else if let Some((a,b))=exact_line{PathContour{start:[a.x,a.y],segments:vec![Segment::Line([b.x,b.y])]}}else if let Some(points)=&straight_outline{let mut segments=points.iter().skip(1).map(|p|Segment::Line([p.x,p.y])).collect::<Vec<_>>();segments.push(Segment::Line([points[0].x,points[0].y]));PathContour{start:[points[0].x,points[0].y],segments}}else{return Err("Cosmetic unsupported authored path".into());};
-     let transform=|p:[f64;2]|[p[0]*f64::from(density)+phase.x,p[1]*f64::from(density)+phase.y];path.start=transform(path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>*to=transform(*to),Segment::Cubic{control1,control2,to}=>{*control1=transform(*control1);*control2=transform(*control2);*to=transform(*to);}}}
-     let spans=ingetrazo_render::qt_cosmetic::rasterize_path(&path,closed,command.stroke.as_ref().unwrap().1*f64::from(density),100_000)?;
+     let transform=|p:[f64;2]|[p[0]*density+phase.x,p[1]*density+phase.y];path.start=transform(path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>*to=transform(*to),Segment::Cubic{control1,control2,to}=>{*control1=transform(*control1);*control2=transform(*control2);*to=transform(*to);}}}
+     let spans=ingetrazo_render::qt_cosmetic::rasterize_path(&path,closed,command.stroke.as_ref().unwrap().1*density,100_000)?;
      if let Some(clip)=&command.clip{let contour=clip.iter().map(|p|transform([p.x,p.y])).collect::<Vec<_>>();let clip=ingetrazo_render::qt_gray::rasterize(&[contour],250_000,100_000)?;
       // Cosmetic segments may overlap and are deliberately not globally sorted.
       let mut clipped=Vec::new();for span in &spans{clipped.extend(ingetrazo_render::qt_gray::intersect_spans(&[*span],&clip,100_000)?);if clipped.len()>100_000{return Err("Cosmetic clipped span admission exceeded".into());}}clipped
      }else{spans}
     }else if let Some(points)=eligible_outline{
     let outlines=if fill{vec![points.clone()]}else{convex_bevel_outline(points,radius)?};
-    let mut contours=outlines.into_iter().map(|outline|outline.into_iter().map(|p|[p.x*f64::from(density),p.y*f64::from(density)]).collect::<Vec<_>>()).collect::<Vec<_>>();
+    let mut contours=outlines.into_iter().map(|outline|outline.into_iter().map(|p|[p.x*density,p.y*density]).collect::<Vec<_>>()).collect::<Vec<_>>();
     for contour in &mut contours{for point in contour{point[0]+=phase.x;point[1]+=phase.y;}}
     ingetrazo_render::qt_gray::rasterize(&contours,250_000,100_000)?
     }else if let Some(path)=&closed_curve{
-     let paths=if fill{vec![path.clone()]}else{source_curve_stroke(path,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,f64::from(density),[phase.x,phase.y],250_000,100_000)?
+     let paths=if fill{vec![path.clone()]}else{source_curve_stroke(path,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,density,[phase.x,phase.y],250_000,100_000)?
     }else{
      let(a,b)=exact_line.unwrap();let Some(path)=round_cap_outline(a,b,radius)else{continue;};
-     let spans=ingetrazo_render::qt_gray::rasterize_transformed_paths(&[path],f64::from(density),[phase.x,phase.y],250_000,100_000)?;
-     if let Some(clip)=&command.clip{let contour=clip.iter().map(|p|[p.x*f64::from(density)+phase.x,p.y*f64::from(density)+phase.y]).collect::<Vec<_>>();let clip=ingetrazo_render::qt_gray::rasterize(&[contour],250_000,100_000)?;ingetrazo_render::qt_gray::intersect_spans(&spans,&clip,100_000)?}else{spans}
+     let spans=ingetrazo_render::qt_gray::rasterize_transformed_paths(&[path],density,[phase.x,phase.y],250_000,100_000)?;
+     if let Some(clip)=&command.clip{let contour=clip.iter().map(|p|[p.x*density+phase.x,p.y*density+phase.y]).collect::<Vec<_>>();let clip=ingetrazo_render::qt_gray::rasterize(&[contour],250_000,100_000)?;ingetrazo_render::qt_gray::intersect_spans(&spans,&clip,100_000)?}else{spans}
     };
     let byte_count=vertices.len().checked_mul(12).and_then(|v|indices.len().checked_mul(4).and_then(|i|v.checked_add(i))).and_then(|old|spans.len().checked_mul(72).and_then(|new|old.checked_add(new))).ok_or("Composer span byte overflow")?;
     if byte_count>8*1024*1024{return Err("Composer exact span geometry exceeds8MiB admission".into());}
@@ -96,7 +106,8 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
      source_spans.push(ingetrazo_render::cad2d::SourceSpan{x:span.x,y:span.y,len:i32::try_from(span.len).map_err(|_|"Source span length exceeds signed domain")?,coverage:span.coverage});
      let base=u32::try_from(vertices.len()).map_err(|_|"Composer CAD vertex overflow")?;
      for position in [[span.x as f64,span.y as f64],[span.x as f64+span.len as f64,span.y as f64],[span.x as f64+span.len as f64,span.y as f64+1.],[span.x as f64,span.y as f64+1.]] {
-      vertices.push(Vertex{position:[((position[0]-phase.x)/f64::from(density)) as f32,((position[1]-phase.y)/f64::from(density)) as f32],coverage:f32::from(span.coverage)/255.});
+      let position=if canvas.is_some(){[(position[0]-phase.x)/density,(position[1]-phase.y)/density]}else{position};
+      vertices.push(Vertex{position:position.map(|v|v as f32),coverage:f32::from(span.coverage)/255.});
      }
      indices.extend([base,base+1,base+2,base,base+2,base+3]);
     }
@@ -105,6 +116,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
     continue;
    }
 
+   if canvas.is_none(){return Err("Physical sheet path lacks an exact source-span painter".into());}
    all_span_paths=false;
    let mut shapes=vec![egui::epaint::ClippedShape{clip_rect:egui::Rect::EVERYTHING,shape:egui::epaint::PathShape{points:points.clone(),closed,fill:if fill{Color32::WHITE}else{Color32::TRANSPARENT},stroke:if fill{Stroke::NONE}else{Stroke::new(width,Color32::WHITE)}.into()}.into()}];
    // A round-capped stroke is one covered region. Separate endpoint circles
@@ -118,7 +130,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
     shapes=vec![egui::epaint::ClippedShape{clip_rect:egui::Rect::EVERYTHING,shape:egui::epaint::PathShape{points:outline,closed:true,fill:Color32::WHITE,stroke:Stroke::NONE.into()}.into()}];
    }
    let first=u32::try_from(indices.len()).map_err(|_|"Composer CAD index overflow")?;
-   for primitive in ctx.tessellate(shapes,density){
+   for primitive in ctx.tessellate(shapes,density as f32){
     let egui::epaint::Primitive::Mesh(mesh)=primitive.primitive else{return Err("Unexpected callback in composer CAD tessellation".into());};
     let base=u32::try_from(vertices.len()).map_err(|_|"Composer CAD vertex overflow")?;
     vertices.extend(mesh.vertices.into_iter().map(|v|Vertex{position:[v.pos.x,v.pos.y],coverage:f32::from(v.color.a())/255.}));
@@ -128,7 +140,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    if end>first{batches.push(Batch{first,count:end-first,color});mapping.push((command_index,fill));}
   }
  }
- let geometry=if all_span_paths{Geometry::new_with_source_spans(vertices,indices,ordered_draws,source_spans,zoom,pixels_per_point,[phase.x,phase.y])?}else{Geometry::new(vertices,indices)?};geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
+ let geometry=if all_span_paths{Geometry::new_with_source_spans(vertices,indices,ordered_draws,source_spans,canvas.map_or(1.,|c|c.0),canvas.map_or(1.,|c|c.1),if canvas.is_some(){[phase.x,phase.y]}else{[0.;2]})?}else{Geometry::new(vertices,indices)?};geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
 }
 pub type Cubic=[DVec2;4];
 fn cubic_split(q:Cubic)->(Cubic,Cubic){let ab=(q[0]+q[1])*0.5;let bc=(q[1]+q[2])*0.5;let cd=(q[2]+q[3])*0.5;let abc=(ab+bc)*0.5;let bcd=(bc+cd)*0.5;let m=(abc+bcd)*0.5;([q[0],ab,abc,m],[m,bcd,cd,q[3]])}
@@ -170,7 +182,7 @@ pub fn source_curve_stroke(path:&ingetrazo_render::qt_gray::PathContour,r:f64)->
  // Inner offsets are shifted along the reversed path's outward normal.
  let mut edges=Vec::new();let mut current=point(reversed.start);for s in &reversed.segments{match s{Segment::Line(to)=>{let to=point(*to);let d=to-current;if d.length()<=1e-12{current=to;continue;}let n=DVec2::new(d.y,-d.x)/d.length();edges.push([current+n*r,current+n*r,to+n*r,to+n*r]);current=to;},Segment::Cubic{control1,control2,to}=>{edges.extend(shifted_cubic([current,point(*control1),point(*control2),point(*to)],r)?);current=point(*to);}}}Ok(vec![outer,contour(edges)])
 }
-fn round_cap_outline(a:DVec2,b:DVec2,radius:f64)->Option<ingetrazo_render::qt_gray::PathContour>{
+pub(crate) fn round_cap_outline(a:DVec2,b:DVec2,radius:f64)->Option<ingetrazo_render::qt_gray::PathContour>{
  use ingetrazo_render::qt_gray::{PathContour,Segment};let d=b-a;let length=d.length();if length<=1e-12||radius<=0.{return None;}
  let u=d/length*radius;let n=DVec2::new(u.y,-u.x);let k=0.5522847498;
  let point=|p:DVec2|[p.x,p.y];

@@ -7,6 +7,7 @@ license.workspace = true
 
 [dependencies]
 libm = { version = "=0.2.16", default-features = false, features = ["force-soft-floats"] }
+turbojpeg-sys = { version = "=1.2.0", default-features = false, features = ["cmake"] }
 pdf-writer = "=0.15.0"
 ingetrazo-core = { path = "../ingetrazo-core" }
 glam.workspace = true
@@ -29,3 +30,6 @@ libloading = "=0.8.9"
 unicode-bidi = "=0.3.18"
 unicode-linebreak = "=0.1.5"
 siphasher = "=1.0.4"
+
+[build-dependencies]
+cc = "=1.6.0"

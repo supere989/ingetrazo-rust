@@ -1344,12 +1344,27 @@ mod tests {
 
 // This explicit engineering readback owner is not used by the application host.
 // Every production paint submits directly to the drawable without a readback.
+/// Cached synchronous paper readback attachments. In-flight submissions retain
+/// Arc owners; a completion-unknown slot is never reclaimed or reused.
+#[derive(Default)]
+pub struct SheetReadbackPool {owner:Option<usize>,slots:Vec<([usize;2],Arc<Image>,Arc<Buffer>)>}
+impl SheetReadbackPool {
+ fn acquire(&mut self,metal:&NativeMetal,size:[usize;2],row:usize)->Result<(Arc<Image>,Arc<Buffer>),String>{
+  let identity=Arc::as_ptr(&metal.budget)as usize;if self.owner.is_some_and(|old|old!=identity){return Err("Paper readback pool differs from native owner".into());}self.owner=Some(identity);
+  self.slots.retain(|(extent,image,buffer)|*extent==size||Arc::strong_count(image)>1||Arc::strong_count(buffer)>1);
+  if let Some((_,image,buffer))=self.slots.iter().find(|(extent,image,buffer)|*extent==size&&Arc::strong_count(image)==1&&Arc::strong_count(buffer)==1){return Ok((image.clone(),buffer.clone()));}
+  if self.slots.len()>=3{return Err("Paper readback pool has no completed slot".into());}
+  let image=Arc::new(allocate_sheet_target(metal,size)?);let buffer=Arc::new(metal.buffer(row*size[1],true)?);
+  self.slots.try_reserve(1).map_err(|_|"Paper readback pool allocation failed")?;
+  self.slots.push((size,image.clone(),buffer.clone()));Ok((image,buffer))
+ }
+}
 struct DiagnosticOwners {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     _paint: Arc<PreparedPaint>,
-    _target: Image,
+    _target: Arc<Image>,
     _canvas:Option<Arc<crate::compute_canvas::Lease>>,
-    readback: Buffer,
+    readback: Arc<Buffer>,
     gate: Option<Retained<ProtocolObject<dyn MTLSharedEvent>>>,
     width: usize,
     height: usize,
@@ -1444,6 +1459,13 @@ impl EguiPainter {
         self.submit_diagnostic_with_pool(metal,paint,width,height,blocked_for_probe,&mut pool)
     }
     pub fn submit_diagnostic_with_pool(&self,metal:&NativeMetal,paint:Arc<PreparedPaint>,width:usize,height:usize,blocked_for_probe:bool,pool:&mut crate::compute_canvas::Pool)->Result<DiagnosticPaint,String>{
+        self.submit_readback(metal,paint,width,height,blocked_for_probe,pool,None)
+    }
+    /// Direct native paper output; shares device/pipelines and cached attachments.
+    pub fn submit_sheet_readback(&self,metal:&NativeMetal,paint:Arc<PreparedPaint>,width:usize,height:usize,pool:&mut crate::compute_canvas::Pool,attachments:&mut SheetReadbackPool)->Result<DiagnosticPaint,String>{
+        self.submit_readback(metal,paint,width,height,false,pool,Some(attachments))
+    }
+    fn submit_readback(&self,metal:&NativeMetal,paint:Arc<PreparedPaint>,width:usize,height:usize,blocked_for_probe:bool,pool:&mut crate::compute_canvas::Pool,attachments:Option<&mut SheetReadbackPool>)->Result<DiagnosticPaint,String>{
         objc2::rc::autoreleasepool(|_| {
             if width == 0 || height == 0 || width > 4096 || height > 4096 {
                 return Err("Invalid diagnostic target extent".into());
@@ -1452,8 +1474,7 @@ impl EguiPainter {
                 return Err("Metal admission poisoned".into());
             }
             let row = (width * 4 + 255) & !255;
-            let target = allocate_target(metal, [width, height])?;
-            let readback = metal.buffer(row * height, true)?;
+            let (target,readback)=if let Some(attachments)=attachments{attachments.acquire(metal,[width,height],row)?}else{(Arc::new(allocate_target(metal,[width,height])?),Arc::new(metal.buffer(row*height,true)?))};
             let command = metal
                 .queue
                 .commandBuffer()
@@ -1560,4 +1581,19 @@ fn allocate_target(metal: &NativeMetal, size: [usize; 2]) -> Result<Image, Strin
         budget: metal.budget.clone(),
         handle,
     })
+}
+
+fn allocate_sheet_target(metal:&NativeMetal,size:[usize;2])->Result<Image,String>{
+ let descriptor=MTLTextureDescriptor::new();descriptor.setTextureType(MTLTextureType::Type2D);
+ unsafe{descriptor.setWidth(size[0]);descriptor.setHeight(size[1]);}
+ descriptor.setPixelFormat(MTLPixelFormat::BGRA8Unorm);descriptor.setStorageMode(MTLStorageMode::Private);descriptor.setUsage(MTLTextureUsage::RenderTarget);
+ let estimate=metal.device.heapTextureSizeAndAlignWithDescriptor(&descriptor).size as u64;
+ if estimate==0{return Err("Native paper texture size query returned zero".into());}
+ let ticket=metal.budget.lock().map_err(|_|"Metal budget poisoned")?.reserve(0,estimate)?;
+ let Some(raw)=metal.device.newTextureWithDescriptor(&descriptor)else{metal.budget.lock().map_err(|_|"Metal budget poisoned")?.cancel(ticket)?;return Err("Native paper texture allocation failed".into());};
+ let actual=MTLResource::allocatedSize(&*raw)as u64;
+ if actual==0||actual>estimate{metal.budget.lock().map_err(|_|"Metal budget poisoned")?.cancel(ticket)?;return Err(format!("Native paper texture allocation {actual} exceeds queried ticket {estimate}"));}
+ let handle=(&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>()as usize as u64;
+ let mut ledger=metal.budget.lock().map_err(|_|"Metal budget poisoned")?;ledger.cancel(ticket)?;let ticket=ledger.reserve(0,actual)?;ledger.commit(ticket,handle)?;drop(ledger);
+ Ok(Image{raw:ManuallyDrop::new(raw),budget:metal.budget.clone(),handle})
 }

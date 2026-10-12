@@ -436,6 +436,15 @@ impl TextureImage {
         Ok(image)
     }
     pub(crate) fn allocate_color(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data_bytes: u64, block_format: ingetrazo_render::texture_layout::Format, mips: bool, diagnostic_readback: bool) -> Result<Self, String> {
+        Self::allocate_color_usage(context,resources,extent,data_bytes,block_format,mips,diagnostic_readback,vk::ImageUsageFlags::empty())
+    }
+    /// Physical paper target uses the same actual native allocation admission
+    /// and completion owner as sampled images, with direct CAD feedback usage.
+    pub(crate) fn paper_target(context:&VulkanContext,resources:&mut Resources,extent:vk::Extent2D)->Result<Self,String>{
+        let bytes=u64::from(extent.width).checked_mul(u64::from(extent.height)).and_then(|n|n.checked_mul(4)).ok_or("Paper target byte overflow")?;
+        Self::allocate_color_usage(context,resources,extent,bytes,ingetrazo_render::texture_layout::Format::Rgba8,false,true,vk::ImageUsageFlags::COLOR_ATTACHMENT|vk::ImageUsageFlags::INPUT_ATTACHMENT)
+    }
+    fn allocate_color_usage(context:&VulkanContext,resources:&mut Resources,extent:vk::Extent2D,data_bytes:u64,block_format:ingetrazo_render::texture_layout::Format,mips:bool,diagnostic_readback:bool,extra_usage:vk::ImageUsageFlags)->Result<Self,String>{
         resources.admit_context(context)?;
         use egui_ash_renderer::MemoryObserver;
         let layout = ingetrazo_render::texture_layout::Layout::full(
@@ -447,7 +456,7 @@ impl TextureImage {
         if layout.mips[0].bytes != data_bytes {
             return Err("Texture bytes differ from block dimensions".into());
         }
-        let mut usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_DST;
+        let mut usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_DST | extra_usage;
         if levels > 1 || diagnostic_readback {
             usage |= vk::ImageUsageFlags::TRANSFER_SRC;
         }
@@ -488,6 +497,7 @@ impl TextureImage {
             return Err("Texture requires actual linear sampling support".into());
         }
         if levels>1&&!features.contains(vk::FormatFeatureFlags::BLIT_SRC|vk::FormatFeatureFlags::BLIT_DST|vk::FormatFeatureFlags::SAMPLED_IMAGE_FILTER_LINEAR){return Err("Device format does not support linear GPU mip generation".into());}
+        if extra_usage.contains(vk::ImageUsageFlags::COLOR_ATTACHMENT)&&!features.contains(vk::FormatFeatureFlags::COLOR_ATTACHMENT){return Err("Paper target requires native color attachment support".into());}
         let device = context.device.clone();
         let budget = resources.budget.clone();
         let image = unsafe {

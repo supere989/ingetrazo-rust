@@ -143,16 +143,27 @@ pub fn source_paper_spans(page:[f64;2],margin:f64,density:f64,phase:[f64;2])->Re
  }
  Ok(layers)
 }
+pub(crate) fn physical_geometry(sheet:&Sheet,density:f64)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{
+ let(w,h)=sheet.dimensions_mm();let border=sheet.effective_source_border();
+ let color=EncodedRgba::from_bytes(ingetrazo_core::sheet_color::parse_sheet_color(&border.color)?,1.)?;
+ let layers=source_spans([w,h],sheet.margin_mm,&border,density,[0.;2])?.into_iter().map(|spans|(spans,color)).collect();
+ colored_geometry_mode(layers,1.,[0.;2],true,None)
+}
+pub(crate) fn physical_layers(layers:Vec<(Vec<ingetrazo_render::qt_gray::Span>,EncodedRgba)>)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{colored_geometry_mode(layers,1.,[0.;2],true,None)}
+pub(crate) fn physical_premultiplied_layer(spans:Vec<ingetrazo_render::qt_gray::Span>,color:ingetrazo_render::cad2d::PremultipliedRgba8)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{colored_geometry_mode(vec![(spans,EncodedRgba([0.;4]))],1.,[0.;2],true,Some(vec![color]))}
 fn colored_geometry(layers:Vec<(Vec<ingetrazo_render::qt_gray::Span>,EncodedRgba)>,density:f64,phase:[f64;2])->Result<(Arc<Geometry>,Arc<[Batch]>),String>{
- let(mut vertices,mut indices,mut batches,mut draws)=(Vec::new(),Vec::new(),Vec::new(),Vec::new());
+ colored_geometry_mode(layers,density,phase,false,None)
+}
+fn colored_geometry_mode(layers:Vec<(Vec<ingetrazo_render::qt_gray::Span>,EncodedRgba)>,density:f64,phase:[f64;2],physical:bool,palette:Option<Vec<ingetrazo_render::cad2d::PremultipliedRgba8>>)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{
+ let(mut vertices,mut indices,mut batches,mut draws)=(Vec::new(),Vec::new(),Vec::new(),Vec::new());let mut spans=Vec::new();
  for(stroke,color)in layers{
  let first=indices.len()as u32;
   for range in ingetrazo_render::qt_cosmetic::disjoint_ranges(&stroke,100_000)?{draws.push(first+range.start as u32*6..first+range.end as u32*6);}
   if vertices.len().checked_add(stroke.len()*4).and_then(|n|n.checked_mul(12)).and_then(|n|n.checked_add((indices.len()+stroke.len()*6)*4)).is_none_or(|n|n>8*1024*1024){return Err("Source paper geometry exceeds8MiB admission".into());}
-  for s in stroke{let base=vertices.len()as u32;for p in [[s.x as f64,s.y as f64],[s.x as f64+s.len as f64,s.y as f64],[s.x as f64+s.len as f64,s.y as f64+1.],[s.x as f64,s.y as f64+1.]]{vertices.push(Vertex{position:[((p[0]-phase[0])/density)as f32,((p[1]-phase[1])/density)as f32],coverage:f32::from(s.coverage)/255.});}indices.extend([base,base+1,base+2,base,base+2,base+3]);}
+  for s in stroke{if physical{spans.push(ingetrazo_render::cad2d::SourceSpan{x:s.x,y:s.y,len:i32::try_from(s.len).map_err(|_|"Border span length overflow")?,coverage:s.coverage});}let base=vertices.len()as u32;for p in [[s.x as f64,s.y as f64],[s.x as f64+s.len as f64,s.y as f64],[s.x as f64+s.len as f64,s.y as f64+1.],[s.x as f64,s.y as f64+1.]]{vertices.push(Vertex{position:[((p[0]-phase[0])/density)as f32,((p[1]-phase[1])/density)as f32],coverage:f32::from(s.coverage)/255.});}indices.extend([base,base+1,base+2,base,base+2,base+3]);}
   let end=indices.len()as u32;if end>first{batches.push(Batch{first,count:end-first,color});}
  }
- let geometry=Geometry::new_with_ordered_draws(vertices,indices,draws)?;geometry.validate_batches(&batches)?;Ok((geometry,batches.into()))
+ let geometry=if let Some(palette)=palette{Geometry::new_with_premultiplied_source_spans(vertices,indices,draws,spans,1.,1.,[0.;2],palette,&batches)?}else if physical{Geometry::new_with_source_spans(vertices,indices,draws,spans,1.,1.,[0.;2])?}else{Geometry::new_with_ordered_draws(vertices,indices,draws)?};geometry.validate_batches(&batches)?;Ok((geometry,batches.into()))
 }
 #[derive(Clone,Default)]pub struct CanvasPaper{numeric:Option<[u64;6]>,geometry:Option<Arc<Geometry>>,batches:Option<Arc<[Batch]>>,handle:Option<crate::composer_backend::Handle>,pub cold_builds:u64}
 impl CanvasPaper{

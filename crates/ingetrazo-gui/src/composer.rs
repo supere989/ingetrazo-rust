@@ -17,8 +17,8 @@ use ingetrazo_core::scene::Scene;
 use ingetrazo_render::pipeline::project_point;
 
 use crate::app::IngeTrazoApp;
-#[path="composer_pdf.rs"] mod pdf;
-#[path="composer_text_canvas.rs"] mod text_canvas;
+#[path="composer_pdf.rs"] pub(crate) mod pdf;
+#[path="composer_text_canvas.rs"] pub(crate) mod text_canvas;
 #[path="composer_text_authoring.rs"] mod text_authoring;
 #[path="composer_pointer.rs"] mod pointer_transactions;
 
@@ -179,7 +179,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
 
     app.enter_composer_sheet(sheet_idx);
-    if ui.input(|i|i.key_pressed(egui::Key::Escape)){
+    if ui.is_enabled()&&ui.input(|i|i.key_pressed(egui::Key::Escape)){
         // A normal item grab keeps its geometry until the real release.
         // Source Select Escape only drops selection; explicit edit/placement
         // cancellation retains the existing snapshot rollback law.
@@ -419,6 +419,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let mut fit_page_needed = false;
     let mut export_view_dxf = false;
     let mut export_pdf = false;
+    let mut export_image = false;
     let mut export_all_pdf = false;
 
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
@@ -591,6 +592,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                     export_view_dxf |= ui.button(tr("Export view as DXF…")).clicked();
                 }
 
+                export_image|=ui.button(tr("Export image…")).clicked();
                 let current_pdf_button=ui.button(tr("Export PDF…"));
                 let all_pdf_button=ui.button(tr("Export all sheets (PDF)…"));
                 export_pdf |=current_pdf_button.clicked();
@@ -612,6 +614,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         });
     });
 
+    if export_image {app.begin_sheet_image_export(sheet_idx);}
     if export_pdf || export_all_pdf {
         let title=if export_all_pdf{tr("Export all sheets (PDF)…")}else{tr("Export PDF…")};
         let default=if export_all_pdf{"laminas.pdf"}else{"lamina.pdf"};
@@ -659,15 +662,15 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         app.scene.bump_version();
     }
 
-    if text_authoring::render(app,ui,&painter,sheet_idx,paper_rect,toolbar_rect,&response,zoom){return;}
+    if ui.is_enabled()&&text_authoring::render(app,ui,&painter,sheet_idx,paper_rect,toolbar_rect,&response,zoom){return;}
 
     // Shape placement stays transient until a second click or a completed drag.
     if let Some(kind)=app.composer_state.shape_tool.clone() {
-        if ui.input(|i|i.key_pressed(egui::Key::Escape)) {app.composer_state.shape_start=None;app.composer_state.shape_tool=None;}
+        if ui.is_enabled()&&ui.input(|i|i.key_pressed(egui::Key::Escape)) {app.composer_state.shape_start=None;app.composer_state.shape_tool=None;}
         else if let Some(hover)=pointer.hover_pos().filter(|p|paper_rect.contains(*p)&&!toolbar_rect.contains(*p)) {
             let first_pass=ui.ctx().output(|o|o.num_completed_passes)==0;
             let page=|p:Pos2|glam::DVec2::new(f64::from((p.x-paper_rect.min.x)/zoom),f64::from((p.y-paper_rect.min.y)/zoom));
-            if first_pass && response.drag_started() {if let Some(start)=pointer.press_origin(){app.composer_state.shape_start=Some(page(start));}}
+            if ui.is_enabled()&&first_pass && response.drag_started() {if let Some(start)=pointer.press_origin(){app.composer_state.shape_start=Some(page(start));}}
             if let Some(start)=app.composer_state.shape_start {
                 if let Ok(preview)=ingetrazo_core::sheet_shape::SheetShape::from_drag(&kind,start,page(hover)){match app.native_composer.paint_preview(&painter,&preview,zoom,paper_rect.min){Ok(true)=>{},Ok(false)=>{if let Err(error)=paint_sheet_shape(&painter,&preview,zoom,paper_rect.min){app.status_message=error;}},Err(error)=>app.status_message=error}}
                 if first_pass && (response.drag_stopped()||response.clicked()){
@@ -681,8 +684,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
     // Original Qt item mouse grab is acquired at the press, before the
     // platform drag threshold. It uses the original press throughout.
-    pointer_transactions::input(app,ui,sheet_idx,&response,paper_rect,toolbar_rect,zoom,&item_order,space_down);
-    if app.composer_state.dragging_item_idx.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
+    if ui.is_enabled(){pointer_transactions::input(app,ui,sheet_idx,&response,paper_rect,toolbar_rect,zoom,&item_order,space_down);}
+    if ui.is_enabled()&&app.composer_state.dragging_item_idx.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
 }
 
 fn frame_scene<'a>(scene:&'a Scene,frame:&ViewFrame)->std::borrow::Cow<'a,Scene>{if let Some(name)=frame.view_key.strip_prefix("scene:"){if let Some(view)=scene.saved_views.iter().find(|view|view.name==name){let mut snapshot=scene.clone();let mut camera=scene.camera.clone();view.apply_scene(&mut snapshot,&mut camera);return std::borrow::Cow::Owned(snapshot);}}std::borrow::Cow::Borrowed(scene)}

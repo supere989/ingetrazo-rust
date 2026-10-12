@@ -13,7 +13,7 @@ fn rect(w: f64, h: f64) -> Vec<PathOp> {
         PathOp::Close,
     ]
 }
-pub(super) fn view_draws(
+pub(crate) fn view_draws(
     scene: &Scene,
     live: &OrbitCamera,
     compute: &mut ComposerCompute,
@@ -457,7 +457,7 @@ mod grid_tests {
 }
 
 /// Source free-text painter, including archive-side presentation fields absent from the minimal model.
-pub(super) fn text_draws(
+pub(crate) fn text_draws(
     sheet: &ingetrazo_core::composition::Sheet,
     item: &ingetrazo_core::composition::TextItem,
     painter: &mut ingetrazo_formats::paper_text_painter::Painter,
