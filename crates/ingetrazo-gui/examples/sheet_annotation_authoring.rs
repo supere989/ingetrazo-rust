@@ -7,9 +7,13 @@ type Error = Box<dyn std::error::Error>;
 fn open(source: &Path, file: &str, session: &Path) -> Result<IngeTrazoApp, Error> {
     let mut app = IngeTrazoApp::new();
     app.system_clipboard = None;
-    app.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(
-        session,
-    ));
+    let mut store = ingetrazo_gui::session_state::SessionStore::isolated(session);
+    // The source creates new windows in one preferences namespace. Recovery data stays case-local.
+    store.config_dir = session
+        .parent()
+        .ok_or("Missing case session parent")?
+        .join("shared-preferences");
+    app.attach_session_store(store);
     app.mark_document_clean();
     app.open_document(&source.join(file));
     if app.document_session.confirm_unsaved
