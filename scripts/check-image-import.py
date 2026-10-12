@@ -131,7 +131,7 @@ def negatives(a,b,readers):
 s=Path(sys.argv[1]).resolve();n=Path(sys.argv[2]).resolve();report=Path(sys.argv[3]);result={'ok':False}
 try:
  a=json.loads(file(s,'original-image-import.json').read_text());b=json.loads(file(n,'native-image-import.json').read_text());a=canonical_source(a,s,n);metadata(a,b)
- result.update(cases=len(a['cases']),states=len(a['states']),headers=len(a['headers']),literal_states=True)
+ result.update(cases=len(a['cases']),states=len(a['states']),headers=len(a['headers']),raw_source_unchanged=True,state_comparison="Exact values with authenticated material resource identities and exact numeric camera distance; all other fields retain strict types and signed zero")
  bytes_check(s,n,a);result['decoded_bytes']=True
  readers=json.loads(file(n,'reopens-image-import.json').read_text());readers_check(readers);result['readers']=len(readers)
  for c in b['cases']:file(n,c['saved'])
