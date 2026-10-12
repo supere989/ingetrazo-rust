@@ -23,6 +23,9 @@ def inventories(s,n):
  assert s['source_pin']=='6be29fe437a7cd992d4e079f71720821b25216b9'
  assert [x['case']for x in s['images']]==NAMES and [x['case']for x in n['images']]==NAMES
  assert n['atomic_refusal']is True
+ assert [r['family']for r in n['refusals']]==['cotas','cotas_ang','cotas_rad','etiquetas','niveles','llamadas']
+ for refusal in n['refusals']:
+  assert all(refusal[key]is True for key in ['png_destination_preserved','pdf_destination_preserved','scene_preserved'])
  for a,b in zip(s['images'],n['images']):
   assert b['nonmutating']is True and b['snapshot_owner']is True
   assert type(b['dpi'])is int and b['dpi']==a['dpi']
@@ -54,7 +57,7 @@ try:
 except (AssertionError,KeyError,TypeError,IndexError,ValueError,OSError)as error:
  report.update(result='fail',error=repr(error));write();raise SystemExit(repr(error))
 negative=[]
-for name,change in [('missing-case',lambda s,n:n['images'].pop()),('jointly-empty',lambda s,n:(s.update(images=[]),n.update(images=[]))),('jointly-truncated',lambda s,n:(s['images'].pop(),n['images'].pop())),('duplicate-case',lambda s,n:n['images'].__setitem__(-1,n['images'][0])),('reordered-cases',lambda s,n:n['images'].reverse()),('bool-dpi',lambda s,n:n['images'][0].update(dpi=True)),('bool-sheet-index',lambda s,n:n['images'][0].update(sheet_index=False)),('false-nonmutating',lambda s,n:n['images'][0].update(nonmutating=False)),('numeric-snapshot',lambda s,n:n['images'][0].update(snapshot_owner=1)),('false-warm',lambda s,n:n['images'][0].update(warm_reused=False)),('false-atomic',lambda s,n:n.update(atomic_refusal=False)),('wrong-png',lambda s,n:n['images'][0].update(file='wrong.png')),('wrong-pdf',lambda s,n:n['images'][0].update(pdf='wrong.pdf')),('missing-jpeg',lambda s,n:n['images'][0].pop('jpeg'))]:
+for name,change in [('missing-case',lambda s,n:n['images'].pop()),('jointly-empty',lambda s,n:(s.update(images=[]),n.update(images=[]))),('jointly-truncated',lambda s,n:(s['images'].pop(),n['images'].pop())),('duplicate-case',lambda s,n:n['images'].__setitem__(-1,n['images'][0])),('reordered-cases',lambda s,n:n['images'].reverse()),('bool-dpi',lambda s,n:n['images'][0].update(dpi=True)),('bool-sheet-index',lambda s,n:n['images'][0].update(sheet_index=False)),('false-nonmutating',lambda s,n:n['images'][0].update(nonmutating=False)),('numeric-snapshot',lambda s,n:n['images'][0].update(snapshot_owner=1)),('false-warm',lambda s,n:n['images'][0].update(warm_reused=False)),('false-atomic',lambda s,n:n.update(atomic_refusal=False)),('wrong-png',lambda s,n:n['images'][0].update(file='wrong.png')),('wrong-pdf',lambda s,n:n['images'][0].update(pdf='wrong.pdf')),('missing-jpeg',lambda s,n:n['images'][0].pop('jpeg')),('missing-refusal',lambda s,n:n['refusals'].pop()),('false-refusal-png',lambda s,n:n['refusals'][0].update(png_destination_preserved=False)),('false-refusal-pdf',lambda s,n:n['refusals'][1].update(pdf_destination_preserved=False)),('false-refusal-scene',lambda s,n:n['refusals'][2].update(scene_preserved=False))]:
  ss=copy.deepcopy(s);nn=copy.deepcopy(n);change(ss,nn)
  try:inventories(ss,nn)
  except (AssertionError,KeyError,TypeError,IndexError):negative.append(name)
