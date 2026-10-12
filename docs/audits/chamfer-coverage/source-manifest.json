@@ -1,0 +1,194 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt_version": "6.12.0",
+  "qt_identity_basis": "Actual captured qVersion assertion and original-chamfer.json; no new Qt execution",
+  "capture_revision": "6c52a5609c8ca64d43bfe8a813d3eee59835bf31",
+  "capture_receipt": "capture/receipt.json",
+  "archive": "source-records.zip",
+  "archive_sha256": "377b0d6e00f4bd678b8987f67fd3706b0dc8f21f2bc37779d7ad89489748c1c7",
+  "members": [
+    {
+      "path": "after-heavy.png",
+      "size": 32385,
+      "sha256": "04a8f47c6fce586ff0dabfc3a7eb64f4d51bc16872ea9b24945feed606b67357"
+    },
+    {
+      "path": "after-heavy.rgba",
+      "size": 3867052,
+      "sha256": "ec1f0015f59e366da8f854b53e1f93e3d077af8423fc39bb748c5bda37c28011"
+    },
+    {
+      "path": "capture-tools/docs/audits/chamfer-coverage/fixture-contract.json",
+      "size": 623,
+      "sha256": "16b8bef085a67618f620c09ad41e168abf89549fd07a27c0c979716b2d65f1ce"
+    },
+    {
+      "path": "capture-tools/scripts/reference-chamfer-coverage.py",
+      "size": 7434,
+      "sha256": "bdbb7d2ec60abef517fd3c6159e9f0ac7d638dedb6d2e0e4801317dcc2c9bce1"
+    },
+    {
+      "path": "capture/capture.log",
+      "size": 101,
+      "sha256": "06b14f6c75595ef387b51f18a3471c9e1eee486a20586e1921031c8780e0e4e6"
+    },
+    {
+      "path": "capture/receipt.json",
+      "size": 434,
+      "sha256": "13a097d2f7de19cb3f7b81952e84f73204bcd8fc1191f2a80f484494aae00ff3"
+    },
+    {
+      "path": "heavy-black.png",
+      "size": 4076,
+      "sha256": "fe8affc5fca534510a6c0bfd70fa152045e696821c5a66694e5a1885555d7937"
+    },
+    {
+      "path": "heavy-black.rgba",
+      "size": 3867052,
+      "sha256": "0815d252a59c06111349f786ccb4e9411d71fa5b3efa34042ef361edf116dec7"
+    },
+    {
+      "path": "heavy-transparent.png",
+      "size": 5226,
+      "sha256": "056689131417c632a72f77a04a13fd554bb550528c6224ed27b1454f5ad07051"
+    },
+    {
+      "path": "heavy-transparent.rgba",
+      "size": 3867052,
+      "sha256": "579276817562ee988bfafebaa17a1f2cfb6df9f214116179a6cd63b9a1d6e654"
+    },
+    {
+      "path": "heavy-white.png",
+      "size": 6401,
+      "sha256": "fdabfc357228d3e299a86fea6e60dd05f3346d0cc4a26ab1d371bb7db487a3a8"
+    },
+    {
+      "path": "heavy-white.rgba",
+      "size": 3867052,
+      "sha256": "43c25e14033eab18498aa1ef37ed18ae2ea45eddcbb4cb9f05f981106fd529ab"
+    },
+    {
+      "path": "ordinary-before.png",
+      "size": 33142,
+      "sha256": "7bcfe673134a0acbf181c3b7ec915d357f196443d4723311e6de085cab08ecab"
+    },
+    {
+      "path": "ordinary-observed.png",
+      "size": 33142,
+      "sha256": "7bcfe673134a0acbf181c3b7ec915d357f196443d4723311e6de085cab08ecab"
+    },
+    {
+      "path": "ordinary.png",
+      "size": 33142,
+      "sha256": "7bcfe673134a0acbf181c3b7ec915d357f196443d4723311e6de085cab08ecab"
+    },
+    {
+      "path": "ordinary.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "original-chamfer.json",
+      "size": 4377,
+      "sha256": "fb91c45a2189a668577cb179938ce3bcf9a075157d29e448f029332b05fd2c73"
+    },
+    {
+      "path": "prefix.png",
+      "size": 31628,
+      "sha256": "536d31104a6edb807ae2ff16d3c49a23e3e7f5f38b7502f6032b191da3897561"
+    },
+    {
+      "path": "prefix.rgba",
+      "size": 3867052,
+      "sha256": "e50df305f5df681bd36d8a2ec7d9b6d29089c357206e9bdaae8db1c439488bfb"
+    },
+    {
+      "path": "title-chamfer-double.igz",
+      "size": 1779,
+      "sha256": "2baa4a9e44549a29f1697f69272cf4b9b3c4cbf352e6b474c8a4d91e7d695344"
+    },
+    {
+      "path": "title-chamfer-double.png",
+      "size": 33142,
+      "sha256": "7bcfe673134a0acbf181c3b7ec915d357f196443d4723311e6de085cab08ecab"
+    }
+  ],
+  "sources": [
+    {
+      "path": "scripts/reference-chamfer-coverage.py",
+      "revision": "6c52a5609c8ca64d43bfe8a813d3eee59835bf31",
+      "sha256": "bdbb7d2ec60abef517fd3c6159e9f0ac7d638dedb6d2e0e4801317dcc2c9bce1",
+      "retained_member": "capture-tools/scripts/reference-chamfer-coverage.py",
+      "verification": "Hash retained by root before capture"
+    },
+    {
+      "path": "docs/audits/chamfer-coverage/fixture-contract.json",
+      "revision": "6c52a5609c8ca64d43bfe8a813d3eee59835bf31",
+      "sha256": "16b8bef085a67618f620c09ad41e168abf89549fd07a27c0c979716b2d65f1ce",
+      "retained_member": "capture-tools/docs/audits/chamfer-coverage/fixture-contract.json",
+      "verification": "Hash retained by root before capture"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "views/composer.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
+      "verification": "Post-capture pinned Git/current-byte authentication, not a preoperative check"
+    },
+    {
+      "path": "views/viewport.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+      "verification": "Post-capture pinned Git/current-byte authentication, not a preoperative check"
+    },
+    {
+      "path": "core/composition.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
+      "verification": "Post-capture pinned Git/current-byte authentication, not a preoperative check"
+    },
+    {
+      "path": "formats/igz.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "verification": "Post-capture pinned Git/current-byte authentication, not a preoperative check"
+    },
+    {
+      "path": "core/scene.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "verification": "Post-capture pinned Git/current-byte authentication, not a preoperative check"
+    },
+    {
+      "path": "core/camera.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52",
+      "verification": "Post-capture pinned Git/current-byte authentication, not a preoperative check"
+    }
+  ],
+  "parent": {
+    "archive": "docs/audits/sheet-symbols/source-records.zip",
+    "archive_sha256": "4068e97cf6620160efc6b5c0f9ce07a89d5c10885160bc7d436d4a69da4173da",
+    "manifest_sha256": "caa5d962392c1977cf272de15733e3bf19b1ab187e399b5caad90e18d3680ff3",
+    "inputs": [
+      {
+        "member": "title-chamfer-double.igz",
+        "size": 1779,
+        "sha256": "2baa4a9e44549a29f1697f69272cf4b9b3c4cbf352e6b474c8a4d91e7d695344"
+      },
+      {
+        "member": "title-chamfer-double.png",
+        "size": 33142,
+        "sha256": "7bcfe673134a0acbf181c3b7ec915d357f196443d4723311e6de085cab08ecab"
+      }
+    ]
+  },
+  "cases": 1,
+  "heavy_operations": 1,
+  "excluded_roots": [
+    "/tmp/ingetrazo-chamfer-source-r1/data"
+  ],
+  "cleanup_performed": false,
+  "scope": "Public QPainter mask paints and unchanged ordinary source frames only; no private Qt span, causal or native parity claim"
+}
