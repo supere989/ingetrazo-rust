@@ -295,7 +295,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     app.native_composer.retain_items(&items);
     if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
-    let item_order=app.scene.sheets[sheet_idx].physical_export_items().map(|v|v.into_iter().filter_map(|item|match item{ingetrazo_core::composition::PhysicalExportItem::Typed{index,..}=>Some((0,index)),ingetrazo_core::composition::PhysicalExportItem::Picture{index,..}=>Some((1,index)),ingetrazo_core::composition::PhysicalExportItem::Legend{index,..}=>Some((2,index))}).collect::<Vec<_>>()).unwrap_or_else(|e|{app.status_message=e;Vec::new()});
+    let item_order=app.scene.sheets[sheet_idx].physical_canvas_items().map(|v|v.into_iter().filter_map(|item|match item{ingetrazo_core::composition::PhysicalExportItem::Typed{index,..}=>Some((0,index)),ingetrazo_core::composition::PhysicalExportItem::Picture{index,..}=>Some((1,index)),ingetrazo_core::composition::PhysicalExportItem::Legend{index,..}=>Some((2,index)),ingetrazo_core::composition::PhysicalExportItem::Annotation{..}=>None}).collect::<Vec<_>>()).unwrap_or_else(|e|{app.status_message=e;Vec::new()});
     // The same mixed category order owns painting and pointer acquisition.
     for &(picture,idx) in &item_order {
         if picture==2{if let Err(e)=legend_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
@@ -1425,9 +1425,17 @@ impl IngeTrazoApp {
         };
         let mut legends=|_:&Sheet,value:&serde_json::Value|crate::composer_legend::draws(value,&mut text_resources.borrow_mut()).map(|v|v.draws);
         let mut pictures=|_:&Sheet,value:&serde_json::Value|self.sheet_image.painters.pictures.draws(value).map(|v|v.draws);
-        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_pictures(sheets,&mut painter,&mut texts,&mut symbols,&mut legends,&mut pictures)?;
+        let mut emitted_annotation=false;
+        let mut annotations=|sheet:&Sheet,key:&str,value:&serde_json::Value|{
+            let date=crate::composer_text_fields::today()?;
+            let fields=crate::composer_text_fields::Context{index:Some(*indices.get(&(sheet as *const _)).ok_or("Annotation sheet context lost")?),total:scene.sheets.len(),path:current_file,date:&date};
+            let output=crate::composer_annotations::draws(sheet,key,value,&mut text_resources.borrow_mut(),&fields,true)?;
+            emitted_annotation|=!output.draws.is_empty();Ok(output.draws)
+        };
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_annotations(sheets,&mut painter,&mut texts,&mut symbols,&mut legends,&mut pictures,&mut annotations)?;
+        drop(annotations);
         let has_view=sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::ViewFrame(_))));
-        if has_view || sheets.iter().any(|s|s.items.iter().any(|item|!matches!(item,SheetItem::Shape(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
+        if emitted_annotation || has_view || sheets.iter().any(|s|s.items.iter().any(|item|!matches!(item,SheetItem::Shape(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
     }
 }
 

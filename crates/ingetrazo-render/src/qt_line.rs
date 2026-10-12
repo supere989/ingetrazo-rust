@@ -29,12 +29,15 @@ impl Output{
  }
 }
 /// Clip is half-open physical pixels. No pixel image or per-pixel interior mesh.
-pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{
+pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{rasterize_with_cap(a,b,pen_width,clip,max_work,max_runs,true)}
+/// Literal QRasterizer flat-cap branch, including its thick source-point segment.
+pub fn rasterize_flat(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize)->Result<Vec<Span>,String>{rasterize_with_cap(a,b,pen_width,clip,max_work,max_runs,false)}
+fn rasterize_with_cap(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,max_runs:usize,square_cap:bool)->Result<Vec<Span>,String>{
  if a.into_iter().chain(b).chain([pen_width]).any(|v|!v.is_finite()||v.abs()>1_000_000.)||clip[0]>clip[2]||clip[1]>clip[3]{return Err("Line raster coordinate admission exceeded".into());}
  let mut out=Output{spans:Vec::new(),limit:max_runs,work:0,max_work};
  if a==b||pen_width<=0.||clip[0]==clip[2]||clip[1]==clip[3]{return Ok(out.spans);}
  let dx=b[0]-a[0];let dy=b[1]-a[1];let length=dx.hypot(dy);let mut width=pen_width/length;
- let mut pa=[a[0]-0.5*width*dx,a[1]-0.5*width*dy];let mut pb=[b[0]+0.5*width*dx,b[1]+0.5*width*dy];
+ let mut pa=if square_cap{[a[0]-0.5*width*dx,a[1]-0.5*width*dy]}else{a};let mut pb=if square_cap{[b[0]+0.5*width*dx,b[1]+0.5*width*dy]}else{b};
  if !width.is_finite()||pa.into_iter().chain(pb).any(|v|!v.is_finite()){return Err("Line derived coordinate overflow".into());}
  let offs=[dy.abs()*width*0.5,dx.abs()*width*0.5];// QRectF(point-pair) stores extent, then right()/bottom() reconstruct origin+extent.
  // Preserve that sequence before 26.6 snapping; direct endpoint substitution changes coverage.
@@ -97,4 +100,18 @@ pub fn rasterize(a:[f64;2],b:[f64;2],pen_width:f64,clip:[i32;4],max_work:usize,m
  #[test]fn dimension_line_uses_source_255_area_not_gray_256(){let spans=rasterize([160.,100.],[280.,100.],1.5,[0,0,640,400],10000,1000).unwrap();assert_eq!(spans.iter().find(|s|s.y==99&&s.x<=200&&s.x+i32::try_from(s.len).unwrap()>200).unwrap().coverage,191);}
  #[test]fn clipped_endpoint_preserves_qrect_extent_reconstruction(){let spans=rasterize([-1000.,63.75],[1000.,64.25],3.125,[17,19,101,103],10000,1000).unwrap();for (y,c) in [(63,253),(64,252),(65,145)]{assert_eq!(spans.iter().find(|s|s.y==y&&s.x<=100&&i64::from(s.x)+i64::from(s.len)>100).unwrap().coverage,c);}}
  #[test]fn refusal_is_bounded_before_publication(){assert!(rasterize([f64::NAN,0.],[10.,1.],1.5,[0,0,640,400],100,100).is_err());assert!(rasterize([0.,0.],[100.,100.],2.,[0,0,640,400],1,100).is_err());}
+}
+
+#[cfg(test)]mod source_point_contract{
+ use super::*;
+ #[test]fn flat_point_segment_has_source_pen_width_area(){
+  let spans=rasterize_flat([3.,5.],[7.,5.],4.,[0,0,10,10],1000,100).unwrap();
+  assert_eq!(spans.len(),4);for(y,span)in spans.iter().enumerate(){assert_eq!((span.x,span.y,span.len,span.coverage),(3,y as i32+3,4,255));}
+  let ordinary=rasterize([3.,5.],[7.,5.],4.,[0,0,10,10],1000,100).unwrap();
+  assert_eq!(ordinary.iter().map(|s|s.len).sum::<u32>(),32);
+ }
+ #[test]fn flat_point_segment_respects_half_open_device_clip(){
+  let spans=rasterize_flat([-2.,0.],[2.,0.],4.,[0,0,2,2],1000,100).unwrap();
+  assert_eq!(spans.len(),2);for(y,span)in spans.iter().enumerate(){assert_eq!((span.x,span.y,span.len,span.coverage),(0,y as i32,2,255));}
+ }
 }

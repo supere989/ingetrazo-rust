@@ -218,5 +218,6 @@ mod vcb_input;
 mod composer_symbols;
 mod composer_view_captions;
 mod composer_legend;
+mod composer_annotations;
 
 mod composer_picture;

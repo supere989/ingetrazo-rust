@@ -65,6 +65,16 @@ impl Painter {
         }
         Ok(advance as f64/64.*scale)
     }
+    /// Primary 100px QFontMetricsF quantities scaled to source paper millimetres:
+    /// ascent, descent, leading, cap height. Reuses the existing resolver owner.
+    pub fn font_metrics_mm(&mut self,style:&TextStyle<'_>)->Result<[f64;4],String>{
+        if !style.size_pt.is_finite()||style.size_pt<=0.||style.size_pt>10000.{return Err("Invalid paper font metric size".into());}
+        if self.resolver.is_none(){self.resolver=Some(Resolver::new()?);}
+        let request=Request{family:style.family.into(),bold:style.bold,italic:style.italic,required_chars:vec![]};
+        let font=self.resolver.as_mut().unwrap().resolve(request)?.font;
+        let scale=style.size_pt*25.4/72./100.*0.75;
+        Ok([font.ascent_26_6(),font.descent_26_6(),font.leading_26_6(),font.cap_height_26_6()].map(|v|f64::from(v)/64.*scale))
+    }
     pub fn measure_box(&mut self,style:&TextStyle<'_>)->Result<[f64;2],String>{self.box_metrics(style).map(|v|v.0)}
     /// Finite source drawText rectangle; vertical alignment is 0=top,1=center,2=bottom.
     pub fn draw_box(&mut self,style:&TextStyle<'_>,height:f64,vertical:u8)->Result<Vec<Draw>,String>{

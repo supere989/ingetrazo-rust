@@ -216,6 +216,21 @@ pub(crate) fn source_line_records(draw:&Draw,density:f64,device:[u32;2])->Result
     if !matches!(draw.path.as_slice(),[PathOp::Move(a),PathOp::Line(b)]if a!=b)||draw.stroke.is_none()||!draw.stroke_options.as_ref().is_some_and(|v|v.cap==2&&v.dash.is_empty()){return Err("Invalid source drawLine primitive admission".into());}
     records_with_primitive(std::slice::from_ref(draw),density,device,true)
 }
+/// Only literal source drawLine with equal endpoints may select the point primitive.
+pub(crate) fn source_point_records(draw:&Draw,density:f64,device:[u32;2])->Result<Vec<crate::sheet_image::Records>,String>{
+    let point=match draw.path.as_slice(){[PathOp::Move(a),PathOp::Line(b)]if a==b=>*a,_=>return Err("Invalid source point primitive".into())};
+    if !density.is_finite()||density<=0.||draw.rotation_deg!=0.||draw.text.is_some()||draw.fill.is_some(){return Err("Invalid source point painter".into());}
+    let(rgba,width)=draw.stroke.ok_or("Source point lacks pen")?;
+    if !width.is_finite()||width<0.||width>1e6{return Err("Invalid source point pen".into());}
+    let origin=draw.origin_mm.map(|q|q*density);let q=[origin[0]+point[0]*density,origin[1]+point[1]*density];
+    if q.iter().any(|q|!q.is_finite()||q.abs()>1e6){return Err("Source point coordinate admission exceeded".into());}
+    let effective=if width==0.{1.}else{width*density};
+    let spans=if effective<=1.{let alpha=((255*((256.*effective)as u32).min(256))>>8)as u8;if alpha==0{vec![]}else{vec![ingetrazo_render::qt_gray::Span{x:q[0].floor()as i32,y:q[1].floor()as i32,len:1,coverage:alpha}]}}
+    else if draw.stroke_options.as_ref().map_or(2,|v|v.cap)==0{vec![]}
+    else{ingetrazo_render::qt_line::rasterize_flat([q[0]-effective/2.,q[1]],[q[0]+effective/2.,q[1]],effective,[0,0,device[0]as i32,device[1]as i32],250_000,100_000)?};
+    let bounds=clip_bounds(draw,density,origin)?;let spans=clip(spans,bounds);let spans=clip(spans,Some([0,0,device[0]as i32,device[1]as i32]));let spans=mask_clip(spans,&masks(draw,density,origin)?)?;
+    if spans.is_empty(){return Ok(vec![]);}Ok(vec![crate::composer_border::physical_layers(vec![(spans,EncodedRgba::from_bytes(rgba.map(|v|(v*255.).round()as u8),1.)?)])?])
+}
 fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:bool)->Result<Vec<crate::sheet_image::Records>,String>{
     let mut records = Vec::new();
     for draw in draws {

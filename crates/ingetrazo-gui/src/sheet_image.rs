@@ -22,15 +22,7 @@ pub struct Plan {
 /// together, before native submission or opening a destination temporary file.
 pub fn unsupported(sheet: &Sheet) -> Vec<String> {
     let mut out = Vec::new();
-    for key in [
-        "cotas",
-        "cotas_ang",
-        "cotas_rad",
-        "etiquetas",
-        "perfiles",
-        "niveles",
-        "llamadas",
-    ] {
+    for key in ["perfiles"    ] {
         if let Some(items) = sheet.native_document.get(key).and_then(|v| v.as_array()) {
             for (i, item) in items.iter().enumerate() {
                 if !item
@@ -160,6 +152,29 @@ impl PainterCache {
                         for part in parts {
                             append(part.into())?;
                         }
+                    }
+                    continue;
+                }
+                ingetrazo_core::composition::PhysicalExportItem::Annotation{key,value,..}=>{
+                    let fallback_date;
+                    let fallback;
+                    let fields=if let Some(fields)=context{fields}else{
+                        fallback_date=crate::composer_text_fields::today()?;
+                        fallback=crate::composer_text_fields::Context{index:Some(0),total:1,path:None,date:&fallback_date};
+                        &fallback
+                    };
+                    let annotation=crate::composer_annotations::draws(sheet,key,value,&mut self.fonts,fields,false)?;
+                    for (index,mut draw) in annotation.draws.into_iter().enumerate(){
+                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(&draw),density)?{append(part.into())?;}continue;}
+                        if annotation.rectangles.binary_search(&index).is_ok(){
+                            let mut fill=draw.clone();fill.stroke=None;fill.stroke_options=None;
+                            for part in self.text.physical_rectangle(&fill,density)?{append(part.into())?;}
+                            draw.fill=None;
+                        }
+                        let parts=if annotation.source_points.binary_search(&index).is_ok(){crate::sheet_image_paths::source_point_records(&draw,density,metrics.pixels())?}
+                        else if annotation.source_lines.binary_search(&index).is_ok(){crate::sheet_image_paths::source_line_records(&draw,density,metrics.pixels())?}
+                        else{crate::sheet_image_paths::records(std::slice::from_ref(&draw),density,metrics.pixels())?};
+                        for part in parts{append(part.into())?;}
                     }
                     continue;
                 }

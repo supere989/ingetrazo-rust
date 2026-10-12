@@ -202,14 +202,27 @@ where
     L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
     P: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
 {
+    prepare_with_annotations(sheet,views,texts,symbols,legends,pictures,&mut |_,key,_|Err(format!("PDF annotation painter for {key} remains unavailable")))
+}
+pub fn prepare_with_annotations<F, T, S, L, P, A>(
+    sheet: &Sheet,
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+    legends: &mut L,
+    pictures: &mut P,
+    annotations:&mut A,
+) -> Result<Page, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
+    L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+    P: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+    A:FnMut(&Sheet,&str,&serde_json::Value)->Result<Vec<Draw>,String>,
+{
     for key in [
-        "cotas",
-        "cotas_ang",
-        "cotas_rad",
-        "etiquetas",
         "perfiles",
-        "niveles",
-        "llamadas",
     ] {
         if sheet
             .native_document
@@ -253,6 +266,21 @@ where
             }
             ingetrazo_core::composition::PhysicalExportItem::Legend { value, .. } => {
                 for next in legends(sheet, value)? {
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(draw_command_count(&next)?)
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
+                    draws.push(next);
+                }
+                continue;
+            }
+            ingetrazo_core::composition::PhysicalExportItem::Annotation { key,value, .. } => {
+                for next in annotations(sheet,key,value)? {
                     if draws.len() == crate::sheet_pdf::MAX_DRAWS {
                         return Err("PDF draw budget exceeded".into());
                     }
@@ -444,6 +472,25 @@ where
     L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
     P: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
 {
+    prepare_all_with_annotations(sheets,views,texts,symbols,legends,pictures,&mut |_,key,_|Err(format!("PDF annotation painter for {key} remains unavailable")))
+}
+pub fn prepare_all_with_annotations<F, T, S, L, P, A>(
+    sheets: &[Sheet],
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+    legends: &mut L,
+    pictures: &mut P,
+    annotations:&mut A,
+) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
+    L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+    P: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+    A:FnMut(&Sheet,&str,&serde_json::Value)->Result<Vec<Draw>,String>,
+{
     if sheets.is_empty() || sheets.len() > 10_000 {
         return Err("PDF requires 1..10000 pages".into());
     }
@@ -451,7 +498,7 @@ where
     let mut draws = 0usize;
     let mut commands = 0usize;
     for sheet in sheets {
-        let page = prepare_with_pictures(sheet, views, texts, symbols, legends, pictures)?;
+        let page = prepare_with_annotations(sheet, views, texts, symbols, legends, pictures,annotations)?;
         draws = draws
             .checked_add(page.draws.len())
             .ok_or("PDF draw count overflow")?;

@@ -464,11 +464,13 @@ pub enum PhysicalExportItem<'a> {
         index: usize,
         value: &'a serde_json::Value,
     },
+    Annotation { key:&'static str,index:usize,value:&'a serde_json::Value },
 }
 impl Sheet {
-    pub fn physical_export_items(
-        &self,
-    ) -> Result<impl Iterator<Item = PhysicalExportItem<'_>>, String> {
+    pub fn physical_export_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{self.ordered_export_items(true)}
+    /// Existing canvas categories only: raw annotation export must not add work to warm UI frames.
+    pub fn physical_canvas_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{self.ordered_export_items(false)}
+    fn ordered_export_items(&self,include_annotations:bool)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{
         const LIMIT: usize = 100_000;
         let legends = match self.native_document.get("leyendas") {
             None | Some(serde_json::Value::Null) => &[][..],
@@ -484,11 +486,19 @@ impl Sheet {
                 .map(Vec::as_slice)
                 .ok_or("Invalid physical picture inventory")?,
         };
+        let mut annotations=Vec::new();
+        let mut annotation_count=0usize;
+        for (key,category) in if include_annotations { &[("cotas",7),("cotas_ang",8),("cotas_rad",9),("etiquetas",10),("niveles",12),("llamadas",13)][..] } else {&[][..]} {
+            let rows=match self.native_document.get(key){None|Some(serde_json::Value::Null)=>&[][..],Some(v)=>v.as_array().map(Vec::as_slice).ok_or("Invalid physical annotation inventory")?};
+            annotation_count=annotation_count.checked_add(rows.len()).filter(|n|*n<=LIMIT).ok_or("Physical annotation inventory exceeds budget")?;
+            annotations.push((*key,*category,rows));
+        }
         let count = self
             .items
             .len()
             .checked_add(legends.len())
             .and_then(|n| n.checked_add(pictures.len()))
+            .and_then(|n| n.checked_add(annotation_count))
             .filter(|n| *n <= LIMIT)
             .ok_or("Physical item inventory exceeds budget")?;
         let mut ordered = Vec::new();
@@ -566,6 +576,15 @@ impl Sheet {
                 return Err("Invalid picture stacking order".into());
             }
             ordered.push((z, 2, index, PhysicalExportItem::Picture { index, value }));
+        }
+        for (key,category,rows) in annotations {
+            for (index,value) in rows.iter().enumerate(){
+                if !value.is_object(){return Err("Invalid physical annotation record".into());}
+                let hidden=match value.get("hidden"){None=>false,Some(v)=>v.as_bool().ok_or("Invalid physical annotation hidden flag")?};
+                if hidden{continue;}
+                let z=match value.get("z"){None=>0.,Some(v)=>v.as_f64().filter(|n|n.is_finite()).ok_or("Invalid physical annotation stacking order")?};
+                ordered.push((z,category,index,PhysicalExportItem::Annotation{key,index,value}));
+            }
         }
         ordered.sort_unstable_by(|a, b| {
             a.0.partial_cmp(&b.0)
@@ -880,4 +899,16 @@ mod source_paper_border_tests {
             SourcePaperBorder::default()
         );
     }
+}
+
+#[cfg(test)]mod annotation_export_order_tests{
+ use super::*;
+ #[test]fn raw_annotations_are_cold_only_and_follow_source_categories(){
+  let mut sheet=Sheet::default();sheet.native_document=serde_json::json!({"cotas":true});
+  assert!(sheet.physical_canvas_items().is_ok());assert!(sheet.physical_export_items().is_err());
+  sheet.native_document=serde_json::json!({"cotas":[{}],"cotas_ang":[{}],"cotas_rad":[{}],"etiquetas":[{}],"niveles":[{}],"llamadas":[{}]});
+  let keys:Vec<_>=sheet.physical_export_items().unwrap().filter_map(|v|if let PhysicalExportItem::Annotation{key,..}=v{Some(key)}else{None}).collect();
+  assert_eq!(keys,["cotas","cotas_ang","cotas_rad","etiquetas","niveles","llamadas"]);
+  assert!(sheet.physical_canvas_items().unwrap().all(|v|!matches!(v,PhysicalExportItem::Annotation{..})));
+ }
 }
