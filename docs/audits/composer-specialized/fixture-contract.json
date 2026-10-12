@@ -1,0 +1,98 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "report": "original-specialized.json",
+  "native_report": "native-specialized.json",
+  "reader_report": "native-reopens.json",
+  "cases": [
+    {
+      "name": "linear-handles",
+      "contract": "Endpoint detaches imported anchor; Undo restores. Separation and text drags retain anchor. Aligned/h/v separation branches; text reset actual button; zero-displacement no history."
+    },
+    {
+      "name": "angular-radius",
+      "contract": "Actual arc midpoint handle; outward drag and min2mm clamp; release one command, Undo/Redo."
+    },
+    {
+      "name": "radial-endpoint",
+      "contract": "Actual arc endpoint handle; radius/angle mutation and min1mm clamp; literal source callback exception retained separately from geometry."
+    },
+    {
+      "name": "label-leaders",
+      "contract": "Primary and extra tips detach only their own anchors; Ctrl-tip copies new leader; extra dropped inside ink removes it; Undo/Redo each gesture."
+    },
+    {
+      "name": "label-wrap-width",
+      "contract": "Selected wrap corner actual hit outside ink; width minimum4mm, derived text height observed; Undo/Redo."
+    },
+    {
+      "name": "callout-bubble-and-box",
+      "contract": "Bubble tip moves bx/by only; ordinary lower-right box resize w/h; Undo/Redo and source generic snapping."
+    },
+    {
+      "name": "locked-hidden-handle-admission",
+      "contract": "Overlapped z/hidden/locked source canvas hit admission; no programmatic locked mutation claim; no-op press/release and Escape during captured drag recorded literally."
+    },
+    {
+      "name": "chain-fresh-jog",
+      "contract": "Fresh first2points+offset then collinear/jog segment; repeated-last terminates and totals; local Undo/Redo including total; armed state remains."
+    },
+    {
+      "name": "chain-anchored-undo",
+      "contract": "Same-frame real snap points; segments acquire anchors; Undo midrun/rebuild continuation; Escape ends and total; secondEscape Select."
+    },
+    {
+      "name": "chain-seeded-and-switch",
+      "contract": "Actual selected unlocked existing cota seeds run; Shift horizontal/vertical lock; tool switch ends total; new run then sheet switch retirement."
+    },
+    {
+      "name": "baseline-fresh-and-seeded",
+      "contract": "Fresh and selected seed runs; positive/negative separation and document base_step_mm; no total; short run Escape and tool switch."
+    },
+    {
+      "name": "multi-ctrl-properties",
+      "contract": "Actual Ctrl-click text toggles with onepixel wobble; samekind changed-field property propagation/coalescence; differing untouched fields preserved; mixedkind unaffected."
+    },
+    {
+      "name": "multi-box-admission",
+      "contract": "Actual empty-page LTRwindow/RTLcrossing; Ctrladd/Shifttoggle/bothremove; hidden/locked/stacking bounds; blankclick clears; selection immutable/nohistory."
+    },
+    {
+      "name": "multi-group-move-delete",
+      "contract": "Actual selected mixed annotation group bodydrag; one compound localUndo; no handles masquerading as body; Deleteall/Undo/Redo exact source order+selection."
+    }
+  ],
+  "action_vocabulary": [
+    "toolbar",
+    "pointer_press",
+    "pointer_move",
+    "pointer_release",
+    "key",
+    "property",
+    "select_fixture",
+    "rebuild_fixture",
+    "sheet_switch",
+    "undo",
+    "redo",
+    "save"
+  ],
+  "observations": [
+    "full known composition",
+    "sorted selection family/index identities (not Qt enumeration order)",
+    "panel owner family/index",
+    "local undo/redo lengths",
+    "tool mode",
+    "pending primary/angular/radial/run points, sep, axis and live cota membership",
+    "actual quantized page pointer positions and top item/handle admission",
+    "source callback exceptions by case/phase/function",
+    "original saved-file reader composition",
+    "declared opaque raw leaves before/after native save"
+  ],
+  "rules": {
+    "ingress": "Real QtTest viewport pointer/key and enabled toolbar/property controls. Fixture publication/selection/rebuild explicitly separate. Quantized hit must be shape/bounds-contained and resolve intended specialized handle or body before gestures.",
+    "operative": "Each changed release must prove intended fields changed and exact local history increment; no-op observations remain exact. Never simulate a specialized handle with body drag.",
+    "errors": "All source exceptions retained literally. Known radial property population AttributeError may occur; allowlist must be exact function/phase, no manufactured source success.",
+    "history": "Observe actual source Undo/Redo and selection, including any defects. Escape during mouse capture is literal source behavior, not assumed rollback.",
+    "scope": "Single-owner handle gestures plus explicitly declared multi-selection groups. No combinatorial all-kind/permutation matrix or physical pixel recapture.",
+    "capture": "One coherent capture only after geometry and validation full producer prereview. Existing accepted source corpora unchanged."
+  }
+}
