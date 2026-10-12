@@ -60,36 +60,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     queue(&mut app, &observed_path)?;
     let (result, observations) = app.prepare_sheet_image_request_observed(&ctx);
     let (request, plan) = result.ok_or("observed request missing")??;
-    let heavy = observations
-        .iter()
-        .filter(|v| v["stroke"][1].as_f64() == input["stages"][0]["pen"]["width"].as_f64())
-        .collect::<Vec<_>>();
-    if heavy.len() != 1 {
-        return Err(format!("ambiguous actual heavy geometry {}", heavy.len()).into());
-    }
-    let id = heavy[0]["geometry_id"].as_u64().ok_or("geometry ID")?;
     let records = plan.diagnostic_records();
     let rows = records.as_array().ok_or("records")?;
-    let index = rows
+    let fill_color = json!([216f32 / 255., 130f32 / 255., 69f32 / 255., 1f32]);
+    let matching = rows
         .iter()
-        .position(|r| r["geometry_id"].as_u64() == Some(id))
-        .ok_or("published heavy absent")?;
-    if rows[index]["source_spans"] != heavy[0]["postmask_spans"] {
-        return Err("trace not actual published spans".into());
+        .enumerate()
+        .filter(|(_, r)| {
+            r["batches"]
+                .as_array()
+                .is_some_and(|b| b.iter().any(|v| v["color"] == fill_color))
+        })
+        .collect::<Vec<_>>();
+    if matching.len() != 1 {
+        return Err("ambiguous actual shape fill owner".into());
     }
+    let index = matching[0].0;
+    let id = rows[index]["geometry_id"]
+        .as_u64()
+        .ok_or("shape geometry ID")?;
     let prefix = plan.diagnostic_prefix(id)?;
     let prefix_records = prefix.diagnostic_records();
     if prefix_records.as_array() != Some(&rows[..index].to_vec()) {
         return Err("prefix did not retain actual immutable owners".into());
     }
-    let preceding_id = index
-        .checked_sub(1)
-        .and_then(|i| rows[i]["geometry_id"].as_u64())
-        .ok_or("preceding fill owner missing")?;
-    let before_preceding = plan.diagnostic_prefix(preceding_id)?;
-    let preceding_path = out.join("before-preceding-record.png");
-    renderer.save(&before_preceding, &preceding_path)?;
-    let preceding_image = image(&preceding_path, out, "before-preceding-record")?;
     let prefix_path = out.join("prefix.png");
     renderer.save(&prefix, &prefix_path)?;
     let prefix_image = image(&prefix_path, out, "prefix")?;
@@ -112,7 +106,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("native-picture-overlap.json"),
         serde_json::to_vec_pretty(
-            &json!({"source_pin":input["source_pin"],"case":"picture-overlap","dpi":100,"ordinary_before":ordinary_image,"ordinary_observed":observed_image,"prefix":prefix_image,"before_preceding_record":preceding_image,"preceding_record":rows[index-1],"heavy":heavy[0],"prepared_records":records,"heavy_record_index":index,"controls":{"observer_ordinary_equal":true,"model_history_unchanged":true,"actual_published_spans":true,"prefix_immutable_owner_reuse":true},"scope":"Actual App normal export and same prepared native records; prefix shares Arc owners. No probe geometry producer or CPU replacement renderer, no private Qt span claim."}),
+            &json!({"source_pin":input["source_pin"],"case":"picture-overlap","dpi":100,"ordinary_before":ordinary_image,"ordinary_observed":observed_image,"prefix":prefix_image,"shape":rows[index],"path_observations":observations,"prepared_records":records,"heavy_record_index":index,"controls":{"observer_ordinary_equal":true,"model_history_unchanged":true,"actual_published_shape_owner":true,"prefix_immutable_owner_reuse":true},"scope":"Actual App normal export and same prepared native records; prefix shares Arc owners. No probe geometry producer or CPU replacement renderer, no private Qt span claim."}),
         )?,
     )?;
     Ok(())
