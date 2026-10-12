@@ -103,6 +103,7 @@ impl Painter {
     pub fn source_box_clip(&mut self, style: &TextStyle<'_>, height: f64, vertical: u8)
         -> Result<Option<Vec<PathOp>>, String>
     {
+        if !height.is_finite()||height<=0.||height>1_000_000.||vertical>2||style.origin_mm.iter().any(|v|!v.is_finite()){return Err("Invalid paper text rectangle".into());}
         let (_, _, [width, text_height]) = self.box_metrics(style)?;
         let scale = style.size_pt * 25.4 / 72. / 100. * 0.75;
         let [x,y] = style.origin_mm;
