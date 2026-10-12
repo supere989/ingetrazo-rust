@@ -4,7 +4,7 @@ import argparse,copy,json,math
 from pathlib import Path
 PIN='6be29fe437a7cd992d4e079f71720821b25216b9'
 ROSTER=[('fragmented-and-ordered-requests',2),('stdout-stderr-eval-persistent-scope',4),('geometry-history',3),('noop-preserves-redo',3),('mutation-error-rollback',4),('syntax-type-dispatch-errors',4)]
-CONTROLS={'actual_socket','actual_ui_poll','caught_overflow_atomic','disabled_refused','modal_refused','worker_joined'}
+CONTROLS={'actual_socket','actual_ui_poll','caught_overflow_atomic','disabled_refused','modal_refused','worker_joined','actual_authorization_checkbox'}
 def exact(a,b,path='$'):
  assert type(a)is type(b),path+': type'
  if isinstance(a,dict):
@@ -62,7 +62,7 @@ def main():
    else:count+=1
   result['exact_app_states']=count
   compare(a,b);probes=[]
-  mutations=[('empty-roster',lambda n:n.update(cases=[])),('truncated-states',lambda n:n['states'].pop()),('reordered-states',lambda n:n['states'].reverse()),('wrong-pin',lambda n:n.update(source_pin='wrong')),('false-control',lambda n:n['controls'].update(actual_socket=False)),('numeric-control',lambda n:n['controls'].update(actual_socket=1)),('joint-empty-geometry',lambda n:[s['scene'].update(faces=[])for s in n['states']]),('changed-stdout',lambda n:n['states'][0]['reply']['result'].update(stdout='corrupt')),('changed-error',lambda n:n['states'][13]['reply']['result'].update(error='corrupt')),('bool-history',lambda n:n['states'][0]['scene'].update(undo=False)),('changed-history',lambda n:n['states'][6]['scene'].update(undo=99)),('successful-overflow',lambda n:n['control_replies']['overflow'].update(ok=True))]
+  mutations=[('empty-roster',lambda n:n.update(cases=[])),('truncated-states',lambda n:n['states'].pop()),('reordered-states',lambda n:n['states'].reverse()),('wrong-pin',lambda n:n.update(source_pin='wrong')),('false-control',lambda n:n['controls'].update(actual_socket=False)),('numeric-control',lambda n:n['controls'].update(actual_socket=1)),('joint-empty-geometry',lambda n:[s['scene'].update(faces=[])for s in n['states']]),('changed-stdout',lambda n:n['states'][0]['reply']['result'].update(stdout='corrupt')),('changed-error',lambda n:n['states'][13]['reply']['result'].update(error='corrupt')),('bool-history',lambda n:n['states'][0]['scene'].update(undo=False)),('changed-history',lambda n:n['states'][6]['scene'].update(undo=99)),('successful-overflow',lambda n:n['control_replies']['overflow'].update(ok=True)),('false-authorization-checkbox',lambda n:n['controls'].update(actual_authorization_checkbox=False))]
   for name,mutate in mutations:
    n=copy.deepcopy(b);mutate(n)
    try:compare(a,n)
