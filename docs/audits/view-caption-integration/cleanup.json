@@ -1,0 +1,8 @@
+{
+  "authenticated_removed_directory": "/tmp/ingetrazo-view-caption-integration",
+  "files_removed": 280,
+  "raw_bytes_removed": 155663528,
+  "archive_sha256": "df7fd1bffc71823b3e45be13c1d17ba07e9a49aece0bb0d0086e934106c9270f",
+  "source_reference_count": 104,
+  "preserved": "Source archives, canonical output archive, shared target/dependencies, worktrees and prior failures"
+}

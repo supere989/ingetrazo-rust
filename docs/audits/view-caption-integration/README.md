@@ -1,0 +1,20 @@
+# Physical ViewFrame caption integration
+
+The integrated Rust exporters match all **13 ViewFrame PNGs and 13 PDFs exactly**, with eleven rejecting controls in the final title-ownership replay. The cases cover layout/simple/vertical bar titles, number and sheet bubbles, above/below alignment, bound fields, four separate scale positions, enlargement scale, and two empty-vector placeholders. Invalid visible caption values preserve both destination and document. Nine original Qt advance observations cover line separators, tabs and length variants.
+
+The source corpus is frozen once and reused. Caption production shares the existing font resolver, paragraph resources and actual export paths. Field contexts borrow the owning sheet and use the established source dataclass-equality index; no whole-sheet copy or per-frame scene scan is needed. The source's literal drawLine provenance selects the existing 16.16 line rasterizer for wide square-cap rules/dividers. Generic paths retain their previous rasterizer. Complete off-page stroked outlines are rejected before Gray raster work using a conservative control hull with an antialias fringe; edge-touching strokes retain their original coordinates and coverage path.
+
+Runtime `556a0b14` combines caption `31dde8cf` with the opt-in native text observer. One shared-target build of caption, image and symbol consumers plus the existing worker passed in **9.277 seconds**. Only affected consumers were replayed; no broad local suite or source image capture was repeated. Final ownership review then found that imported title metadata could override the typed title after editing. The narrow correction uses the typed owner; only the caption consumer was relinked (5.967 seconds) and replayed, with a deliberately stale header in the first existing case. [Final ownership evidence](final-title-owner/README.md).
+
+| Integrated check | Result |
+| --- | --- |
+| New caption/placeholder workflow | 13 exact PNGs, 13 exact PDFs; eleven rejected controls after final title-ownership correction |
+| Retained physical image workflow | All eleven images exact, including text and current/saved/cropped views |
+| Retained symbols | Twelve exact PDFs and eleven exact PNGs; same chamfer residual of two pixels, maximum channel difference one |
+| Placement observer | 29 glyphs captured during the existing text export; both Linux lines have exact source glyph IDs and relative X positions |
+
+The observer result is a Linux API and noninterference check, not Mac parity or a private Qt device-phase observation. The existing Mac text residual remains 164 pixels until native CI observes otherwise. Its bounded placement diagnostic is included in the next required native build/replay. The stale INSERT test that blocked the prior publication is repaired separately without changing production import behavior. [Observer scope](../native-text-placement-observer/README.md), [test repair](../dxf-block-test-repair/README.md).
+
+The [manifest](manifest.json) binds the build, binary digests, six helper versions, 176 new records and 104 unchanged source references. New records contain 154,476,035 raw bytes, compressed to 1,064,196 bytes, archive SHA256 `df7fd1bffc71823b3e45be13c1d17ba07e9a49aece0bb0d0086e934106c9270f`. Both integration archives are independently authenticated. Root compared every raw file with its canonical entry or source reference, then purged 387 terminal files totaling 209,553,087 bytes. Shared build dependencies and unique evidence are retained. Owner first-failure and hardware evidence remain in the [caption audit](../view-frame-captions/README.md).
+
+CI adds the caption executable to the existing combined build. Its strict comparison requires that build's explicit readiness output and runs after established acceptance, independently of the known symbol failure. Full parity is not claimed: counts remain 15 Verified / 4 Implemented / 18 Partial across 37 unchanged criteria, with all five release gates open. Broader view painters, annotations, raster/perspective, Mac text, streaming/ray tracing and representative performance remain under their existing criteria.
