@@ -631,6 +631,11 @@ jobs:
         run: |
           mkdir -p docs/audits/view-frame-captions-ci
           python scripts/replay-view-frame-captions.py target/debug/examples/view_frame_caption_workflows docs/audits/view-frame-captions-ci/replay --software > docs/audits/view-frame-captions-ci/replay.log 2>&1
+      - name: Strict frozen offline PhotoMesh profile workflow
+        if: ${{ !cancelled() && steps.integratedconsumers.outputs.ready == 'true' }}
+        run: |
+          mkdir -p docs/audits/survey-profile-ci
+          python scripts/replay-survey-profile.py target/debug/examples/context_document_lifecycle docs/audits/survey-profile-ci/replay > docs/audits/survey-profile-ci/replay.log 2>&1
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
@@ -710,6 +715,7 @@ jobs:
             docs/audits/shift-inference-render/state.json
             docs/audits/sheet-symbols-ci/
             docs/audits/view-frame-captions-ci/
+            docs/audits/survey-profile-ci/
             docs/audits/native-stencil-ci/comparison.json
             docs/audits/native-stencil-ci/provenance.json
             docs/audits/native-stencil-ci/*/*.png
