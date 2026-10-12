@@ -163,8 +163,11 @@ fn opacity(mut c: [f32; 4], a: f64, pdf: bool) -> [f32; 4] {
     let alpha = (a.clamp(0., 1.) * 65535.).round();
     // Qt PDF addBrushPattern reads QColor::alpha(), then writes alpha/255.
     // Its raster painter instead retains QColor's16-bit brush precision.
-    c[3] = if pdf { ((alpha + 128.) / 257.).floor() as f32 / 255. }
-           else { (alpha / 65535.) as f32 };
+    c[3] = if pdf {
+        ((alpha + 128.) / 257.).floor() as f32 / 255.
+    } else {
+        (alpha / 65535.) as f32
+    };
     c
 }
 fn rect(r: [f64; 4]) -> Vec<PathOp> {
@@ -441,7 +444,7 @@ pub(crate) fn draws(
     let mut out = Output::new(origin);
     match key {
         "cotas" => cota(&mut out, v, p, pdf)?,
-        "cotas_ang" => angular(&mut out, v, p)?,
+        "cotas_ang" => angular(&mut out, v, p, pdf)?,
         "cotas_rad" => radial(&mut out, v, p, pdf)?,
         "etiquetas" => label(&mut out, sheet, v, p, context)?,
         "niveles" => level(&mut out, v, p)?,
@@ -640,7 +643,7 @@ fn cota(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), Str
         rotation,
     )
 }
-fn angular(o: &mut Output, v: &Value, p: &mut Painter) -> Result<(), String> {
+fn angular(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), String> {
     let (a, b) = (
         [n(v, "ax_mm", 30.)?, n(v, "ay_mm", 0.)?],
         [n(v, "bx_mm", 0.)?, n(v, "by_mm", -30.)?],
