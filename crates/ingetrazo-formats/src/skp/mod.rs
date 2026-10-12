@@ -1,3 +1,4 @@
+pub mod app_import;
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Rust-only SketchUp import. Parse a neutral payload before preparing/applying a scene.
 //! VFF record interpretation ports the pinned MIT OpenSKP reader; see OPENSKP-LICENSE.
@@ -477,6 +478,9 @@ fn annotation_point(p: [f64; 3]) -> Result<DVec3, SkpError> {
     Ok(point)
 }
 pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
+    scene_from_payload_policy(p, false)
+}
+fn scene_from_payload_policy(p: &Payload, verified_empty: bool) -> Result<Scene, SkpError> {
     textures::admit_assets(p)?;
     for d in std::iter::once(&p.root).chain(p.definitions.values()) {
         if d.vertices
@@ -672,7 +676,7 @@ pub fn scene_from_payload(p: &Payload) -> Result<Scene, SkpError> {
             "empty/library-only document semantics".into(),
         ));
     }
-    if scene.groups.is_empty() {
+    if scene.groups.is_empty() && !verified_empty {
         return Err(SkpError::Unsupported(
             "verified empty document import semantics".into(),
         ));
