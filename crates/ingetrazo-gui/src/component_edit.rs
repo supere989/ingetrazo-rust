@@ -653,8 +653,10 @@ impl IngeTrazoApp {
         // retype window before deciding whether its global command survives.
         self.active_tool.note_history_revision(self.model_revision,false);
         let preserve_global_preview=self.active_tool.preserves_global_preview_on_context_exit();
-        let session=self.component_edit_stack.last().unwrap();
-        let camera=if session.survey_camera_live {self.camera.clone()}else{session.original_camera.clone()};
+        // Source Viewport._leave_group_edit changes model ownership only.
+        // Preserve the live navigation/saved-view pose across tool retirement;
+        // Cancel retains its separate entry-camera restoration below.
+        let camera=self.camera.clone();
         if !preserve_global_preview {self.set_tool(ToolType::Select);}else{self.active_tool.detach_context_preview();}
         publish_finish(plan,&mut self.scene,&mut self.component_edit_stack,&mut self.undo_stack,&mut self.redo_stack);
         self.bump_model_revision();
@@ -722,6 +724,27 @@ mod tests {
         let mut copy=app.scene.groups[0].duplicate_instance();copy.transform=DMat4::from_translation(DVec3::new(3.,4.,5.));app.scene.groups.push(copy);
         app.scene.select(SelectionItem::Group(0));app
     }
+    #[test]
+    fn finish_keeps_live_camera_and_cancel_restores_entry_camera() {
+        let mut app = app();
+        app.begin_component_edit();
+        app.camera.yaw += 0.3;
+        app.camera.target += DVec3::new(2., 3., 1.);
+        let live = app.camera.clone();
+        app.finish_component_edit();
+        assert!(app.component_edit_stack.is_empty());
+        assert_eq!(app.camera, live);
+
+        app.scene.select(SelectionItem::Group(0));
+        let entry = app.camera.clone();
+        app.begin_component_edit();
+        app.camera.pitch -= 0.2;
+        app.camera.target += DVec3::X;
+        app.cancel_component_edit();
+        assert!(app.component_edit_stack.is_empty());
+        assert_eq!(app.camera, entry);
+    }
+
     #[test]
     fn shareback_retains_annotations_and_ordinary_annotation_history_stays_reversible() {
         let mut app=app();app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::ZERO,DVec3::X,DVec3::Y));app.scene.bind_dimensions();
