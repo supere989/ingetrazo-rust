@@ -18,7 +18,9 @@ fn mesh_state(
 ) -> Result<Value, String> {
     let point = |i: usize| {
         let p = mesh.vertices[i].position;
-        if m == m.as_mat4().as_dmat4() && p == p.as_vec3().as_dvec3() {
+        if m == DMat4::IDENTITY {
+            p
+        } else if m == m.as_mat4().as_dmat4() && p == p.as_vec3().as_dvec3() {
             ingetrazo_core::change_axes::map(m, p)
         } else {
             m.transform_point3(p)

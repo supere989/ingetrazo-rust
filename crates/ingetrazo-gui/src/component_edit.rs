@@ -269,7 +269,10 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
                 // Original container bake happens outside History on entry.
                 // Its world mesh/child placements already form the edit view;
                 // Finish persists that representation without a second bake.
-                candidate.groups[group_index].transform=candidate.dimension_frame.inverse();
+                // Qt identity inverse/baked-container constructor returns exact
+                // identity, including positive zero coefficients. Nonidentity
+                // native frames retain their established precision path.
+                candidate.groups[group_index].transform=if candidate.dimension_frame==glam::DMat4::IDENTITY{glam::DMat4::IDENTITY}else{candidate.dimension_frame.inverse()};
             }
             if let Some(axes)=session.container_axes {
                 if !candidate.groups[group_index].native_document.is_object() {candidate.groups[group_index].native_document=serde_json::json!({});}
