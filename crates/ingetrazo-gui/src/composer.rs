@@ -453,6 +453,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             ui.horizontal(|ui| {
                 ui.label(egui::RichText::new(tr("Composer:")).strong());
 
+                annotation_authoring::toolbar(app,ui);
                 let sheet = &mut app.scene.sheets[sheet_idx];
 
                 // Paper Size
@@ -496,7 +497,6 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 });
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
 
-                annotation_authoring::toolbar(app,ui);
                 let legend_button=ui.button(tr("+ Legend"));add_legend|=legend_button.clicked();legend_authoring::observe(ui,"legend-ui-add",legend_button.rect);
                 let add_picture_button=ui.button(tr("+ Image"));add_picture|=add_picture_button.clicked();
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("picture-ui-add"),add_picture_button.rect));}

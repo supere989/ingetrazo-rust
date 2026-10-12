@@ -1,9 +1,9 @@
 //! Retained annotation coverage on the existing native CAD callback path.
 //! Layout ownership and source hit testing belong to the authoring controller.
+use super::text_canvas::CanvasPainter;
 use crate::{
     composer_annotations::Draws,
     composer_backend::{Factory, Handle},
-    composer_text_canvas::CanvasPainter,
 };
 use egui::{Pos2, Rect, Vec2};
 use ingetrazo_formats::sheet_pdf::{Draw, PathOp};
