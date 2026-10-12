@@ -415,8 +415,17 @@ mod fixture {
                         self.report["calibration"].as_array_mut().unwrap().push(json!({"case":self.cases[self.case]["name"],"event":"actual-size-change","requested_inner":[requested.x,requested.y],"previous_inner":[previous.x,previous.y],"observed_inner":[window.width(),window.height()],"observed_viewport":[rect.width(),rect.height()]}));
                         self.resize_pending = None;
                     }
-                    let requested =
+                    let desired =
                         window.size() + egui::vec2(width - rect.width(), height - rect.height());
+                    let pixels_per_point = ctx.pixels_per_point();
+                    if !pixels_per_point.is_finite() || pixels_per_point <= 0. {
+                        return Err("Actual window pixel scale is invalid".into());
+                    }
+                    // The OS acknowledges integral physical pixels, not fractional points.
+                    let requested = egui::vec2(
+                        (desired.x * pixels_per_point).round() / pixels_per_point,
+                        (desired.y * pixels_per_point).round() / pixels_per_point,
+                    );
                     self.report["calibration"].as_array_mut().unwrap().push(json!({"case":self.cases[self.case]["name"],"event":"request","requested_inner":[requested.x,requested.y],"observed_inner":[window.width(),window.height()],"observed_viewport":[rect.width(),rect.height()],"wanted_viewport":[width,height]}));
                     self.persist()?;
                     self.resize_pending = Some((requested, window.size(), Instant::now()));
