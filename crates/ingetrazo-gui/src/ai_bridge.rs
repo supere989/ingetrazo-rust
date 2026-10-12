@@ -183,10 +183,32 @@ impl IngeTrazoApp {
     }
     pub(crate) fn poll_ai_bridge(&mut self) {
         if let Some(mut bridge) = self.ai_bridge.take() {
-            match bridge.poll(|request| self.ai_bridge_request(request)) {
+            match bridge.poll_deferred(|request,context| {
+                if request["tool"].as_str()==Some("screenshot") {
+                    let wire_id=request.get("id").cloned().unwrap_or(Value::Null);
+                    let admission=(|| {
+                        if self.ai_bridge_capture.is_some() { return Err("A viewport capture is already owned".to_owned()); }
+                        let id=self.ai_bridge_capture_serial.checked_add(1).ok_or("Viewport capture identity exhausted")?;
+                        let pending=crate::ai_bridge_capture::PendingCapture::begin(self,id,wire_id.clone(),request.get("args"),context)?;
+                        self.ai_bridge_capture_serial=id;
+                        self.ai_bridge_capture=Some(pending);
+                        Ok::<_,String>(())
+                    })();
+                    match admission { Ok(())=>None,Err(error)=>Some(json!({"id":wire_id,"ok":false,"error":error})) }
+                }else {Some(self.ai_bridge_request(request))}
+            }) {
                 Ok(_) => self.ai_bridge = Some(bridge),
                 Err(error) => self.status_message = format!("Bridge stopped: {error}"),
             }
+        }
+    }
+    /// Called by the render owner only after its capture submission has retired
+    /// or been quarantined. No GPU work runs in the UI dispatch closure above.
+    pub(crate) fn finish_ai_bridge_capture(&mut self,pending:crate::ai_bridge_capture::PendingCapture,result:crate::ai_bridge_capture::CaptureResult)->Result<bool,String> {
+        let reply=pending.finish(self,result);
+        match self.ai_bridge.as_mut() {
+            Some(bridge)=>bridge.complete_deferred(reply).map_err(str::to_owned),
+            None=>Ok(false),
         }
     }
     fn ai_bridge_run_python(&mut self, args: Option<&Value>) -> Result<Value, String> {
