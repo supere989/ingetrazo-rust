@@ -1,0 +1,122 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual screenshot socket handler, real Qt GPU current viewport, requested-size rerender with unchanged camera and logical overlay layout. Eight finite image outputs plus two literal argument refusals; no full platform GPU parity, arbitrary styles, line-guide depth or OS-window/chrome capture claim.",
+  "cases": [
+    {
+      "name": "default-perspective",
+      "replies": 1
+    },
+    {
+      "name": "clamped-and-portrait",
+      "replies": 3
+    },
+    {
+      "name": "orthographic-live-depth",
+      "replies": 2
+    },
+    {
+      "name": "committed-selected-overlays",
+      "replies": 1
+    },
+    {
+      "name": "active-edit-context",
+      "replies": 1
+    },
+    {
+      "name": "invalid-dimensions",
+      "replies": 2
+    }
+  ],
+  "states": 10,
+  "images": 8,
+  "fixture_publication": "Original Scene/Mesh/Dimension/TextLabel/Guide/SectionPlane/GeoPath/GeoPoint constructors seed an input IGZ. Selected annotation membership is declared fixture publication, not a UI selection claim. Active edit uses actual begin_group_edit. No expected render values authored.",
+  "source_context": "Actual xcb/Xvfb/software GL if needed; source _gl/_program/context/FBO required valid. Fixed logical widget800x600, DPR1, camera aspect comes from actual resizeGL. Ordinary current-camera frame required before requests. Offscreen-without-GL refused, never used as render oracle.",
+  "live_depth_law": {
+    "source": "views/viewport.py:2115-2125,1273-1338,10612-10645",
+    "rule": "Export paint returns before normal depth snapshot reset/capture. Logical committed annotation overlays use retained live depth snapshot, not export target depth. Snap/hover rubber bands excluded; committed selection ink retained.",
+    "controls": [
+      "actual GPU context",
+      "8 nonuniform actual decoded outputs",
+      "live target identity/size restored",
+      "live depth snapshot identity retained",
+      "ordinary world RGBA unchanged",
+      "full declared model/overlay/history/camera/context/current-file/dirty/epoch unchanged"
+    ]
+  },
+  "path_scope": "Raw source reply path retained. Native response must be an actual existing encoded viewport PNG under its real temporary directory; file content/extent observations are independent, never copied from source. Encoded PNG compressor bytes are diagnostic; decoded RGBA is strict.",
+  "source_producer_sha256": "6d68639bffc8efd9393a657fbe8f2ca027ccafc7f51130d5cfb4188e122d3337",
+  "observation_helper": {
+    "path": "scripts/exchange_import_observations.py",
+    "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+  },
+  "original_sources": [
+    {
+      "path": "plugins/ai_bridge.py",
+      "sha256": "01c4cdcaeee19840980018636378e29f090c02abb0263a3a2c71a091ed145aeb"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52"
+    },
+    {
+      "path": "core/dimension.py",
+      "sha256": "2253da1bb8e186f786c8fcfb780d91ca48460926a1641f8c42913473109f2ce6"
+    },
+    {
+      "path": "core/textlabel.py",
+      "sha256": "7ef512a89a591baa3149ec71b6d5e733f2831783091fe800323a003d449424bf"
+    },
+    {
+      "path": "core/guide.py",
+      "sha256": "a95d0ec873c58c34bd14e23c5e34d56d14bc38cdcd0b0008678be7eb2966d4f6"
+    },
+    {
+      "path": "core/section.py",
+      "sha256": "ace64d908292afdf1e79263117a2c7e1a752ecf4f096aa6a106d4adef98a9826"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "georef/geopath.py",
+      "sha256": "bf164fb5c53c4e621f03d103c75416823a71892461b425aec1946cacce45c348"
+    },
+    {
+      "path": "georef/points.py",
+      "sha256": "e04c08759c30aa62e78557613cd81dd4e454eabf871fe3f78207a22d6c0b4c9a"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    }
+  ],
+  "not_claimed": [
+    "whole screenshot parity before actual native comparison",
+    "screen chrome or UI control pixels",
+    "all styles/resources/section cuts/line guides",
+    "hardware/Metal/platform-specific fonts",
+    "representative performance"
+  ],
+  "dimension_observer": "Pinned formats/igz.py355\u2013363 live a/b/offset/axis/layer/text fields, represented with explicit nullable optional fields; no invented Dimension.to_dict."
+}
