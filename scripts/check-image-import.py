@@ -36,6 +36,7 @@ def metadata(a,b):
   phases=['before']+[v['phase']for v in c['actions']]+['external-removed']+(['finish']if c['edit_path']else[])+['save']
   exact(phases,c['phases'],c['name']+'/sourcephaseinventory')
   expected.extend((c['name'],phase)for phase in phases)
+ assert len(expected)==len(a['states'])==114,'frozen114stateinventory'
  assert [(v['case'],v['phase'])for v in a['states']]==expected,'sourceinventory'
  exact([{k:c[k]for k in ['name','saved','phases','cache_reuse']}for c in a['cases']],b['cases'],'cases')
  exact(a['states'],b['states'],'states')
