@@ -1,0 +1,9 @@
+Publication `7358baaf` has terminal broad **FAIL** ([38322949326](https://github.com/supere989/ingetrazo-rust/actions/runs/38322949326)). Linux failed workspace integration tests on old blank-document assumptions after the genuine startup figure; subsequent acceptance stages were skipped. Windows compile/recovery and both Apple cross-compilation jobs passed. Both native Mac jobs failed capture, picture/annotation, authoring/frame, section/depth and text checks; Intel also failed dimensions and packaged startup. Exact fresh job/step states are retained.
+
+The independent ordered run reports **PASS** ([38322949279](https://github.com/supere989/ingetrazo-rust/actions/runs/38322949279)). This packet authenticates its API outcome only, not new whole-image acceptance.
+
+Both complete native Mac artifacts and every nested member are authenticated against terminal artifact API digests. Each probe authenticated 32 frozen source members and its actual binary, then returned 1 at the readiness bound: ARM 45.257s, Intel 45.358s. ARM rejected required shadow/image/leader annotation passes; Intel refused measured source annotation sample resolve. Neither completed three positive captures or quarantine controls. Tracked reports are not fresh acceptance unless their actual step executed successfully. Source records remain referenced unchanged, with zero source recaptures.
+
+Separately, explicit blank inputs at `3a4430ac` preserve assertions and production constructor behavior. Actual dirty execution on `7358baaf` used the exact committed file SHA; all 14 targeted tests passed (0.14s, root-recorded build 7.40s). This is a local fixture repair, not a CI rerun. Subsequent Metal repairs are not covered by this publication.
+
+API transitions, immutable raw artifacts, executed Git bytes, failure logs and local correction provenance remain retained. Classification counts and release gates are unchanged; no platform/GPU promotion is made.
