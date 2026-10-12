@@ -3,7 +3,7 @@
 //! no rendering process, raster screenshot, or intermediate image is required.
 use pdf_writer::{
     types::{CidFontType, FontFlags, SystemInfo},
-    Name, Pdf, Rect, Ref, Str,
+    Filter, Name, Pdf, Rect, Ref, Str,
 };
 use std::{io::Write, path::Path};
 #[derive(Clone, Debug)]
@@ -230,6 +230,11 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
     let mut font_inputs: Vec<(std::rc::Rc<crate::paper_font::CachedFont>, Vec<u32>)> = Vec::new();
     let mut font_indices: std::collections::HashMap<crate::paper_font::FontKey, usize> =
         std::collections::HashMap::new();
+    // Immutable pixel owners are shared with the raster export cache. A resource
+    // is encoded once even if referenced by several draws or pages.
+    let mut picture_inputs: Vec<&ingetrazo_core::paper_picture::Pixels> = Vec::new();
+    let mut picture_indices = std::collections::HashMap::new();
+    let mut picture_source_bytes = 0usize;
     for page in pages {
         if page
             .device_dpi
@@ -261,6 +266,36 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             return Err("PDF draw budget exceeded".into());
         }
         for draw in &page.draws {
+            if let Some(picture) = &draw.picture {
+                picture.validate()?;
+                if draw.text.is_some() || !draw.path.is_empty() || draw.stroke.is_some()
+                    || draw.fill.is_some() || draw.stroke_options.is_some()
+                    || draw.rotation_deg != 0. || draw.flatten_transform
+                {
+                    return Err("PDF picture requires a separate unrotated image draw".into());
+                }
+                for axis in 0..2 {
+                    let start = draw.origin_mm[axis] + picture.rect_mm[axis];
+                    let end = start + picture.rect_mm[axis + 2];
+                    if !start.is_finite() || !end.is_finite()
+                        || start.abs() > 1_000_000. || end.abs() > 1_000_000.
+                    {
+                        return Err("PDF picture extent exceeds physical domain".into());
+                    }
+                }
+                path_commands = path_commands.checked_add(1).ok_or("PDF picture count overflow")?;
+                if !picture_indices.contains_key(&picture.image.id()) {
+                    picture_source_bytes = picture_source_bytes.checked_add(picture.image.bytes())
+                        .ok_or("PDF picture source byte count overflow")?;
+                    if picture_source_bytes > MAX_PICTURE_BYTES {
+                        return Err("PDF aggregate picture source budget exceeded".into());
+                    }
+                    picture_inputs.try_reserve(1).map_err(|_| "PDF picture inventory allocation failed")?;
+                    picture_indices.try_reserve(1).map_err(|_| "PDF picture inventory allocation failed")?;
+                    picture_indices.insert(picture.image.id(), picture_inputs.len());
+                    picture_inputs.push(&picture.image);
+                }
+            }
             if !draw.rotation_deg.is_finite()||draw.rotation_deg.abs()>1_000_000.||draw.rotation_deg!=0.&&(draw.flatten_transform||draw.text.is_some()){return Err("Invalid physical path rotation".into());}
             if let Some(text) = &draw.text {
                 if !draw.path.is_empty()
@@ -469,6 +504,17 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
         font_refs.push(font_ref);
         next += 5;
     }
+    let mut picture_refs = Vec::new();
+    picture_refs.try_reserve_exact(picture_inputs.len())
+        .map_err(|_| "PDF picture reference allocation failed")?;
+    let mut picture_payload_bytes = 0usize;
+    for image in &picture_inputs {
+        let image_ref = Ref::new(next);
+        let mask_ref = Ref::new(next + 1);
+        next += 2;
+        write_picture(&mut pdf, image_ref, mask_ref, image, &mut picture_payload_bytes)?;
+        picture_refs.push(image_ref);
+    }
     let mut ids = Vec::new();
     pdf.catalog(catalog).pages(tree);
     for page in pages {
@@ -505,6 +551,26 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
         )
         .unwrap();
         for (i, draw) in page.draws.iter().enumerate() {
+            if let Some(picture) = &draw.picture {
+                let index = picture_indices[&picture.image.id()];
+                writeln!(content, "q\n/{} gs", names[i]).unwrap();
+                for clip in [&draw.clip, &draw.clip_intersection].into_iter().flatten() {
+                    path(&mut content, clip, original_qt, Some((draw.origin_mm, local_scale)));
+                    content.extend_from_slice(if draw.even_odd { b"W* n\n" } else { b"W n\n" });
+                }
+                let [x, y, width, height] = picture.rect_mm;
+                let iw = picture.image.width();
+                let ih = picture.image.height();
+                // Keep QPdfEngine's two transforms: serializing a fused matrix
+                // changes the source's truncated logical-device operands.
+                writeln!(content, "{} 0 0 {} {} {} cm\n{} 0 0 -{} 0 {} cm /Im{} Do\nQ",
+                    number(width / f64::from(iw) * local_scale),
+                    number(height / f64::from(ih) * local_scale),
+                    number((draw.origin_mm[0] + x) * local_scale),
+                    number((draw.origin_mm[1] + y) * local_scale),
+                    iw, ih, ih, index).unwrap();
+                continue;
+            }
             if let Some(text) = &draw.text {
                 let index = font_indices[&text.font.key()];
                 let resource = &fonts[index];
@@ -689,6 +755,17 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
             states.pair(Name(names[i].as_bytes()), *id);
         }
         drop(states);
+        if page.draws.iter().any(|d| d.picture.is_some()) {
+            let mut images = resources.x_objects();
+            // A page references the shared identity table, without copying pixels.
+            let mut used = std::collections::HashSet::new();
+            for picture in page.draws.iter().filter_map(|draw| draw.picture.as_ref()) {
+                let index = picture_indices[&picture.image.id()];
+                if used.insert(index) {
+                    images.pair(Name(format!("Im{index}").as_bytes()), picture_refs[index]);
+                }
+            }
+        }
         if page.draws.iter().any(|d| d.text.is_some()) {
             let mut font_resources = resources.fonts();
             for (index, font_ref) in font_refs.iter().enumerate() {
@@ -698,6 +775,89 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
     }
     pdf.pages(tree).kids(ids).count(pages.len() as i32);
     Ok(pdf.finish())
+}
+// Source owners and encoded image payloads each have an aggregate admission.
+// pdf-writer copies stream bytes into its output, so the current JPEG/mask is
+// temporarily retained alongside that output. Row conversion stays bounded;
+// there is no full RGB or alpha plane in addition to the shared RGBA owner.
+const MAX_PICTURE_BYTES: usize = 256 * 1024 * 1024;
+struct PictureBytes {
+    bytes: Vec<u8>,
+    limit: usize,
+}
+impl Write for PictureBytes {
+    fn write(&mut self, data: &[u8]) -> std::io::Result<usize> {
+        let end = self.bytes.len().checked_add(data.len())
+            .filter(|&n| n <= self.limit)
+            .ok_or_else(|| std::io::Error::other("PDF aggregate picture payload budget exceeded"))?;
+        if end > self.bytes.capacity() {
+            let capacity = self.bytes.capacity().saturating_mul(2).max(8192).max(end).min(self.limit);
+            self.bytes.try_reserve_exact(capacity - self.bytes.len())
+                .map_err(|_| std::io::Error::other("PDF picture payload allocation failed"))?;
+        }
+        self.bytes.extend_from_slice(data);
+        Ok(data.len())
+    }
+    fn flush(&mut self) -> std::io::Result<()> { Ok(()) }
+}
+fn write_picture(
+    pdf: &mut Pdf, image_ref: Ref, mask_ref: Ref,
+    image: &ingetrazo_core::paper_picture::Pixels, payload_bytes: &mut usize,
+) -> Result<(), String> {
+    let mut jpeg = PictureBytes { bytes: Vec::new(), limit: MAX_PICTURE_BYTES - *payload_bytes };
+    crate::sheet_jpeg::encode_picture(&mut jpeg, image.width(), image.height(), image.rgba())?;
+    let mut has_mask = false;
+    let mut soft_mask = false;
+    for rgba in image.rgba().chunks_exact(4) {
+        has_mask |= rgba[3] < 255;
+        if rgba[3] != 0 && rgba[3] != 255 { soft_mask = true; break; }
+    }
+    let mut mask = None;
+    if has_mask {
+        let limit = MAX_PICTURE_BYTES.checked_sub(*payload_bytes)
+            .and_then(|n| n.checked_sub(jpeg.bytes.capacity()))
+            .ok_or("PDF aggregate picture payload budget exceeded")?;
+        let mut compressed = flate2::write::ZlibEncoder::new(
+            PictureBytes { bytes: Vec::new(), limit }, flate2::Compression::default());
+        let mut row = [0u8; 8192];
+        if soft_mask {
+            for pixels in image.rgba().chunks(row.len() * 4) {
+                for (alpha, rgba) in row.iter_mut().zip(pixels.chunks_exact(4)) { *alpha = rgba[3]; }
+                compressed.write_all(&row[..pixels.len() / 4]).map_err(|e| e.to_string())?;
+            }
+        } else {
+            let width = image.width() as usize;
+            let packed = (width + 7) / 8;
+            for pixels in image.rgba().chunks_exact(width * 4) {
+                row[..packed].fill(0);
+                for (x, rgba) in pixels.chunks_exact(4).enumerate() {
+                    if rgba[3] != 0 { row[x / 8] |= 0x80 >> (x % 8); }
+                }
+                compressed.write_all(&row[..packed]).map_err(|e| e.to_string())?;
+            }
+        }
+        mask = Some(compressed.finish().map_err(|e| e.to_string())?.bytes);
+    }
+    if let Some(mask) = &mask {
+        let mut writer = pdf.image_xobject(mask_ref, mask);
+        writer.width(image.width() as i32).height(image.height() as i32).filter(Filter::FlateDecode);
+        if soft_mask {
+            writer.bits_per_component(8).color_space().device_gray();
+        } else {
+            writer.bits_per_component(1).image_mask(true).decode([1., 0.]);
+        }
+    }
+    {
+        let mut writer = pdf.image_xobject(image_ref, &jpeg.bytes);
+        writer.width(image.width() as i32).height(image.height() as i32)
+            .bits_per_component(8).filter(Filter::DctDecode);
+        writer.color_space().device_rgb();
+        if mask.is_some() {
+            if soft_mask { writer.s_mask(mask_ref); } else { writer.stencil_mask(mask_ref); }
+        }
+    }
+    *payload_bytes += jpeg.bytes.len() + mask.as_ref().map_or(0, Vec::len);
+    Ok(())
 }
 fn write_font(pdf: &mut Pdf, id: Ref, font: &crate::paper_font::PdfFont) -> Result<(), String> {
     let raw = id.get();
