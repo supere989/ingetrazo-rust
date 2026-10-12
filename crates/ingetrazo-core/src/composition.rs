@@ -381,8 +381,10 @@ impl Sheet {
         let legends=match self.native_document.get("leyendas"){None|Some(serde_json::Value::Null)=>&[][..],Some(v)=>v.as_array().map(Vec::as_slice).ok_or("Invalid physical legend inventory")?};
         let count=self.items.len().checked_add(legends.len()).filter(|n|*n<=LIMIT).ok_or("Physical item inventory exceeds budget")?;
         let mut ordered=Vec::new();ordered.try_reserve_exact(count).map_err(|_|"Physical item order allocation refused")?;
-        for index in self.visible_item_indices(){
-            let item=&self.items[index];let metadata=self.native_items.get(&item.id());
+        for (index,item) in self.items.iter().enumerate(){
+            let metadata=self.native_items.get(&item.id());
+            let hidden=match item{SheetItem::Shape(v)=>v.shape.hidden,_=>metadata.and_then(|v|v.get("hidden")).and_then(|v|v.as_bool()).unwrap_or(false)};
+            if hidden{continue;}
             let z=if let SheetItem::Shape(v)=item{v.shape.z}else{metadata.and_then(|v|v.get("z")).and_then(|v|v.as_f64()).unwrap_or(0.)};
             if !z.is_finite(){return Err("Invalid physical stacking order".into());}
             let category=match item{SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::Shape(_)=>6,SheetItem::TitleBlock(_)=>14};

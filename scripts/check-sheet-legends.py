@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strict physical symbol images + paired PDF render, no fitted tolerances."""
+"""Strict physical legend images + paired PDF render, no fitted tolerances."""
 import json,sys,hashlib,subprocess
 from pathlib import Path
 from PySide6.QtGui import QImage,QPainter
@@ -38,6 +38,8 @@ for row,actual in zip(src['images'],got['images']):
    im=QImage(raw.size(),QImage.Format_RGB32);im.fill(0xffffffff);painter=QPainter(im);painter.drawImage(0,0,raw);painter.end();file=Path(tmp)/(label+'.png');assert im.save(str(file));paths.append(file)
   pdf=compare(*paths)
  report.append({'case':row['case'],'image':image,'pdf':pdf})
+# Preserve observed pixel differences even if a later ownership/control check fails.
+out.write_text(json.dumps({'comparisons':report,'result':'remaining_checks_pending'},indent=2)+'\n')
 assert got['atomic_refusal']is True
 # Original IGZ reader verifies saved legend order/coordinates/rows, without source recapture.
 import sys
@@ -49,7 +51,7 @@ for row,actual in zip(src['images'],got['images']):
  a=Scene();b=Scene();igz.load_into(a,source/row['scene']);igz.load_into(b,native/actual['portable'])
  assert [x.to_dict()if hasattr(x,'to_dict')else vars(x)for x in a.compositions[0].leyendas]==[x.to_dict()if hasattr(x,'to_dict')else vars(x)for x in b.compositions[0].leyendas]
  portable.append(row['case'])
-# Schema mutations are checked independently of the honest two-pixel baseline failure.
+# Schema mutations are checked independently of any retained pixel failure.
 import copy,tempfile
 negative=[]
 for name,mutate in [
