@@ -1,0 +1,9 @@
+{
+  "path": "/tmp/ingetrazo-profile-integration",
+  "files": 112,
+  "bytes": 762885,
+  "archive_sha256": "35aeccf8e01b801d59542a99d8fef256fe08aec900fc9580d410723115c8d070",
+  "independent_review": "72e5c9e6",
+  "authenticated_raw_against_canonical": true,
+  "removed_at_utc": "2026-10-12T03:20:30.868961+00:00"
+}

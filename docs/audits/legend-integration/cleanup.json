@@ -1,0 +1,18 @@
+{
+  "raw_path": "/tmp/ingetrazo-legend-integration",
+  "files": 424,
+  "raw_bytes": 237269249,
+  "archive_sha256": "ed9bb3f33ebddca11450e293b6e545f3ff8d257d15a95d75ca345a376bd31d5b",
+  "root_raw_authenticated": true,
+  "independent_review": "abb31cbe",
+  "independent_raw_authenticated": true,
+  "removed_at": "2026-10-12T03:39:12.121549+00:00",
+  "preserved": [
+    "canonical records and references",
+    "failure records",
+    "original source tree",
+    "isolated worktrees",
+    "dependencies",
+    "shared compiled target"
+  ]
+}
