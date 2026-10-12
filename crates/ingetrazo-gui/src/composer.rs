@@ -744,7 +744,7 @@ fn frame_camera_live(scene:&Scene,frame:&ViewFrame,live:&ingetrazo_core::camera:
 fn frame_camera(scene:&Scene,frame:&ViewFrame)->ingetrazo_core::camera::OrbitCamera{
  frame_camera_with_base(scene,frame,&scene.camera)
 }
-fn frame_camera_with_base(scene:&Scene,frame:&ViewFrame,base:&ingetrazo_core::camera::OrbitCamera)->ingetrazo_core::camera::OrbitCamera{
+pub(crate) fn frame_camera_with_base(scene:&Scene,frame:&ViewFrame,base:&ingetrazo_core::camera::OrbitCamera)->ingetrazo_core::camera::OrbitCamera{
  use ingetrazo_core::camera::StandardView;
  let mut camera=base.clone();let bound=frame.view_key.starts_with("scene:")&&scene.saved_views.iter().any(|v|Some(v.name.as_str())==frame.view_key.strip_prefix("scene:"));
  if frame.view_key.starts_with("std:"){camera.set_standard_view(match frame.view_key.as_str(){"std:front"=>StandardView::Front,"std:right"=>StandardView::Right,"std:back"=>StandardView::Back,"std:left"=>StandardView::Left,"std:iso"=>StandardView::Iso,"std:bottom"=>StandardView::Bottom,_=>StandardView::Top});if matches!(frame.view_key.as_str(),"std:top"|"std:bottom"){camera.pitch=if frame.view_key=="std:top"{std::f64::consts::FRAC_PI_2}else{-std::f64::consts::FRAC_PI_2};camera.up=DVec3::Y;}if let Some((lo,hi))=frame_bounds(scene){camera.target=(lo+hi)/2.;}}
