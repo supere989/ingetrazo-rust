@@ -237,22 +237,34 @@ impl Cache {
                 let right = rounded(dst[0] + dst[2]).clamp(0, i64::from(width));
                 let top = rounded(dst[1]).clamp(0, i64::from(height));
                 let bottom = rounded(dst[1] + dst[3]).clamp(0, i64::from(height));
+                let input_policy = InputPolicy::native();
                 for y in top..bottom {
                     let fy = (((y as f64 + 0.5) * my + ty) * 65536.) as i64 - 32768;
                     let start = (((left as f64 + 0.5) * mx + tx) * 65536.) as i64 - 32768;
+                    let mut group_begin = None;
+                    let mut input_flags = None;
                     for x in left..right {
+                        let relative = x - left;
+                        if let Some((begin, count)) = input_policy.group(relative, right - left) {
+                            if group_begin != Some(begin) {
+                                input_flags = Some(composite_group_opaque(
+                                    &source,
+                                    start + begin * fdx,
+                                    fdx,
+                                    count,
+                                    fy,
+                                ));
+                                group_begin = Some(begin);
+                            }
+                        } else {
+                            input_flags = None;
+                        }
                         let p = composite_sample64(
                             &source,
                             start + (x - left) * fdx,
                             fy,
                             x - left < ((right - left) / 4) * 4,
-                            // Qt fetches two source neighbors per output pixel.
-                            // SIMD input conversion consumes four fetched pixels;
-                            // an odd final output pair is the scalar epilogue.
-                            (x - left < ((right - left) / 2) * 2).then(|| {
-                                let first = start + ((x - left) / 2 * 2) * fdx;
-                                [first, first + fdx]
-                            }),
+                            input_flags,
                         );
                         let i = (y as usize * width as usize + x as usize) * 4;
                         rgba[i..i + 4].copy_from_slice(&p);
@@ -425,8 +437,53 @@ impl Cache {
     }
 }
 
-/// Source SSE4 input conversion uses high-word multiply/fixup in complete
-/// four-pixel groups. Its scalar epilogue uses QRgba64 rounded multiplication.
+#[derive(Clone, Copy)]
+enum InputPolicy {
+    Avx2,
+    Sse4,
+    Scalar,
+}
+impl InputPolicy {
+    fn native() -> Self {
+        #[cfg(target_arch = "x86_64")]
+        {
+            if std::is_x86_feature_detected!("avx2") {
+                return Self::Avx2;
+            }
+            if std::is_x86_feature_detected!("sse4.1") {
+                return Self::Sse4;
+            }
+        }
+        Self::Scalar
+    }
+    fn group(self, offset: i64, length: i64) -> Option<(i64, i64)> {
+        match self {
+            Self::Avx2 => {
+                let begin = offset / 4 * 4;
+                Some((begin, (length - begin).min(4)))
+            }
+            Self::Sse4 => {
+                let begin = offset / 2 * 2;
+                (length - begin >= 2).then_some((begin, 2))
+            }
+            Self::Scalar => None,
+        }
+    }
+}
+fn composite_group_opaque(image: &Pixels, first: i64, step: i64, count: i64, fy: i64) -> [bool; 2] {
+    std::array::from_fn(|row| {
+        let y = ((fy >> 16) + row as i64).clamp(0, i64::from(image.height()) - 1) as usize;
+        (0..count).all(|i| {
+            let x = (first + i * step) >> 16;
+            [x, x + 1].iter().all(|x| {
+                let x = (*x).clamp(0, i64::from(image.width()) - 1) as usize;
+                image.rgba()[(y * image.width() as usize + x) * 4 + 3] == 255
+            })
+        })
+    })
+}
+/// Qt AVX2 uses high-word/fixup for eight inputs, including its masked tail.
+/// SSE4 uses four inputs and a scalar epilogue; generic conversion is scalar.
 fn premultiplied_input64(p: &[u8], vector: bool, opaque_group: bool) -> [u64; 4] {
     let a = u64::from(p[3]) * 257;
     std::array::from_fn(|c| {
@@ -454,7 +511,7 @@ fn composite_sample64(
     fx: i64,
     fy: i64,
     vector_store: bool,
-    input_group: Option<[i64; 2]>,
+    input_flags: Option<[bool; 2]>,
 ) -> [u8; 4] {
     let source_pixel = |x: i64, y: i64| {
         let x = x.clamp(0, i64::from(image.width()) - 1) as usize;
@@ -462,20 +519,11 @@ fn composite_sample64(
         &image.rgba()[(y * image.width() as usize + x) * 4..][..4]
     };
     let y = fy >> 16;
-    let opaque_group = |row: i64| {
-        input_group.is_some_and(|positions| {
-            positions.iter().all(|fx| {
-                let x = fx >> 16;
-                source_pixel(x, row)[3] == 255 && source_pixel(x + 1, row)[3] == 255
-            })
-        })
-    };
-    let top_opaque = opaque_group(y);
-    let bottom_opaque = opaque_group(y + 1);
+    let [top_opaque, bottom_opaque] = input_flags.unwrap_or([false; 2]);
     let pixel = |x: i64, row: i64| {
         premultiplied_input64(
             source_pixel(x, row),
-            input_group.is_some(),
+            input_flags.is_some(),
             if row == y { top_opaque } else { bottom_opaque },
         )
     };
@@ -537,7 +585,8 @@ fn composite_sample64(
 
 #[cfg(test)]
 mod alpha_input_tests {
-    use super::premultiplied_input64;
+    use super::{composite_group_opaque, premultiplied_input64, InputPolicy};
+    use ingetrazo_core::paper_picture::Pixels;
     #[test]
     fn qt_argb32_input_vector_and_scalar_epilogue() {
         // Actual Qt6.12 ARGB32->RGBA64_PM QPainter observation on four
@@ -557,6 +606,29 @@ mod alpha_input_tests {
         for (p, out) in pixels.iter().zip(expected) {
             assert_eq!(premultiplied_input64(p, true, false), out);
         }
+        // Actual AVX2 eight-input mixed-group and masked-six-input observations.
+        assert_eq!(InputPolicy::Avx2.group(2, 3), Some((0, 3)));
+        assert_eq!(InputPolicy::Avx2.group(4, 6), Some((4, 2)));
+        assert_eq!(InputPolicy::Sse4.group(2, 3), None);
+        assert_eq!(InputPolicy::Scalar.group(0, 6), None);
+        let image = Pixels::new(
+            5,
+            1,
+            [[100, 100, 100, 255]; 4]
+                .into_iter()
+                .chain([[57, 44, 36, 14]])
+                .flatten()
+                .collect(),
+        )
+        .unwrap();
+        // Eight fetched neighbors span four output pixels. The partial neighbor
+        // in the last pair makes the first opaque pair use the mixed-group law.
+        assert_eq!(
+            composite_group_opaque(&image, 0, 65536, 4, 0),
+            [false, false]
+        );
+        assert_eq!(composite_group_opaque(&image, 0, 65536, 2, 0), [true, true]);
+
         assert_eq!(
             premultiplied_input64(&pixels[2], false, false),
             [804, 621, 508, 3598]
