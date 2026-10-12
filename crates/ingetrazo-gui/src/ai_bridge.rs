@@ -274,6 +274,9 @@ mod tests {
     #[test]
     fn real_loopback_jobs_execute_inside_production_update_ui() {
         let mut app = IngeTrazoApp::new();
+        // This socket/history fixture owns one loose edge, independent of the
+        // separate source-backed MainWindow startup-figure workflows.
+        app.scene = ingetrazo_core::scene::Scene::new();
         let ctx = egui::Context::default();
         let port = app.start_ai_bridge(&ctx, 0).unwrap();
         let mut expected = app.ai_query_model();
@@ -329,6 +332,16 @@ mod tests {
                 },
                 |ctx| app.update_ui(ctx),
             );
+            // A headless UI owner has no renderer. Retire the deferred job with
+            // an explicit backend refusal rather than waiting for a GPU hook
+            // that this fixture does not own.
+            if let Some(pending) = app.ai_bridge_capture.take() {
+                let id = pending.request().id;
+                assert!(app.finish_ai_bridge_capture(pending,
+                    crate::ai_bridge_capture::CaptureResult {
+                        id, result: Err("Test UI owner has no capture backend".into()),
+                    }).unwrap());
+            }
             std::thread::sleep(Duration::from_millis(1));
         }
         let replies = peer.join().unwrap();
