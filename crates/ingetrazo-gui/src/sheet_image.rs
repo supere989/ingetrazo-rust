@@ -18,6 +18,23 @@ pub struct Plan {
     pub metrics: Metrics,
     pub(crate) records: Vec<Record>,
 }
+impl Plan {
+    /// Immutable actual prepared record inventory; diagnostic only, no new rasterization.
+    #[doc(hidden)]
+    pub fn diagnostic_records(&self)->serde_json::Value{
+        serde_json::json!(self.records.iter().map(|record|match record{
+            Record::Cad((g,b))=>serde_json::json!({"geometry_id":g.id(),"source_spans":g.source_spans().map(|s|s.rows().iter().map(|s|[i64::from(s.x),i64::from(s.y),i64::from(s.len),i64::from(s.coverage)]).collect::<Vec<_>>()),"batches":b.iter().map(|b|serde_json::json!({"first":b.first,"count":b.count,"color":b.color.0})).collect::<Vec<_>>(),"premultiplied_palette":g.premultiplied_palette().map(|p|p.iter().map(|c|c.bytes()).collect::<Vec<_>>())}),
+            Record::Picture(_)=>serde_json::json!({"picture":true})
+        }).collect::<Vec<_>>())
+    }
+    /// Retain actual preceding owners for a prefix destination export.
+    #[doc(hidden)]
+    pub fn diagnostic_prefix(&self,geometry_id:u64)->Result<Self,String>{
+        let index=self.records.iter().position(|r|matches!(r,Record::Cad((g,_))if g.id()==geometry_id)).ok_or("diagnostic geometry absent")?;
+        let records=self.records[..index].iter().map(|r|match r{Record::Cad(v)=>Record::Cad(v.clone()),Record::Picture(v)=>Record::Picture(v.clone())}).collect();
+        Ok(Self{metrics:self.metrics.clone(),records})
+    }
+}
 /// Cold export preparation. Every visible unsupported painter is reported
 /// together, before native submission or opening a destination temporary file.
 pub fn unsupported(sheet: &Sheet) -> Vec<String> {
@@ -591,6 +608,11 @@ impl crate::app::IngeTrazoApp {
             )?;
             Ok((request, plan))
         })())
+    }
+    /// Observe the same normal cold preparation; no substitute geometry producer.
+    #[doc(hidden)]
+    pub fn prepare_sheet_image_request_observed(&mut self,ctx:&egui::Context)->(Option<Result<(Request,Plan),String>>,Vec<serde_json::Value>){
+        crate::sheet_image_paths::observe_spans(||self.prepare_sheet_image_request(ctx))
     }
     #[doc(hidden)]
     pub fn sheet_image_result(&mut self, result: Result<(), String>) {

@@ -7,6 +7,28 @@ use ingetrazo_render::{
     cad2d::{EncodedRgba, PremultipliedRgba8},
     qt_gray::{PathContour, Segment, Span},
 };
+thread_local! {
+    static SPAN_OBSERVATIONS: std::cell::RefCell<Option<Vec<serde_json::Value>>> = const { std::cell::RefCell::new(None) };
+}
+/// Explicit cold diagnostic scope. Ordinary preparation has no observation owner.
+pub(crate) fn observe_spans<R>(operation: impl FnOnce()->R)->(R,Vec<serde_json::Value>){
+    struct Reset;
+    impl Drop for Reset {fn drop(&mut self){SPAN_OBSERVATIONS.with(|v|{v.borrow_mut().take();});}}
+    SPAN_OBSERVATIONS.with(|v|{assert!(v.borrow().is_none(),"nested span observation");*v.borrow_mut()=Some(Vec::new());});
+    let guard=Reset;let result=operation();
+    let observations=SPAN_OBSERVATIONS.with(|v|v.borrow_mut().take().unwrap());drop(guard);(result,observations)
+}
+fn span_rows(spans:&[Span])->serde_json::Value{serde_json::json!(spans.iter().map(|s|[i64::from(s.x),i64::from(s.y),i64::from(s.len),i64::from(s.coverage)]).collect::<Vec<_>>())}
+fn path_rows(ops:&[PathOp])->serde_json::Value{serde_json::json!(ops.iter().map(|o|match o{PathOp::Move(p)=>serde_json::json!(["move",p]),PathOp::Line(p)=>serde_json::json!(["line",p]),PathOp::Cubic(p)=>serde_json::json!(["cubic",p]),PathOp::Close=>serde_json::json!(["close"])}).collect::<Vec<_>>())}
+fn start_observation(draw:&Draw,spans:&[Span],density:f64,origin:[f64;2],bounds:Option<[i32;4]>,masks:&[Vec<Span>])->Option<serde_json::Value>{
+    SPAN_OBSERVATIONS.with(|v|v.borrow().as_ref().map(|_|serde_json::json!({"path":path_rows(&draw.path),"origin_mm":draw.origin_mm,"density":density,"translation_px":origin,"stroke":draw.stroke,"options":draw.stroke_options.as_ref().map(|o|serde_json::json!({"cap":o.cap,"join":o.join,"dash":o.dash})),"clip":draw.clip.as_ref().map(|p|path_rows(p)),"clip_intersection":draw.clip_intersection.as_ref().map(|p|path_rows(p)),"clip_bounds":bounds,"masks":masks.iter().map(|m|span_rows(m)).collect::<Vec<_>>(),"preclip_spans":span_rows(spans)})))
+}
+fn finish_observation(mut observation:Option<serde_json::Value>,spans:&[Span],record:&crate::sheet_image::Records){
+    if let Some(mut observation)=observation.take(){
+        observation["postmask_spans"]=span_rows(spans);observation["geometry_id"]=serde_json::json!(record.0.id());
+        SPAN_OBSERVATIONS.with(|v|{if let Some(rows)=v.borrow_mut().as_mut(){assert!(rows.len()<1000,"span observation bound");rows.push(observation);}});
+    }
+}
 pub(crate) fn paths(ops: &[PathOp]) -> Result<Vec<PathContour>, String> {
     let mut out: Vec<PathContour> = Vec::new();
     for op in ops {
@@ -430,18 +452,16 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
             let mut refusal=None;
             outlines.retain(|path|match outline_visible(path,density,origin,bounds,device){Ok(visible)=>visible,Err(e)=>{refusal=Some(e);false}});
             if let Some(error)=refusal{return Err(error);}
-            let spans = clip(
-                ingetrazo_render::qt_gray::rasterize_transformed_paths(
-                    &outlines, density, origin, 250_000, 100_000,
-                )?,
-                bounds,
-            );
-            let spans = mask_clip(spans,&masks)?;
+            let spans=ingetrazo_render::qt_gray::rasterize_transformed_paths(&outlines,density,origin,250_000,100_000)?;
+            let observation=start_observation(draw,&spans,density,origin,bounds,&masks);
+            let spans=mask_clip(clip(spans,bounds),&masks)?;
             if !spans.is_empty() {
-                records.push(crate::composer_border::physical_layers(vec![(
-                    spans,
-                    color(rgba)?,
-                )])?);
+                // Diagnostic snapshots observe these exact published runs;
+                // ordinary preparation does not clone or rerasterize them.
+                let observed=observation.as_ref().map(|_|spans.clone());
+                let record=crate::composer_border::physical_layers(vec![(spans,color(rgba)?)])?;
+                if let Some(spans)=observed{finish_observation(observation,&spans,&record);}
+                records.push(record);
             }
         }
     }
