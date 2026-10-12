@@ -85,7 +85,18 @@ impl Probe {
         if app.scene.dimensions.is_empty() || app.scene.text_labels.is_empty() {
             return Err("Actual committed dimension/text fixture required".into());
         }
-        app.selected_dimension = Some(0);
+        if self.recipe["selected_annotations"].as_bool() == Some(true) {
+            app.scene
+                .selection
+                .insert(ingetrazo_core::scene::SelectionItem::Dimension(0));
+            app.scene
+                .selection
+                .insert(ingetrazo_core::scene::SelectionItem::TextLabel(0));
+        }
+        app.current_file = self.recipe["initial_file"].as_str().map(PathBuf::from);
+        if self.recipe["initial_dirty"].as_bool() == Some(true) {
+            app.document_session.clean = None;
+        }
         Ok(())
     }
     pub fn tick(&mut self, state: &mut super::State, ctx: &egui::Context) -> Result<bool, String> {
