@@ -495,10 +495,11 @@ fn source_dashed_bevel(
     let mut run = Vec::new();
     let (mut idash, mut pos, mut offset, mut start) = (0usize, 0., 0., 0.);
     let mut steps = 0usize;
+    let mut move_to=DVec2::from_array(path.start);
     for edge in points.windows(2) {
         let a = DVec2::from_array(edge[0]);
         let b = DVec2::from_array(edge[1]);
-        let length = (b - a).length();
+        let d=b-a;let length=d.x.hypot(d.y);
         let stop = start + length;
         while pos < stop {
             steps += 1;
@@ -516,7 +517,8 @@ fn source_dashed_bevel(
                 if run.is_empty() {
                     run.try_reserve(2)
                         .map_err(|_| "Physical dash allocation refused")?;
-                    run.push(a + (b - a) * ((pos - start) / length));
+                    // QDashStroker retains the preceding pointAt endpoint.
+                    run.push(move_to);
                 }
                 run.try_reserve(1)
                     .map_err(|_| "Physical dash allocation refused")?;
@@ -534,6 +536,7 @@ fn source_dashed_bevel(
                 idash = (idash + 1) % 2;
                 offset = 0.;
             }
+            move_to=p;
         }
         start = stop;
     }
