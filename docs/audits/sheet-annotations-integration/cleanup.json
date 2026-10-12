@@ -1,0 +1,51 @@
+{
+  "scope": "Only terminal generated test state/config/data/cache/session directories. Authenticated sources, exports, failures, canonical evidence and shared build target retained.",
+  "directories": [
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-integration-r2/replay/cache",
+      "files": 14,
+      "bytes": 2630792
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-integration-r2/replay/native/session",
+      "files": 1,
+      "bytes": 1368
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-diagnostic/replay/cache",
+      "files": 14,
+      "bytes": 2630792
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-diagnostic/replay/native/session",
+      "files": 1,
+      "bytes": 1306
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-integration-r3/replay/cache",
+      "files": 14,
+      "bytes": 2630792
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-integration-r3/replay/native/session",
+      "files": 1,
+      "bytes": 1341
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-integration-r4/replay/cache",
+      "files": 14,
+      "bytes": 2630792
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-integration-r4/replay/native/session",
+      "files": 1,
+      "bytes": 1341
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-annotations-hardware/native/session",
+      "files": 1,
+      "bytes": 821
+    }
+  ],
+  "total_bytes": 10529345
+}

@@ -13,3 +13,5 @@ Six focused tests passed: one core category-order test and five Qt-line tests. T
 Source captures are not duplicated here. The unchanged original corpus is authenticated by archive SHA-256 `6bd1016cfd82f10ff194730faf4904252bfc688562662153418b827f5ccf3be8`, with original Python pinned to `6be29fe437a7cd992d4e079f71720821b25216b9`. Extracted source copies, generated configuration, caches, sessions and state directories are excluded. No new source capture or owner build was performed for packaging.
 
 This batch covers consuming export painters and preserved saved data. It does not claim annotation authoring UI, model-view anchor synchronization, platform-independent font equality or complete physical pixel parity. Source fonts and Qt rasterization remain part of the strict frozen reference.
+
+After root authenticated all archive members and Git bindings, ten terminal generated test-state/session directories containing 10,530,166 logical bytes were purged. Source inputs, exports, retained failures and the shared build target remain available. [Container cleanup](cleanup.json) and [hardware-session cleanup](hardware-cleanup.json) record the exact paths.

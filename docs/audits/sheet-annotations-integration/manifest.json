@@ -1564,7 +1564,7 @@
   },
   "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "source_archive_sha256": "6bd1016cfd82f10ff194730faf4904252bfc688562662153418b827f5ccf3be8",
-  "source_manifest_sha256": "e5acf13b28453ea355639e914b93a47d8df45888c8dd77b104328dc57f3d7cca",
+  "source_manifest_sha256": "0b507374f1b700df9d3c009caaaea7bd11d94cf64f729a3afc7d437b9eefdcc7",
   "executed": {
     "integration": {
       "head": "51aed7593c632a09cd0461a22eea83b92b8d4eb4",
@@ -1585,6 +1585,12 @@
     "integration-r4": {
       "head": "a0b1dd997743795c2cbf6d2643ea4366e48056a0",
       "binary_sha256": "ebdb50fb9ff443b1ac12f4325ac7c2a48882e06f3fe3b29a523c07f8d1bb0d45"
+    },
+    "integration-r3-corrected-checker": {
+      "helper_commit": "1fd654ca93961f515857bf40a4d5ac26b5596786",
+      "runtime_head": "d518faae710cfccf3f8ee9c885e16b59912e7e8d",
+      "report": "integration-r3/replay/comparison-corrected-checker.json",
+      "scope": "Checker-only retry using unchanged native outputs after fixing the NumPy global alias. No native execution or source capture repeated."
     }
   },
   "git_bindings": [
@@ -2067,6 +2073,12 @@
       "commit": "a0b1dd997743795c2cbf6d2643ea4366e48056a0",
       "path": "scripts/replay-sheet-annotations.py",
       "sha256": "6f7ee9cfc825597494b0616ce29f2d4c9f0a9d0aca92e4cdb575d7233213b07b"
+    },
+    {
+      "stage": "integration-r3-corrected-checker",
+      "commit": "1fd654ca93961f515857bf40a4d5ac26b5596786",
+      "path": "scripts/check-sheet-annotations.py",
+      "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
     }
   ],
   "focused_unchanged_bindings": [
@@ -2098,5 +2110,7 @@
     "strict_result": "fail",
     "hardware_duplicate_files": 114
   },
-  "scope": "Native exports/readers/refusal/cache controls complete; strict physical pixel parity remains FAIL. Hardware payloads byte-identical to software. No UI authoring or Model View anchor synchronization claim."
+  "scope": "Native exports/readers/refusal/cache controls complete; strict physical pixel parity remains FAIL. Hardware payloads byte-identical to software. No UI authoring or Model View anchor synchronization claim.",
+  "prior_source_manifest_sha256": "e5acf13b28453ea355639e914b93a47d8df45888c8dd77b104328dc57f3d7cca",
+  "source_manifest_commit": "a0b1dd997743795c2cbf6d2643ea4366e48056a0"
 }
