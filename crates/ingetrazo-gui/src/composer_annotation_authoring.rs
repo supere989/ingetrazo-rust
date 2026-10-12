@@ -953,7 +953,9 @@ pub(super) fn paint(
         family: f,
         index,
     };
-    let value = record(app, owner).ok_or("Annotation no longer exists")?;
+    let value = app.scene.sheets[s].native_document.get(FAMILIES[f])
+        .and_then(Value::as_array).and_then(|rows|rows.get(index))
+        .ok_or("Annotation no longer exists")?;
     let x = value.get("x_mm").and_then(Value::as_f64).unwrap_or(0.);
     let y = value.get("y_mm").and_then(Value::as_f64).unwrap_or(0.);
     let fields = matches!(f, 3 | 5)
