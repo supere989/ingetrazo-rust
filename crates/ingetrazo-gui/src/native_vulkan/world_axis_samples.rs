@@ -1,11 +1,11 @@
 //! Diagnostic-only precise per-sample query counts; never writes attachments.
 use ash::{vk, Device};
 pub(super) const SITES: [[i32; 2]; 4] = [[575, 1], [749, 441], [1, 639], [825, 227]];
-const COUNT: u32 = 96;
+const COUNT: u32 = 97;
 pub(super) struct Owner {
     device: Device,
     pool: vk::QueryPool,
-    pipelines: [vk::Pipeline; 8],
+    pipelines: [vk::Pipeline; 9],
     recorded: bool,
 }
 impl Owner {
@@ -31,7 +31,7 @@ impl Owner {
         let mut owner = Self {
             device: device.clone(),
             pool,
-            pipelines: [vk::Pipeline::null(); 8],
+            pipelines: [vk::Pipeline::null(); 9],
             recorded: false,
         };
         for sample in 0..4 {
@@ -51,6 +51,18 @@ impl Owner {
                 )?;
             }
         }
+        owner.pipelines[8] = super::make_pipeline_source_depth_query(
+            device,
+            pass,
+            layout,
+            super::WorldPass::Axes,
+            samples,
+            false,
+            Some(&[0xf]),
+            false,
+            source_depth,
+            Some(false),
+        )?;
         Ok(owner)
     }
     pub(super) fn reset(&mut self, command: vk::CommandBuffer) {
@@ -63,6 +75,23 @@ impl Owner {
     pub(super) fn record(&mut self, command: vk::CommandBuffer, extent: vk::Extent2D) {
         let mut query = 0;
         unsafe {
+            self.device.cmd_set_scissor(
+                command,
+                0,
+                &[vk::Rect2D {
+                    offset: vk::Offset2D::default(),
+                    extent,
+                }],
+            );
+            self.device.cmd_bind_pipeline(
+                command,
+                vk::PipelineBindPoint::GRAPHICS,
+                self.pipelines[8],
+            );
+            self.device
+                .cmd_begin_query(command, self.pool, 96, vk::QueryControlFlags::PRECISE);
+            self.device.cmd_draw(command, 3126, 1, 0, 0);
+            self.device.cmd_end_query(command, self.pool, 96);
             for axis in 0..3 {
                 for [x, top_y] in SITES {
                     self.device.cmd_set_scissor(
@@ -136,14 +165,9 @@ impl Owner {
                 }
             }
         }
-        let positive = rows.iter().any(|row: &serde_json::Value| {
-            row["site_top_origin"] == serde_json::json!([825, 227])
-                && row["counts"]["depth_disabled"]
-                    .as_u64()
-                    .is_some_and(|count| count > 0)
-        });
+        let positive = values[96] > 0;
         Ok(
-            serde_json::json!({"positive_control_passed":positive,"positive_control_site":[825,227],"scope":"Precise per-sample occlusion counts before ordinary axes draw; not raw stored color/depth","requested_extent":[1024,768],"color_writes":false,"depth_writes":false,"precise_feature_admitted":true,"rows":rows}),
+            serde_json::json!({"positive_control_passed":positive,"positive_control_scope":"Full viewport, all four samples, actual 3126-vertex axes draw, depth disabled; counts only","full_viewport_depth_disabled_count":values[96],"diagnostic_short_dash_site":[825,227],"scope":"Precise per-sample occlusion counts before ordinary axes draw; not raw stored color/depth","requested_extent":[1024,768],"color_writes":false,"depth_writes":false,"precise_feature_admitted":true,"rows":rows}),
         )
     }
 }

@@ -31,7 +31,7 @@ gl.glGetVertexAttribfv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctyp
 gl.glBindFramebuffer.argtypes=[ctypes.c_uint,ctypes.c_uint]
 gl.glGetFramebufferAttachmentParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)];gl.glBindRenderbuffer.argtypes=[ctypes.c_uint,ctypes.c_uint];gl.glGetRenderbufferParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
 gl.glIsEnabled.argtypes=[ctypes.c_uint];gl.glIsEnabled.restype=ctypes.c_ubyte;gl.glGetFloatv.argtypes=[ctypes.c_uint,ctypes.POINTER(ctypes.c_float)]
-rows=[];buffers={};sample_rows=[];sites=[(575,1),(749,441),(1,639),(825,227)];
+rows=[];buffers={};sample_rows=[];full_viewport_rows=[];sites=[(575,1),(749,441),(1,639),(825,227)];
 assert not args.sample_counts or args.requested_draw_only
 original_gl=v._gl;before=copy.deepcopy(observation(host))
 def integers(key,n=1):a=(ctypes.c_int*n)();gl.glGetIntegerv(key,a);return list(a)
@@ -85,6 +85,13 @@ def sample_counts(arguments):
  result=[]
  try:
   gl.glColorMask(0,0,0,0);gl.glDepthMask(0);gl.glEnable(0x0C11);gl.glEnable(0x8E51)
+  gl.glDisable(0x0B71);gl.glSampleMaski(0,0xf);gl.glScissor(0,0,1024,768)
+  gl.glBeginQuery(0x8914,query[0])
+  try:original_gl.glDrawArrays(*arguments)
+  finally:gl.glEndQuery(0x8914)
+  full=(ctypes.c_uint*1)();gl.glGetQueryObjectuiv(query[0],0x8866,full)
+  full_viewport_rows.append({"axis_first":int(arguments[1]),"count":int(full[0]),"sample_mask":15,"depth_enabled":False,"scissor":[0,0,1024,768]})
+  gl.glScissor(*box);gl.glSampleMaski(0,mask[0]&0xffffffff);(gl.glEnable if depth_test else gl.glDisable)(0x0B71)
   for x,top_y in sites:
    y=767-top_y
    assert not scissor or(box[0]<=x<box[0]+box[2]and box[1]<=y<box[1]+box[3])
@@ -151,7 +158,7 @@ assert len(rows)==3 and len(buffers)==1 and not errors and observation(host)==be
 assert rows[0]["mvp"]==rows[1]["mvp"]==rows[2]["mvp"]
 assert all(row["viewport"]==([0,0,1024,768]if args.requested_draw_only else[0,0,800,600])and row["clip_enabled"]==0 for row in rows)
 raw=next(iter(buffers.values()));(out/"source-axis-vbo.bin").write_bytes(raw)
-result={"source_pin":PIN,"case":case["name"],"scope":("Actual requested 1024x768 GPU draw only, without toImage/QPainter/PNG; retained live framebuffer/depth restored." if args.requested_draw_only else "Read-only actual delegated ordinary live GL axes calls at declared frozen pose; no screenshot/render_image/PNG or source-corpus recapture."),"before":before,"after":observation(host),"readonly":True,"hook_restored":v._gl is original_gl,"callback_errors":errors,"vbo":{"file":"source-axis-vbo.bin","size":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),"stride":12,"count":3126},"draws":rows,"axes_spans":v._axes_spans,"sample_counts":sample_rows,"positive_control_site":[825,227],"positive_control_passed":any(row["site_top_origin"]==[825,227]and row["counts"]["depth_disabled"]>0 for row in sample_rows)if args.sample_counts else None,"sample_count_scope":"Precise per-sample occlusion query counts before ordinary axes draw; not stored color/depth. Color/depth writes disabled; actual accepted VBO/program/uniforms retained.","requested_gpu_draw_only":args.requested_draw_only,"live_fbo_restored":v._scene_fbo is live_fbo,"live_depth_restored":getattr(v,"_depth_snap",None)is live_depth if args.requested_draw_only else None}
+result={"source_pin":PIN,"case":case["name"],"scope":("Actual requested 1024x768 GPU draw only, without toImage/QPainter/PNG; retained live framebuffer/depth restored." if args.requested_draw_only else "Read-only actual delegated ordinary live GL axes calls at declared frozen pose; no screenshot/render_image/PNG or source-corpus recapture."),"before":before,"after":observation(host),"readonly":True,"hook_restored":v._gl is original_gl,"callback_errors":errors,"vbo":{"file":"source-axis-vbo.bin","size":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),"stride":12,"count":3126},"draws":rows,"axes_spans":v._axes_spans,"sample_counts":sample_rows,"diagnostic_short_dash_site":[825,227],"positive_control_scope":"Full viewport, all four samples, three actual 1042-vertex axes draws, depth disabled; counts only","full_viewport_counts":full_viewport_rows,"positive_control_passed":sum(row["count"]for row in full_viewport_rows)>0 if args.sample_counts else None,"sample_count_scope":"Precise per-sample occlusion query counts before ordinary axes draw; not stored color/depth. Color/depth writes disabled; actual accepted VBO/program/uniforms retained.","requested_gpu_draw_only":args.requested_draw_only,"live_fbo_restored":v._scene_fbo is live_fbo,"live_depth_restored":getattr(v,"_depth_snap",None)is live_depth if args.requested_draw_only else None}
 (out/"source-axis-transport.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n");host.hide();
-if args.sample_counts:assert result["positive_control_passed"]is True,"Source sample-count positive control did not cover a sample"
+if args.sample_counts:assert result["positive_control_passed"]is True,"Source full-viewport sample-count positive control did not cover a sample"
 print(json.dumps({"draws":3,"vertices":3126,"readonly":True,"images_captured":0}))

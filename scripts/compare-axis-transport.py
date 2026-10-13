@@ -19,6 +19,9 @@ for i in range(3126):
 report={'diagnostic_only':True,'position_differences':len(position_differences),'position_examples':position_differences[:32],'color_differences':len(color_differences),'color_examples':color_differences[:8],'source_mvp_bits':rows[0]['mvp']['bits'],'native_mvp_bits':nt['mvp_bits'],'matrix_bits_equal':rows[0]['mvp']['bits']==nt['mvp_bits'],'source_viewport':rows[0]['viewport'],'native_extent':nt['extent'],'source_clip_enable':[x['clip_enabled'] for x in rows],'native_draw_flags':nt['draw_flags'],'source_raster_states':[x['raster_state'] for x in rows],'native_pipeline_recipe':nt['pipeline_recipe'],'source_attachments':[x['attachments'] for x in rows],'native_attachment_recipe':nt['attachment_recipe']}
 if s.get('sample_counts'):
  assert s['positive_control_passed'] is True and n['positive_control_passed'] is True
+ assert len(s['full_viewport_counts'])==3 and all(type(row['count'])is int and row['count']>=0 and row['sample_mask']==15 and row['depth_enabled']is False and row['scissor']==[0,0,1024,768]for row in s['full_viewport_counts'])
+ assert sum(row['count']for row in s['full_viewport_counts'])>0 and type(n['full_viewport_depth_disabled_count'])is int and n['full_viewport_depth_disabled_count']>0
+ report['full_viewport_control']={'source_counts':s['full_viewport_counts'],'native_count':n['full_viewport_depth_disabled_count']}
  assert s['requested_gpu_draw_only'] is True and s['live_fbo_restored'] is True and s['live_depth_restored'] is True
  assert n['requested_extent']==[1024,768] and n['precise_feature_admitted'] is True and n['live_target_restored'] is True and n['color_writes'] is False and n['depth_writes'] is False
  def indexed(items):

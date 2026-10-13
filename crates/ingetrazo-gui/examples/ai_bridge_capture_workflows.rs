@@ -463,6 +463,13 @@ mod fixture {
             f
         }
         fn build_ui(&mut self, ctx: &egui::Context) {
+            if self.failed.is_some() && std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some()
+            {
+                // The diagnostic hook has completed/retired its owned target.
+                // Preserve the failed report and close on the next real UI tick.
+                ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                return;
+            }
             self.app.update_ui(ctx);
             let result = (|| {
                 if self.started.elapsed() > Duration::from_secs(45) {

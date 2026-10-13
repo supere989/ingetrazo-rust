@@ -91,21 +91,23 @@
     ],
     "site_provenance": "Declared residual sites from frozen default-perspective-0.rgba vs retained native R10; neither coordinates nor counts adjust rendering",
     "rows": 48,
-    "queries": 96,
+    "queries": {
+      "source": 99,
+      "native": 97
+    },
     "operations": "Actual accepted axes per1042-vertex axis; sample mask1<<sample,1pixel scissor,color/depth writes off; depth test enabled/disabled",
     "scope": "Counts only; not raw attachment values or new image/golden capture",
     "native_capability": "Actual occlusionQueryPrecise feature required and enabled only for diagnostic device",
     "positive_control": {
-      "site": [
+      "scope": "Full viewport all-four-sample mask and depth disabled, color/depth writes off",
+      "source_actual_queries": 3,
+      "native_actual_queries": 1,
+      "assertion": "Total count greater than zero; report retained and exit nonzero on failure",
+      "short_dash_site": [
         825,
         227
       ],
-      "source_native_retained_R10_rgb": [
-        215,
-        175,
-        177
-      ],
-      "assertion": "At least one depth-disabled count greater than zero; failure retains report and exits nonzero"
+      "short_dash_zero_allowed": true
     }
   }
 }
