@@ -1,6 +1,6 @@
 {
  "scope":"Actual Metal World submission admission and bounded probe failure diagnostic",
- "candidate":"Successfully prepared and submitted paint contains nonempty mesh with native World TEXTURE and positive clip",
+ "candidate":"Successfully submitted PreparedPaint has actual DrawTexture::World in encoded mesh order, nonzero indices and nonempty same-law clamped target scissor",
  "storage":{"serials":32,"fixed_array":true,"warm_allocation":false},
  "admission":"At least one exact candidate serial returns true from actual MetalPresentation.was_displayed(serial)",
  "preserved":"First submitted World serial remains diagnostic provenance, never sole readiness requirement",

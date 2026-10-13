@@ -187,6 +187,19 @@ pub struct PreparedPaint {
     capture_source_depth: Option<Arc<crate::world::Prepared>>,
 }
 impl PreparedPaint {
+    /// Borrow the actual encoded draw order and native World texture owner.
+    /// Uses the same target clamp/scissor law as encode/encode_mesh.
+    pub fn has_presentable_world_draw(&self, extent: (u32, u32)) -> Result<bool, String> {
+        if self.mesh.is_none() || self.world.is_none() { return Ok(false); }
+        for item in &self.order {
+            let PaintOrder::Mesh(index) = item else { continue };
+            let draw = self.draws.get(*index).ok_or("Metal prepared draw order invalid")?;
+            if draw.count == 0 || !matches!(&draw.texture, DrawTexture::World(_)) { continue; }
+            let [x, y, right, bottom] = clipped_scissor(draw.clip, self.density, extent)?;
+            if right > x && bottom > y { return Ok(true); }
+        }
+        Ok(false)
+    }
     /// Encode world targets before any UI sampling in the same native command.
     /// The PreparedPaint owner retains the complete world frame through completion.
     pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{

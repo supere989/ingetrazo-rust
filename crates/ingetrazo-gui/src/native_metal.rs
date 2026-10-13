@@ -236,14 +236,9 @@ impl Host {
                 state
                     .painter
                     .prepare(state.gpu.metal(), &primitives, output.pixels_per_point)?;
-            // Preparation succeeded with the live World texture installed. Only
-            // real, nonempty World meshes in this submitted paint are candidates.
-            prepared_contains_world = primitives.iter().any(|primitive| {
-                matches!(&primitive.primitive, egui::epaint::Primitive::Mesh(mesh)
-                    if mesh.texture_id == world_viewport::TEXTURE
-                    && !mesh.indices.is_empty() && !mesh.vertices.is_empty()
-                    && primitive.clip_rect.is_positive())
-            });
+            // Inspect the actual prepared native draw order and target scissor,
+            // not merely the original egui texture ID or viewport enable flag.
+            prepared_contains_world = paint.has_presentable_world_draw(state.gpu.extent())?;
             state.painter.free_textures(&state.pending_textures.free);
             state.pending_textures.free.clear();
             state.gpu.present_paint(paint)
