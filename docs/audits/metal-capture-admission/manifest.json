@@ -1,0 +1,66 @@
+{
+  "scope": "Apple Rust metadata and affected shared cache tests only; no native Metal runtime/pixel acceptance",
+  "executed_revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+  "archive_sha256": "c9cf756014b9c9d9be5c993a410fc3bdd7129f7ad326805680de2009b2394222",
+  "members": {
+    "arm-metadata.log": {
+      "size": 31433,
+      "sha256": "46a3d996e0428d10a841c8bfc54d41ce5eda8882647fa5e7e39e9856a5c81c43",
+      "origin": "/tmp/ingetrazo-metal-overlay-arm-metadata-r1.log"
+    },
+    "intel-metadata.log": {
+      "size": 31044,
+      "sha256": "dde02dba4f3e8909e745ea796cec852d5385270d31432899d58e6afcd9ab8cb5",
+      "origin": "/tmp/ingetrazo-metal-overlay-intel-metadata-r1.log"
+    },
+    "shared-annotation-tests.log": {
+      "size": 27380,
+      "sha256": "4f323c253a45c456fce917a046308eeecc1d02100e053ad70e43ffaf05926a03",
+      "origin": "/tmp/ingetrazo-metal-overlay-shared-tests-r1.log"
+    }
+  },
+  "git_bindings": [
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-gui/src/annotation_overlay_geometry.rs",
+      "sha256": "93b5c744ea241965f2333273916561415587c4bcf7e7b92c8bcabc045b52b431"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-gui/src/capture_presentation.rs",
+      "sha256": "02ebba71be4d016955bfd606c4cf2d8a9e3012693194a791c177424c7094588b"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-gui/src/native_metal/bridge_capture_probe.rs",
+      "sha256": "2c435ba70375c4b976c9e21adf6b9ac9f420f1d83ca05313137cd0011383d716"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-gui/src/native_metal/distance_label.rs",
+      "sha256": "94b8d0bd24d40a975b9cdff2284c2649830a1a15978b18dbdb5e3da94107a8a4"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-gui/src/native_metal/document_annotations_probe.rs",
+      "sha256": "2d5b1bf20c6d9745089bf3a1847c8bddd11cd689b2bff19b372e85e8314abee5"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-gui/src/native_metal/world_viewport.rs",
+      "sha256": "da892cd37644b7498790b66f38577a2bdd3efa3af3f7bf0dbe8910a73a0b7a48"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "crates/ingetrazo-metal/src/world_scene.rs",
+      "sha256": "bc8737980827401be0f2196378d4be61255d13c7c1b43987c57190d121e96df8"
+    },
+    {
+      "revision": "7932c5683b43124fe2bbcd36e6ffd726f8922b4d",
+      "path": "scripts/check-metal-gui-metadata.sh",
+      "sha256": "66aac8a02eb94b52d9d0933ad259f759c4fb8b9309a2bb6f6d744f613a4ab82b"
+    }
+  ],
+  "native_execution_after_fix": false,
+  "cleanup_performed": false
+}
