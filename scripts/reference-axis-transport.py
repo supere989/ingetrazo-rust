@@ -86,7 +86,9 @@ def sample_counts(arguments):
     counts={}
     for enabled in [True,False]:
      (gl.glEnable if enabled else gl.glDisable)(0x0B71)
-     gl.glBeginQuery(0x8914,query[0]);original_gl.glDrawArrays(*arguments);gl.glEndQuery(0x8914)
+     gl.glBeginQuery(0x8914,query[0])
+     try:original_gl.glDrawArrays(*arguments)
+     finally:gl.glEndQuery(0x8914)
      count=(ctypes.c_uint*1)();gl.glGetQueryObjectuiv(query[0],0x8866,count)
      counts["depth_enabled"if enabled else"depth_disabled"]=int(count[0])
     result.append({"site_top_origin":[x,top_y],"attachment_pixel":[x,y],"axis_first":int(arguments[1]),"sample":sample,"counts":counts})
