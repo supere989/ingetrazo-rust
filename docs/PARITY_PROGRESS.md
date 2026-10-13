@@ -4,6 +4,8 @@
 
 Full Python parity remains unverified: **4 Implemented / 18 Partial / 15 Verified across 37 areas; all five release gates remain OPEN**. These are feature classifications, not effort percentages.
 
+The axis per-sample positive-control replay at `7a5c3f47` is inconclusive: source and native both report zero samples at the proposed known-visible site `(825,227)`. Source exited nonzero in 0.965 seconds; native retained its 48-row report with every count zero, then reached the 45-second diagnostic wrapper timeout. The affected native build passed in 7.35 seconds. These runs produced no images and establish neither a rendering cause nor parity acceptance. Raw attempts remain at `/tmp/ingetrazo-axis-{source,native}-samples-r2` and their corresponding attempt directories; query coordinate/state validity and diagnostic failure exit are under review. Feature classifications and release gates are unchanged.
+
 | Workstream | Accepted evidence | Remaining work |
 | --- | --- | --- |
 | Documents | P01 now satisfies its unchanged criterion: all 28 source writer fields, nested/shared transforms, materials/resources, 15 populated page-record inventories and six complete actual app edit/history/save reopens. [Integrated proof](audits/feature-workflow-integration/README.md) | Broader document workflows and feature behavior remain under their own rows and Gate 1 |
