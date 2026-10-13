@@ -43,5 +43,19 @@
     }
   ],
   "source_output": "source-axis-transport.json",
-  "native_output": "native-axis-transport.json"
+  "native_output": "native-axis-transport.json",
+  "requested_gpu_draw_only": {
+    "extent": [
+      1024,
+      768
+    ],
+    "request": {},
+    "source_gpu_sequence": "views/viewport.py render_image: retain live _scene_fbo/_fbo_size; makeCurrent; _export_size; paintGL; restore; doneCurrent",
+    "omitted": [
+      "toImage",
+      "QPainter",
+      "PNG"
+    ],
+    "acceptance": "Attachment diagnostic only; no sample/pixel acceptance"
+  }
 }
