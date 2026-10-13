@@ -37,7 +37,7 @@ impl Owner {
         for sample in 0..4 {
             for enabled in [true, false] {
                 let index = sample * 2 + usize::from(!enabled);
-                owner.pipelines[index] = super::make_pipeline_source_depth(
+                owner.pipelines[index] = super::make_pipeline_source_depth_query(
                     device,
                     pass,
                     layout,
