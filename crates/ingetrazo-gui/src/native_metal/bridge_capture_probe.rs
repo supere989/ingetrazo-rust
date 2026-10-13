@@ -1,6 +1,6 @@
 //! Real host/TCP capture admission and bounded owner-lifecycle probe.
 use crate::IngeTrazoApp;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::{
     io::{BufRead, BufReader, Write},
     net::TcpStream,
@@ -19,6 +19,7 @@ pub(super) struct Probe {
     receiver: Option<mpsc::Receiver<Result<Vec<Value>, String>>>,
     baseline: Option<Value>,
     done: bool,
+    terminal_error: Option<String>,
     port: Option<u16>,
     phase: u8,
     rows: Vec<Value>,
@@ -66,6 +67,7 @@ impl Probe {
             receiver: None,
             baseline: None,
             done: false,
+            terminal_error: None,
             port: None,
             phase: 0,
             rows: vec![],
@@ -105,6 +107,35 @@ impl Probe {
     }
     pub fn tick(&mut self, state: &mut super::State, ctx: &egui::Context) -> Result<bool, String> {
         let app = &mut state.app;
+        // A reported missing pass or measured sample-policy refusal cannot become
+        // a ready frame by waiting. Do not classify ordinary pending GPU work or
+        // allocation/device errors as an unsupported capability.
+        if self.worker.is_none() && !self.done {
+            let reason=app.native_metal_world.as_ref().and_then(|v|v.last_route_reason.as_deref()).filter(|reason|
+                ingetrazo_metal::world_scene::unsupported_stage(reason)
+                || *reason=="Metal default sample positions cannot admit measured source annotation resolve"
+                || *reason=="Metal device does not support source4x samples"
+            ).map(str::to_owned);
+            if let Some(reason) = reason {
+                let error = format!("Metal capture probe definitive backend refusal: {reason}");
+                let report = json!({"scope":"Actual Metal host capability refusal; no capture or pixel acceptance",
+                    "passed":false,"terminal":"definitive-backend-refusal","route_reason":reason,
+                    "seconds":self.started.elapsed().as_secs_f64(),
+                    "sample_diagnostics":ingetrazo_metal::annotation::sample_diagnostics(state.gpu.metal()),
+                    "readiness":{"capture_ready":app.ai_bridge_metal_capture_ready,"world_submitted":state.world_submitted,"first_world_submission":state.first_world_submission,"document_annotation_owner":app.native_metal_world.as_ref().is_some_and(|v|v.document_annotation_owner_for_probe(app))},
+                    "presentation_counters":state.gpu.counters(),"observation":observation(app),
+                    "backend_events":state.capture.diagnostics(),"rows":self.rows,
+                    "positive_requests_observed":0,"worker_started":false,"port":self.port});
+                std::fs::write(
+                    self.output.join("report.json"),
+                    serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
+                )
+                .map_err(|e| e.to_string())?;
+                self.terminal_error = Some(error.clone());
+                self.done = true;
+                return Err(error);
+            }
+        }
         if self.started.elapsed() > Duration::from_secs(45) {
             return Err("Metal host/TCP capture probe deadline exceeded".into());
         }
@@ -115,7 +146,11 @@ impl Probe {
             if !app.ai_bridge_metal_capture_ready {
                 return Ok(false);
             }
-            if !app.native_metal_world.as_ref().is_some_and(|viewport|viewport.document_annotation_owner_for_probe(app)){
+            if !app
+                .native_metal_world
+                .as_ref()
+                .is_some_and(|viewport| viewport.document_annotation_owner_for_probe(app))
+            {
                 return Err("Actual host document annotation candidate absent".into());
             }
             let baseline = observation(app);
@@ -332,6 +367,9 @@ impl Probe {
             worker
                 .join()
                 .map_err(|_| "Capture worker cleanup panicked")?;
+        }
+        if let Some(error) = &self.terminal_error {
+            return Err(error.clone());
         }
         if !self.done {
             return Err("Metal capture probe did not reach terminal report".into());
