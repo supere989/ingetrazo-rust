@@ -41,7 +41,8 @@ struct Frame {
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     // Observation only; do not hold the application drawable until its callback.
     drawable_id: usize,
-    _paint: Option<std::sync::Arc<dyn std::any::Any>>,
+    _paint: Option<std::sync::Arc<crate::egui_painter::PreparedPaint>>,
+    extent: (u32, u32),
     _canvas:Option<std::sync::Arc<crate::compute_canvas::Lease>>,
     callback_seen: std::sync::Arc<std::sync::atomic::AtomicBool>,
     callback_time: std::sync::Arc<std::sync::atomic::AtomicU64>,
@@ -67,6 +68,7 @@ pub struct MetalPresentation {
     displayed_submissions: [u64; 32],
     displayed_cursor: usize,
     extent: (u32, u32),
+    completed_world: Option<(u64, std::sync::Arc<crate::egui_painter::PreparedPaint>)>,
 }
 impl MetalPresentation {
     pub fn attach(window: std::sync::Arc<Window>, metal: NativeMetal) -> Result<Self, String> {
@@ -139,6 +141,7 @@ impl MetalPresentation {
             skipped: 0,
             displayed_submissions: [0; 32],
             displayed_cursor: 0,
+            completed_world: None,
             extent: (0, 0),
         };
         let size = window.inner_size();
@@ -174,6 +177,17 @@ impl MetalPresentation {
     /// Nonblocking completion query. Command completion alone is insufficient:
     /// presentation can still own the drawable after rendering has completed.
     pub fn poll(&mut self) -> Result<usize, String> {
+        // Source screenshot admission needs completed rendering, not a positive
+        // compositor callback. This does not retire presentation owners.
+        for frame in &self.owners.frames {
+            if frame.command.status() == MTLCommandBufferStatus::Completed && frame.command.error().is_none() {
+                if let Some(paint) = &frame._paint {
+                    if paint.has_presentable_world_draw(frame.extent)? && self.completed_world.as_ref().is_none_or(|(serial, _)| *serial < frame.submission_id) {
+                        self.completed_world = Some((frame.submission_id, paint.clone()));
+                    }
+                }
+            }
+        }
         let mut count = 0;
         loop {
             let terminal = next_terminal(&self.owners.frames, |frame| {
@@ -308,7 +322,8 @@ impl MetalPresentation {
             callback_seen,
             callback_time,
             _callback: callback,
-            _paint: paint.map(|p| p as std::sync::Arc<dyn std::any::Any>),
+            _paint: paint,
+            extent: self.extent,
             _canvas:canvas,
         });
         self.submitted += 1;
@@ -433,6 +448,16 @@ impl MetalPresentation {
     pub fn was_displayed(&self, submission: u64) -> bool {
         submission > 0 && self.displayed_submissions.contains(&submission)
     }
+    /// A single completed command receipt; stale owners are released immediately.
+    /// Successful UI-only paints never overwrite the last World receipt.
+    pub fn completed_capture_world(&mut self, world: &std::sync::Arc<crate::world::Prepared>, annotation: Option<&crate::egui_painter::AdmittedCallback>) -> Option<u64> {
+        if self.owners.metal.poisoned.load(Ordering::Acquire) || !self.completed_world.as_ref().is_some_and(|(_, paint)| paint.matches_capture_owners(world, annotation)) {
+            self.completed_world = None;
+            return None;
+        }
+        self.completed_world.as_ref().map(|(serial, _)| *serial)
+    }
+    pub fn clear_capture_world_proof(&mut self) { self.completed_world = None; }
     pub fn presentation_counters(&self) -> (u64, u64) {
         (self.displayed, self.skipped)
     }

@@ -200,6 +200,23 @@ impl PreparedPaint {
         }
         Ok(false)
     }
+    /// Exact immutable owners used by this encoded World/depth and annotation paint.
+    pub fn matches_capture_owners(&self, world: &Arc<crate::world::Prepared>, annotation: Option<&AdmittedCallback>) -> bool {
+        if !self.world.as_ref().is_some_and(|owned| Arc::ptr_eq(owned, world)) { return false; }
+        match annotation {
+            Some(owner) => self.order.iter().any(|item| match (item, &owner.prepared) {
+                (PaintOrder::Cad(a, _), NativeCallbackKind::Cad(b)) => Arc::ptr_eq(a, b),
+                (PaintOrder::Compute(a, _), NativeCallbackKind::Compute(b)) => Arc::ptr_eq(a, b),
+                _ => false,
+            }),
+            None => !self.order.iter().any(|item| match item {
+                PaintOrder::Cad(p, _) => p.annotation.is_some(),
+                PaintOrder::Compute(p, _) => p.annotation.is_some(),
+                _ => false,
+            }),
+        }
+    }
+
     /// Encode world targets before any UI sampling in the same native command.
     /// The PreparedPaint owner retains the complete world frame through completion.
     pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{

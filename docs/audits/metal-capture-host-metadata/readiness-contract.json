@@ -1,10 +1,11 @@
 {
- "scope":"Actual Metal World submission admission and bounded probe failure diagnostic",
- "candidate":"Successfully submitted PreparedPaint has actual DrawTexture::World in encoded mesh order, nonzero indices and nonempty same-law clamped target scissor",
- "storage":{"serials":32,"fixed_array":true,"warm_allocation":false},
- "admission":"At least one exact candidate serial returns true from actual MetalPresentation.was_displayed(serial)",
- "preserved":"First submitted World serial remains diagnostic provenance, never sole readiness requirement",
- "refusals":["all candidates skipped","no positive displayed timestamp","backend poisoned","unsupported current capture route"],
- "failure_report":["actual first serial","bounded candidates","exact candidate displayed checks","presentation and displayed/skipped counters","native GPU diagnostics","actual full App observation","actual capture owner events"],
- "forbidden":["count-based visible inference","retired or skipped fallback","fake presented frame","source recapture"]
+ "scope":"Source screenshot requires current successful offscreen rendering, not visible presentation",
+ "completion":"Exact MTLCommandBuffer Completed AND error()==None; actual committed PreparedPaint contains presentable World draw",
+ "ownership":"One bounded immutable existing paint Arc; exact current live World target/depth Arc and current document Cad/Compute annotation pipeline association",
+ "invalidation":"Document/model/scene/view/render epochs, 15camera bits, logical viewport and root edit context checked before bridge polling and again after it and at capture ingress",
+ "scheduling":"Poll real UI-owned bridge and service eligible offscreen capture before drawable capacity gate; unresolved presentation owners remain retained",
+ "display":"Exact was_displayed diagnostics remain separate and never inferred from completion",
+ "refusals":["error command","stale current World","changed document/camera/context","unsupported sample policy","poisoned backend"],
+ "bounds":{"completed_paint_receipts":1,"warm_scene_clones":0,"new_renderers":0},
+ "execution":"Unrun owner implementation; root owns metadata and native execution"
 }

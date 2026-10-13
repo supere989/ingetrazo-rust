@@ -122,7 +122,7 @@ impl Probe {
                     "passed":false,"terminal":"definitive-backend-refusal","route_reason":reason,
                     "seconds":self.started.elapsed().as_secs_f64(),
                     "sample_diagnostics":ingetrazo_metal::annotation::sample_diagnostics(state.gpu.metal()),
-                    "readiness":{"capture_ready":app.ai_bridge_metal_capture_ready,"world_submitted":state.world_submitted,"first_world_submission":state.first_world_submission,"world_submission_candidates":state.world_submission_candidates,"displayed_world_submission":state.displayed_world_submission,"document_annotation_owner":app.native_metal_world.as_ref().is_some_and(|v|v.document_annotation_owner_for_probe(app))},
+                    "readiness":{"capture_ready":app.ai_bridge_metal_capture_ready,"world_submitted":state.world_submitted,"first_world_submission":state.first_world_submission,"world_submission_candidates":state.world_submission_candidates,"displayed_world_submission":state.displayed_world_submission,"completed_world_submission":state.completed_world_submission,"document_annotation_owner":app.native_metal_world.as_ref().is_some_and(|v|v.document_annotation_owner_for_probe(app))},
                     "presentation_counters":state.gpu.counters(),"observation":observation(app),
                     "backend_events":state.capture.diagnostics(),"rows":self.rows,
                     "positive_requests_observed":0,"worker_started":false,"port":self.port});
@@ -145,7 +145,7 @@ impl Probe {
                     "capture_ready":app.ai_bridge_metal_capture_ready,
                     "first_world_submission":state.first_world_submission,
                     "world_submission_candidates":state.world_submission_candidates,
-                    "displayed_world_submission":state.displayed_world_submission,
+                    "displayed_world_submission":state.displayed_world_submission,"completed_world_submission":state.completed_world_submission,
                     "candidate_displayed":state.world_submission_candidates.map(|serial|serial!=0&&state.gpu.was_displayed(serial))
                 },
                 "presentation_counters":state.gpu.counters(),
@@ -337,6 +337,7 @@ impl Probe {
                                         && v.iter().all(|n| n.as_u64().is_some_and(|n| n > 0))
                                 })
                                 && event["live_depth_samples"].as_u64() == Some(4)
+                        && event["completed_world_submission"].as_u64().is_some_and(|serial| serial > 0)
                         },
                     );
                 let timeout = inventory
@@ -364,7 +365,7 @@ impl Probe {
                 state.capture.release_gate_for_probe();
                 app.stop_ai_bridge();
                 let report = json!({"scope":"Actual native Metal host/TCP finite capture probe; no source pixel acceptance inferred",
-                    "port":self.port,"fixture_ui_timeout_seconds":5,"readiness":{"first_world_submission":state.first_world_submission,"world_submission_candidates":state.world_submission_candidates,"displayed_world_submission":state.displayed_world_submission,"admission_law":"Exact candidate was_displayed(serial) observed on native owner poll"},"rows":self.rows,"before":self.baseline,"after":after,"backend_events":events,
+                    "port":self.port,"fixture_ui_timeout_seconds":5,"readiness":{"first_world_submission":state.first_world_submission,"world_submission_candidates":state.world_submission_candidates,"displayed_world_submission":state.displayed_world_submission,"completed_world_submission":state.completed_world_submission,"admission_law":"Exact successful MTLCompleted command with matching current World/depth/annotation owners; display separately observed"},"rows":self.rows,"before":self.baseline,"after":after,"backend_events":events,
                     "controls":{"actual_host":true,"actual_tcp":true,"readonly_model_history_camera":readonly,"worker_joined":true,"bridge_stopped":true,"blocked_deadline_quarantine":timeout,"poisoned_backend_quick_refusal":poison,"retained_live_depth_owner":live_depth},
                     "all_positive_requests_successful":true,"document_annotation_coverage":{"actual_host_callback":app.native_metal_world.as_ref().is_some_and(|v|v.document_annotation_owner_for_probe(app)),"dimensions":app.scene.dimensions.len(),"text_labels":app.scene.text_labels.len(),"point_guides":app.scene.guides.len(),"geo_paths":app.scene.geo_paths.len(),"geo_points":app.scene.geo_points.len(),"annotation_only_selection":app.scene.selection.iter().all(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Dimension(_)|ingetrazo_core::scene::SelectionItem::TextLabel(_)))}});
                 std::fs::write(

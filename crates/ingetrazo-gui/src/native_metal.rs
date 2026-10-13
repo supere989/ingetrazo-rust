@@ -98,6 +98,7 @@ struct State {
     world_submission_candidates: [u64; 32],
     world_submission_cursor: usize,
     displayed_world_submission: Option<u64>,
+    completed_world_submission: Option<u64>,
 }
 struct Host {
     state: Option<State>,
@@ -108,6 +109,22 @@ struct Host {
     probe: Option<lifecycle_probe::Probe>,
     bridge_probe: Option<bridge_capture_probe::Probe>,
     options: HostOptions,
+}
+impl State {
+    fn refresh_capture_readiness(&mut self) -> bool {
+        let app = &self.app;
+        let gpu = &mut self.gpu;
+        let serial = if EguiPainter::capture_admission(gpu.metal()).is_ok() {
+            app.native_metal_world.as_ref().filter(|viewport| viewport.capture_stamp_matches(app)).and_then(|viewport| {
+                let annotation = viewport.capture_annotation_owner(app);
+                viewport.frame.as_ref().and_then(|world| gpu.completed_capture_world(world, annotation.as_deref()))
+            })
+        } else { None };
+        if serial.is_none() { self.gpu.clear_capture_world_proof(); }
+        self.completed_world_submission = serial;
+        self.app.ai_bridge_metal_capture_ready = serial.is_some();
+        serial.is_some()
+    }
 }
 impl Host {
     fn draw(&mut self, ev: &ActiveEventLoop) {
@@ -344,6 +361,7 @@ impl ApplicationHandler for Host {
                 world_submission_candidates: [0; 32],
                 world_submission_cursor: 0,
                 displayed_world_submission: None,
+                completed_world_submission: None,
             })
         })();
         match result {
@@ -423,10 +441,14 @@ impl ApplicationHandler for Host {
                     state.displayed_world_submission = state.world_submission_candidates.iter()
                         .copied().find(|&serial| serial != 0 && state.gpu.was_displayed(serial));
                 }
-                if state.displayed_world_submission.is_some() {
-                    state.app.ai_bridge_metal_capture_ready = true;
-                }
             }
+            if let Err(error) = capture::poll(state) { state.app.status_message = error; }
+            state.refresh_capture_readiness();
+            // Real bridge ingress and offscreen export are independent of
+            // drawable capacity. Retain all unresolved presentation owners.
+            state.app.poll_ai_bridge();
+            state.refresh_capture_readiness();
+            if let Err(error) = capture::after_ui(state, &self.ctx) { state.app.status_message = error; }
             if let Some(probe)=self.bridge_probe.as_mut(){
                 match probe.tick(state,&self.ctx){
                     Ok(true)=>ev.exit(),Ok(false)=>{},Err(e)=>{self.error=Some(e);ev.exit();}

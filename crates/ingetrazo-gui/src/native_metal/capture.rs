@@ -237,9 +237,21 @@ impl Owner {
 /// Deadline/cancellation cannot free the serial bridge slot while an actual
 /// Metal submission is outstanding. Poll even if ordinary presentation pauses.
 pub(super) fn outstanding(state: &State) -> bool {
-    state.capture.flight.is_some()
+    state.capture.flight.is_some() || state.app.ai_bridge_capture.is_some()
 }
 pub(super) fn poll(state: &mut State) -> Result<(), String> {
+    // Unsubmitted requests own no GPU work. Deadline/cancel must retire their
+    // deferred slot even when no matching World can complete under backpressure.
+    let unsubmitted_error = state.app.ai_bridge_capture.as_ref().and_then(|pending| {
+        if !pending.is_live(&state.app) { Some("Metal capture cancelled before preparation".to_owned()) }
+        else { remaining(pending).err() }
+    });
+    if let Some(error) = unsubmitted_error {
+        if let Some(pending) = state.app.ai_bridge_capture.take() {
+            let id = pending.request().id;
+            state.app.finish_ai_bridge_capture(pending, CaptureResult { id, result: Err(error) })?;
+        }
+    }
     let retire = state.capture.flight.as_ref().is_some_and(|f| {
         f.submission.completed()
             || f.submission.failed()
@@ -306,6 +318,11 @@ pub(super) fn after_ui(state: &mut State, ctx: &egui::Context) -> Result<(), Str
     if state.capture.flight.is_some() {
         return Ok(());
     }
+    // A changed model/camera/context must first encode a matching World. Keep
+    // the deferred owner until that completion or its existing deadline.
+    if state.app.ai_bridge_capture.as_ref().is_some_and(|pending| pending.is_live(&state.app)) && !state.refresh_capture_readiness() {
+        return Ok(());
+    }
     let Some(pending) = state.app.ai_bridge_capture.take() else {
         return Ok(());
     };
@@ -338,9 +355,10 @@ fn capture(
         return Err("Metal capture cancelled before preparation".into());
     }
     remaining(pending)?;
-    if !state.world_submitted {
-        return Err("Metal viewport has not presented".into());
+    if !state.refresh_capture_readiness() {
+        return Err("Metal capture requires a completed current World/depth/annotation command".into());
     }
+    let completion_serial = state.completed_world_submission.ok_or("Metal completed World receipt missing")?;
     if state.app.scene.active_sheet_index.is_some() {
         return Err("Metal capture requires model viewport".into());
     }
@@ -486,7 +504,7 @@ fn capture(
         state.capture.events.push(
             serde_json::json!({"id":request.id,"requested":[request.width,request.height],
             "logical":logical,"live_depth_extent":live_extent,"live_depth_samples":live_samples,
-            "source_frame":source_identity,"target_frame":target_identity,"blocked_gate":blocked,
+            "source_frame":source_identity,"target_frame":target_identity,"blocked_gate":blocked,"completed_world_submission":completion_serial,
             "retirement":"Submitted"}),
         );
     }

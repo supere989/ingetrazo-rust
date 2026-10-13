@@ -15,9 +15,17 @@ pub(crate) struct Viewport {
     labels: Option<super::distance_label::Labels>,
     pub(crate) frame: Option<Arc<Prepared>>,
     pub(crate) last_route_reason: Option<String>,
+    capture_stamp: Option<(crate::ai_bridge_capture::CaptureStamp, RenderRevisions, u64, u64)>,
     unsupported: Option<(ingetrazo_render::scene_revision::Revisions, u16, String)>,
 }
 impl Viewport {
+    pub(crate) fn capture_stamp_matches(&self, app: &IngeTrazoApp) -> bool {
+        self.last_route_reason.is_none() && self.capture_stamp.as_ref().is_some_and(|(stamp, revisions, view, geometry)|
+            stamp.matches(app) && *revisions == app.native_render_revisions && *view == app.scene.view_version && *geometry == app.native_geometry_revision)
+    }
+    pub(crate) fn capture_annotation_owner(&self, app: &IngeTrazoApp) -> Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>> {
+        self.labels.as_ref().and_then(|labels| labels.document_owner(app))
+    }
     pub(crate) fn document_annotation_owner_for_probe(&self,app:&IngeTrazoApp)->bool{self.labels.as_ref().and_then(|labels|labels.document_owner(app)).is_some()}
     pub(crate) fn label_owner(&self)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{self.labels.as_ref().and_then(|l|l.admitted())}
     pub(crate) fn label_stats(&self)->(u64,u64){self.labels.as_ref().map(|l|l.stats()).unwrap_or((0,0))}
@@ -32,6 +40,7 @@ impl Viewport {
             labels: None,
             frame: None,
             unsupported: None,
+            capture_stamp: None,
             last_route_reason: None,
         }
     }
@@ -48,6 +57,7 @@ impl Viewport {
             return Err("Metal capture extent outside source admission".into());
         }
         let live_frame = self.frame.take();
+        let live_stamp = self.capture_stamp.take();
         let live_unsupported = self.unsupported.take();
         let live_reason = self.last_route_reason.take();
         let annotation_owner=self.labels.as_ref().and_then(|labels|labels.document_owner(app));
@@ -60,6 +70,7 @@ impl Viewport {
                 }
             });
         self.frame = live_frame;
+        self.capture_stamp = live_stamp;
         self.unsupported = live_unsupported;
         self.last_route_reason = live_reason;
         result
@@ -89,6 +100,12 @@ impl Viewport {
         }
     }
     fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32),logical_height:f32,annotations:Option<&ingetrazo_metal::egui_painter::AdmittedCallback>) -> Result<bool, String> {
+        // Capture metadata is optional for ordinary painting and staged before
+        // any World/frame publication. Active-edit capture remains unsupported.
+        let capture_stamp = if app.component_edit_stack.is_empty() {
+            crate::ai_bridge_capture::CaptureStamp::for_app(app).ok().map(|stamp|
+                (stamp, app.native_render_revisions, app.scene.view_version, app.native_geometry_revision))
+        } else { None };
         let RenderRevisions {
             static_domains,
             poses,
@@ -133,6 +150,7 @@ impl Viewport {
             Ok(Some(frame)) => {
                 self.unsupported = None;
                 self.frame = Some(frame);
+                self.capture_stamp = capture_stamp;
                 Ok(true)
             }
             Ok(None) => Ok(false),
