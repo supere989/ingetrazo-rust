@@ -598,6 +598,11 @@ mod fixture {
                         serde_json::to_vec_pretty(&report).unwrap(),
                     )
                     .map_err(|e| e.to_string())?;
+                    if std::env::var_os("INGETRAZO_AXIS_SAMPLE_PROBE").is_some()
+                        && report["positive_control_passed"] != true
+                    {
+                        return Err("Native axis sample query positive control did not cover a sample; retained report is diagnostic failure".into());
+                    }
                     Ok::<(), String>(())
                 })();
                 if let Err(error) = result {
@@ -641,6 +646,13 @@ mod fixture {
         std::env::set_var("INGETRAZO_CAPTURE_OUTPUT", &out);
         std::env::set_var("INGETRAZO_VULKAN_WORLD", "1");
         ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)?;
+        if std::env::var_os("INGETRAZO_AXIS_SAMPLE_PROBE").is_some() {
+            let report: Value =
+                serde_json::from_slice(&std::fs::read(out.join("native-axis-transport.json"))?)?;
+            if report["positive_control_passed"] != true {
+                return Err("Native sample query positive control failed; report retained".into());
+            }
+        }
         if !out
             .join(
                 if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some() {

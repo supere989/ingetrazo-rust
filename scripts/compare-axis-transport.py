@@ -18,10 +18,11 @@ for i in range(3126):
  if tuple(row['color']['bits'][:3])!=color:color_differences.append({'vertex':i,'source_bits':row['color']['bits'][:3],'native_bits':color})
 report={'diagnostic_only':True,'position_differences':len(position_differences),'position_examples':position_differences[:32],'color_differences':len(color_differences),'color_examples':color_differences[:8],'source_mvp_bits':rows[0]['mvp']['bits'],'native_mvp_bits':nt['mvp_bits'],'matrix_bits_equal':rows[0]['mvp']['bits']==nt['mvp_bits'],'source_viewport':rows[0]['viewport'],'native_extent':nt['extent'],'source_clip_enable':[x['clip_enabled'] for x in rows],'native_draw_flags':nt['draw_flags'],'source_raster_states':[x['raster_state'] for x in rows],'native_pipeline_recipe':nt['pipeline_recipe'],'source_attachments':[x['attachments'] for x in rows],'native_attachment_recipe':nt['attachment_recipe']}
 if s.get('sample_counts'):
+ assert s['positive_control_passed'] is True and n['positive_control_passed'] is True
  assert s['requested_gpu_draw_only'] is True and s['live_fbo_restored'] is True and s['live_depth_restored'] is True
  assert n['requested_extent']==[1024,768] and n['precise_feature_admitted'] is True and n['live_target_restored'] is True and n['color_writes'] is False and n['depth_writes'] is False
  def indexed(items):
-  assert len(items)==36
+  assert len(items)==48
   result={}
   for row in items:
    key=(*row['site_top_origin'],row['axis_first'],row['sample'])

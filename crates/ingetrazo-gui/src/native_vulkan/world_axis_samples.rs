@@ -1,7 +1,7 @@
 //! Diagnostic-only precise per-sample query counts; never writes attachments.
 use ash::{vk, Device};
-pub(super) const SITES: [[i32; 2]; 3] = [[575, 1], [749, 441], [1, 639]];
-const COUNT: u32 = 72;
+pub(super) const SITES: [[i32; 2]; 4] = [[575, 1], [749, 441], [1, 639], [825, 227]];
+const COUNT: u32 = 96;
 pub(super) struct Owner {
     device: Device,
     pool: vk::QueryPool,
@@ -125,7 +125,7 @@ impl Owner {
         }
         .map_err(|e| e.to_string())?;
         let mut rows = Vec::new();
-        rows.try_reserve_exact(36)
+        rows.try_reserve_exact(48)
             .map_err(|_| "Axis query report admission")?;
         let mut i = 0;
         for axis in 0..3 {
@@ -136,8 +136,14 @@ impl Owner {
                 }
             }
         }
+        let positive = rows.iter().any(|row: &serde_json::Value| {
+            row["site_top_origin"] == serde_json::json!([825, 227])
+                && row["counts"]["depth_disabled"]
+                    .as_u64()
+                    .is_some_and(|count| count > 0)
+        });
         Ok(
-            serde_json::json!({"scope":"Precise per-sample occlusion counts before ordinary axes draw; not raw stored color/depth","requested_extent":[1024,768],"color_writes":false,"depth_writes":false,"precise_feature_admitted":true,"rows":rows}),
+            serde_json::json!({"positive_control_passed":positive,"positive_control_site":[825,227],"scope":"Precise per-sample occlusion counts before ordinary axes draw; not raw stored color/depth","requested_extent":[1024,768],"color_writes":false,"depth_writes":false,"precise_feature_admitted":true,"rows":rows}),
         )
     }
 }

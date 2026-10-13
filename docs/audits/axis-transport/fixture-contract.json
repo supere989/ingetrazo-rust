@@ -83,13 +83,29 @@
       [
         1,
         639
+      ],
+      [
+        825,
+        227
       ]
     ],
     "site_provenance": "Declared residual sites from frozen default-perspective-0.rgba vs retained native R10; neither coordinates nor counts adjust rendering",
-    "rows": 36,
-    "queries": 72,
+    "rows": 48,
+    "queries": 96,
     "operations": "Actual accepted axes per1042-vertex axis; sample mask1<<sample,1pixel scissor,color/depth writes off; depth test enabled/disabled",
     "scope": "Counts only; not raw attachment values or new image/golden capture",
-    "native_capability": "Actual occlusionQueryPrecise feature required and enabled only for diagnostic device"
+    "native_capability": "Actual occlusionQueryPrecise feature required and enabled only for diagnostic device",
+    "positive_control": {
+      "site": [
+        825,
+        227
+      ],
+      "source_native_retained_R10_rgb": [
+        215,
+        175,
+        177
+      ],
+      "assertion": "At least one depth-disabled count greater than zero; failure retains report and exits nonzero"
+    }
   }
 }
