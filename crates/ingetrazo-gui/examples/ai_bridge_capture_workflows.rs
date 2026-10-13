@@ -578,7 +578,12 @@ mod fixture {
             {
                 let result = (|| {
                     let before = observe(&self.app)?;
-                    let (bytes, mut report) = system.axis_transport_for_probe()?;
+                    let (bytes, mut report) =
+                        if std::env::var_os("INGETRAZO_AXIS_SAMPLE_PROBE").is_some() {
+                            system.axis_sample_transport_for_probe(&self.app)?
+                        } else {
+                            system.axis_transport_for_probe()?
+                        };
                     let after = observe(&self.app)?;
                     if before != after {
                         return Err("Axis readback changed App state".into());
@@ -616,10 +621,13 @@ mod fixture {
             PathBuf::from(std::env::args_os().nth(1).ok_or("SOURCE required")?).canonicalize()?;
         let out = PathBuf::from(std::env::args_os().nth(2).ok_or("OUTPUT required")?);
         if let Some(flag) = std::env::args_os().nth(3) {
-            if flag != "--axis-transport-only" {
+            if flag != "--axis-transport-only" && flag != "--axis-sample-counts" {
                 return Err("Unknown diagnostic argument".into());
             }
             std::env::set_var("INGETRAZO_AXIS_TRANSPORT_PROBE", "1");
+            if flag == "--axis-sample-counts" {
+                std::env::set_var("INGETRAZO_AXIS_SAMPLE_PROBE", "1");
+            }
         }
         std::fs::create_dir_all(&out)?;
         for (key, folder) in [

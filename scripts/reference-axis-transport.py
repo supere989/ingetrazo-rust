@@ -3,7 +3,7 @@
 import argparse,ast,copy,ctypes,hashlib,json,os,struct,subprocess,sys,time,traceback
 from pathlib import Path
 PIN="6be29fe437a7cd992d4e079f71720821b25216b9"
-ap=argparse.ArgumentParser();ap.add_argument("source",type=Path);ap.add_argument("output",type=Path);ap.add_argument("--requested-draw-only",action="store_true");args=ap.parse_args();source=args.source.resolve();out=args.output.resolve();assert not out.exists();out.mkdir(parents=True)
+ap=argparse.ArgumentParser();ap.add_argument("source",type=Path);ap.add_argument("output",type=Path);ap.add_argument("--requested-draw-only",action="store_true");ap.add_argument("--sample-counts",action="store_true");args=ap.parse_args();source=args.source.resolve();out=args.output.resolve();assert not out.exists();out.mkdir(parents=True)
 for key,folder in [("XDG_CONFIG_HOME","config"),("XDG_DATA_HOME","data"),("XDG_CACHE_HOME","cache")]:os.environ[key]=str(out/folder)
 repo=Path(__file__).resolve().parents[1];original=(repo/"ingetrazo").resolve();assert subprocess.check_output(["git","-C",str(original),"rev-parse","HEAD"],text=True).strip()==PIN
 contract=json.loads((repo/"docs/audits/axis-transport/fixture-contract.json").read_text())
@@ -30,7 +30,9 @@ gl.glGetIntegerv.argtypes=[ctypes.c_uint,ctypes.POINTER(ctypes.c_int)];gl.glGetU
 gl.glBindFramebuffer.argtypes=[ctypes.c_uint,ctypes.c_uint]
 gl.glGetFramebufferAttachmentParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)];gl.glBindRenderbuffer.argtypes=[ctypes.c_uint,ctypes.c_uint];gl.glGetRenderbufferParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
 gl.glIsEnabled.argtypes=[ctypes.c_uint];gl.glIsEnabled.restype=ctypes.c_ubyte;gl.glGetFloatv.argtypes=[ctypes.c_uint,ctypes.POINTER(ctypes.c_float)]
-rows=[];buffers={};original_gl=v._gl;before=copy.deepcopy(observation(host))
+rows=[];buffers={};sample_rows=[];sites=[(575,1),(749,441),(1,639)];
+assert not args.sample_counts or args.requested_draw_only
+original_gl=v._gl;before=copy.deepcopy(observation(host))
 def integers(key,n=1):a=(ctypes.c_int*n)();gl.glGetIntegerv(key,a);return list(a)
 def uniform_float(program,location,n):assert location>=0;a=(ctypes.c_float*n)();gl.glGetUniformfv(program,location,a);return {"values":list(a),"bits":list(struct.unpack("<"+"I"*n,bytes(a))),"convention":"column-major"if n==16 else"components"}
 def raster_state():
@@ -55,6 +57,49 @@ def attachment_state():
  finally:gl.glBindRenderbuffer(0x8D41,previous)
  assert integers(0x8CA7)[0]==previous and gl.glGetError()==0
  return result
+def sample_counts(arguments):
+ assert args.requested_draw_only and integers(0x80A9)[0]==4
+ assert not gl.glIsEnabled(0x0B90),"Diagnostic does not admit stencil-writing source state"
+ gl.glGetBooleanv.argtypes=[ctypes.c_uint,ctypes.POINTER(ctypes.c_ubyte)]
+ gl.glGetIntegeri_v.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
+ gl.glColorMask.argtypes=[ctypes.c_ubyte]*4;gl.glDepthMask.argtypes=[ctypes.c_ubyte]
+ gl.glEnable.argtypes=[ctypes.c_uint];gl.glDisable.argtypes=[ctypes.c_uint];gl.glScissor.argtypes=[ctypes.c_int]*4
+ gl.glSampleMaski.argtypes=[ctypes.c_uint,ctypes.c_uint]
+ gl.glGenQueries.argtypes=[ctypes.c_int,ctypes.POINTER(ctypes.c_uint)];gl.glDeleteQueries.argtypes=[ctypes.c_int,ctypes.POINTER(ctypes.c_uint)]
+ gl.glBeginQuery.argtypes=[ctypes.c_uint,ctypes.c_uint];gl.glEndQuery.argtypes=[ctypes.c_uint]
+ gl.glGetQueryiv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
+ gl.glGetQueryObjectuiv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_uint)]
+ counter_bits=(ctypes.c_int*1)();gl.glGetQueryiv(0x8914,0x8864,counter_bits);assert counter_bits[0]>0,"Actual GL sample query counter unsupported"
+ current=(ctypes.c_int*1)();gl.glGetQueryiv(0x8914,0x8865,current);assert current[0]==0
+ color=(ctypes.c_ubyte*4)();gl.glGetBooleanv(0x0C23,color)
+ depth_write=integers(0x0B72)[0];depth_test=bool(gl.glIsEnabled(0x0B71));scissor=bool(gl.glIsEnabled(0x0C11));box=integers(0x0C10,4);mask_enabled=bool(gl.glIsEnabled(0x8E51));mask=(ctypes.c_int*1)();gl.glGetIntegeri_v(0x8E52,0,mask)
+ query=(ctypes.c_uint*1)();gl.glGenQueries(1,query);assert query[0]
+ result=[]
+ try:
+  gl.glColorMask(0,0,0,0);gl.glDepthMask(0);gl.glEnable(0x0C11);gl.glEnable(0x8E51)
+  for x,top_y in sites:
+   y=767-top_y
+   assert not scissor or(box[0]<=x<box[0]+box[2]and box[1]<=y<box[1]+box[3])
+   gl.glScissor(x,y,1,1)
+   for sample in range(4):
+    gl.glSampleMaski(0,1<<sample)
+    counts={}
+    for enabled in [True,False]:
+     (gl.glEnable if enabled else gl.glDisable)(0x0B71)
+     gl.glBeginQuery(0x8914,query[0]);original_gl.glDrawArrays(*arguments);gl.glEndQuery(0x8914)
+     count=(ctypes.c_uint*1)();gl.glGetQueryObjectuiv(query[0],0x8866,count)
+     counts["depth_enabled"if enabled else"depth_disabled"]=int(count[0])
+    result.append({"site_top_origin":[x,top_y],"attachment_pixel":[x,y],"axis_first":int(arguments[1]),"sample":sample,"counts":counts})
+ finally:
+  gl.glColorMask(*color);gl.glDepthMask(depth_write);(gl.glEnable if depth_test else gl.glDisable)(0x0B71)
+  gl.glScissor(*box);(gl.glEnable if scissor else gl.glDisable)(0x0C11)
+  gl.glSampleMaski(0,mask[0]&0xffffffff);(gl.glEnable if mask_enabled else gl.glDisable)(0x8E51)
+  gl.glDeleteQueries(1,query)
+ assert gl.glGetError()==0
+ assert raster_state()==rows[-1]["raster_state"]
+ restored_color=(ctypes.c_ubyte*4)();gl.glGetBooleanv(0x0C23,restored_color);assert list(restored_color)==list(color)
+ restored_mask=(ctypes.c_int*1)();gl.glGetIntegeri_v(0x8E52,0,restored_mask);assert restored_mask[0]==mask[0]and bool(gl.glIsEnabled(0x8E51))==mask_enabled
+ return result
 class ObservedGl:
  def __getattr__(self,name):return getattr(original_gl,name)
  def glDrawArrays(self,*arguments):
@@ -70,6 +115,7 @@ class ObservedGl:
    digest=hashlib.sha256(raw).hexdigest();buffers[digest]=raw;clip=(ctypes.c_int*1)();gl.glGetUniformiv(program,v._loc_clip_enable,clip)
    rows.append({"mode":int(mode),"first":int(first),"count":int(count),"vao":integers(0x85B5)[0],"vbo":int(buffer_id),"vbo_sha256":digest,"mvp":uniform_float(program,v._loc_mvp,16),"color":uniform_float(program,v._loc_color,4),"opacity":uniform_float(program,v._loc_opacity,1),"clip_enabled":clip[0],"clip_plane":uniform_float(program,v._loc_clip_plane,4),"viewport":integers(0x0BA2,4),"raster_state":raster_state(),"attachments":attachment_state()})
    assert gl.glGetError()==0
+   if args.sample_counts:sample_rows.extend(sample_counts(arguments))
   return original_gl.glDrawArrays(*arguments)
 live_fbo=v._scene_fbo;live_size=v._fbo_size;live_depth=getattr(v,"_depth_snap",None)
 try:
@@ -95,5 +141,5 @@ assert len(rows)==3 and len(buffers)==1 and not errors and observation(host)==be
 assert rows[0]["mvp"]==rows[1]["mvp"]==rows[2]["mvp"]
 assert all(row["viewport"]==([0,0,1024,768]if args.requested_draw_only else[0,0,800,600])and row["clip_enabled"]==0 for row in rows)
 raw=next(iter(buffers.values()));(out/"source-axis-vbo.bin").write_bytes(raw)
-result={"source_pin":PIN,"case":case["name"],"scope":("Actual requested 1024x768 GPU draw only, without toImage/QPainter/PNG; retained live framebuffer/depth restored." if args.requested_draw_only else "Read-only actual delegated ordinary live GL axes calls at declared frozen pose; no screenshot/render_image/PNG or source-corpus recapture."),"before":before,"after":observation(host),"readonly":True,"hook_restored":v._gl is original_gl,"callback_errors":errors,"vbo":{"file":"source-axis-vbo.bin","size":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),"stride":12,"count":3126},"draws":rows,"axes_spans":v._axes_spans,"requested_gpu_draw_only":args.requested_draw_only,"live_fbo_restored":v._scene_fbo is live_fbo,"live_depth_restored":getattr(v,"_depth_snap",None)is live_depth if args.requested_draw_only else None}
+result={"source_pin":PIN,"case":case["name"],"scope":("Actual requested 1024x768 GPU draw only, without toImage/QPainter/PNG; retained live framebuffer/depth restored." if args.requested_draw_only else "Read-only actual delegated ordinary live GL axes calls at declared frozen pose; no screenshot/render_image/PNG or source-corpus recapture."),"before":before,"after":observation(host),"readonly":True,"hook_restored":v._gl is original_gl,"callback_errors":errors,"vbo":{"file":"source-axis-vbo.bin","size":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),"stride":12,"count":3126},"draws":rows,"axes_spans":v._axes_spans,"sample_counts":sample_rows,"sample_count_scope":"Precise per-sample occlusion query counts before ordinary axes draw; not stored color/depth. Color/depth writes disabled; actual accepted VBO/program/uniforms retained.","requested_gpu_draw_only":args.requested_draw_only,"live_fbo_restored":v._scene_fbo is live_fbo,"live_depth_restored":getattr(v,"_depth_snap",None)is live_depth if args.requested_draw_only else None}
 (out/"source-axis-transport.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n");host.hide();print(json.dumps({"draws":3,"vertices":3126,"readonly":True,"images_captured":0}))

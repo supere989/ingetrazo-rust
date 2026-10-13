@@ -20,8 +20,15 @@ fn submit(
     pending: &PendingCapture,
     record: impl FnOnce(&mut System, vk::CommandBuffer, u64) -> Result<(), String>,
 ) -> Result<(), String> {
-    let request = pending.request();
-    if !pending.is_live(app) {
+    submit_requested(system,pending.request(),||pending.is_live(app),record)
+}
+fn submit_requested(
+    system:&mut System,
+    request:&OwnedCapture,
+    is_live:impl Fn()->bool,
+    record:impl FnOnce(&mut System,vk::CommandBuffer,u64)->Result<(),String>,
+)->Result<(),String>{
+    if !is_live() {
         return Err("Capture cancelled before GPU submission".into());
     }
     let wait = remaining(request)?;
@@ -52,7 +59,7 @@ fn submit(
             .map_err(|e| e.to_string())?;
     }
     record(system, command, serial)?;
-    if !pending.is_live(app) {
+    if !is_live() {
         return Err("Capture cancelled before GPU submission".into());
     }
     let wait = remaining(request)?;
@@ -90,6 +97,32 @@ fn submit(
 }
 
 impl System {
+    /// Diagnostic-only owned requested GPU draw. Uses the same target staging,
+    /// preparation and fenced submission as capture; no composition/readback/PNG.
+    pub fn axis_sample_transport_for_probe(&mut self,app:&crate::IngeTrazoApp)->Result<(Vec<u8>,serde_json::Value),String>{
+        if std::env::var_os("INGETRAZO_AXIS_SAMPLE_PROBE").is_none(){return Err("Axis sample diagnostic not admitted".into());}
+        if !self.world_presented{return Err("Actual live World has not presented".into());}
+        let request=OwnedCapture{id:0,width:1024,height:768,overlays:false,deadline:Instant::now()+std::time::Duration::from_secs(10),stamp:crate::ai_bridge_capture::CaptureStamp::for_app(app)?};
+        if request.stamp.logical_size()!=[800.,600.]{return Err("Axis diagnostic requires actual 800x600 logical viewport".into());}
+        self.vulkan_context.lifetime.wait(self.fence,remaining(&request)?).map_err(|e|e.to_string())?;
+        let mut world=self.world.take().ok_or("Actual World owner absent")?;
+        let live_identity=world.axis_target_identity_for_probe().ok_or("Actual live target identity absent")?;
+        let target=match world.stage_capture_target(&self.vulkan_context,vk::Extent2D{width:1024,height:768}){Ok(t)=>t,Err(e)=>{self.world=Some(world);return Err(e);}};
+        let result=(||{
+            super::prepare_app_world(app,&mut world,&self.vulkan_context,self.fence,self.draw_serial)?;
+            submit_requested(self,&request,||request.stamp.matches(app)&&Instant::now()<request.deadline,|_,command,serial|world.record(command,serial))?;
+            let mut report=world.axis_sample_report_for_probe()?;
+            let(bytes,transport)=world.axis_transport_for_probe(&self.vulkan_context)?;
+            report["transport"]=transport;report["uploaded_axis_bytes"]=serde_json::json!(bytes.len());
+            Ok::<_,String>((bytes,report))
+        })();
+        let restored=world.finish_capture_target(&self.vulkan_context,target);
+        let restored_identity=world.axis_target_identity_for_probe().is_some_and(|identity|std::sync::Arc::ptr_eq(&identity,&live_identity));
+        let result=result.and_then(|(bytes,mut report)|{if !restored_identity{return Err("Axis diagnostic did not restore live target owner".into());}report["live_target_restored"]=serde_json::json!(true);Ok((bytes,report))});
+        self.world=Some(world);
+        match(result,restored){(_,Err(e))=>Err(e),(result,Ok(()))=>result}
+    }
+
     /// Called by the UI owner after its previous frame completed. The live
     /// descriptor is never replaced; capture owns an independent temporary ID.
     pub(crate) fn capture_viewport(

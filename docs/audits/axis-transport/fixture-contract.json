@@ -30,6 +30,14 @@
     {
       "path": "views/main_window.py",
       "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "resources/shaders/basic.vert",
+      "sha256": "39f2d50c6025a968e6e49b882b195740f1ca544063f283a9b0d3392fa524db2f"
+    },
+    {
+      "path": "resources/shaders/basic.frag",
+      "sha256": "dbc25d2462913ed1dca727e50af194b2fd81534a20ed91e225e14e66f9c93112"
     }
   ],
   "support_sources": [
@@ -57,5 +65,31 @@
       "PNG"
     ],
     "acceptance": "Attachment diagnostic only; no sample/pixel acceptance"
+  },
+  "sample_count_discriminator": {
+    "extent": [
+      1024,
+      768
+    ],
+    "sites_top_origin": [
+      [
+        575,
+        1
+      ],
+      [
+        749,
+        441
+      ],
+      [
+        1,
+        639
+      ]
+    ],
+    "site_provenance": "Declared residual sites from frozen default-perspective-0.rgba vs retained native R10; neither coordinates nor counts adjust rendering",
+    "rows": 36,
+    "queries": 72,
+    "operations": "Actual accepted axes per1042-vertex axis; sample mask1<<sample,1pixel scissor,color/depth writes off; depth test enabled/disabled",
+    "scope": "Counts only; not raw attachment values or new image/golden capture",
+    "native_capability": "Actual occlusionQueryPrecise feature required and enabled only for diagnostic device"
   }
 }

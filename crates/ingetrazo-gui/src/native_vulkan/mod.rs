@@ -1208,7 +1208,9 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     eprintln!("Native present-fence negotiation: extension={has_maintenance} feature={} enabled={enabled}",maintenance.swapchain_maintenance1!=0);
     let available=unsafe{instance.get_physical_device_features(physical_device)};
     let texture_bc_enabled=available.texture_compression_bc!=0;
-    let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0).texture_compression_bc(texture_bc_enabled);
+    let axis_samples=std::env::var_os("INGETRAZO_AXIS_SAMPLE_PROBE").is_some();
+    if axis_samples && available.occlusion_query_precise==0{return Err("Actual Vulkan device cannot admit precise axis sample queries".into());}
+    let features=vk::PhysicalDeviceFeatures::default().occlusion_query_precise(axis_samples).shader_clip_distance(available.shader_clip_distance!=0).texture_compression_bc(texture_bc_enabled);
     let mut device_create_info = vk::DeviceCreateInfo::default()
         .queue_create_infos(&queue_create_infos)
         .enabled_extension_names(&device_extensions_ptrs)
