@@ -27,6 +27,7 @@ host=MainWindow();v=host.viewport;igz.load_into(v.scene,source/case["input"]);v.
 assert v.context().isValid()and v._scene_fbo.isValid()and[v.width(),v.height()]==[800,600]and v.devicePixelRatioF()==1.
 gl=ctypes.CDLL("libGL.so.1")
 gl.glGetIntegerv.argtypes=[ctypes.c_uint,ctypes.POINTER(ctypes.c_int)];gl.glGetUniformfv.argtypes=[ctypes.c_uint,ctypes.c_int,ctypes.POINTER(ctypes.c_float)];gl.glGetUniformiv.argtypes=[ctypes.c_uint,ctypes.c_int,ctypes.POINTER(ctypes.c_int)];gl.glBindBuffer.argtypes=[ctypes.c_uint,ctypes.c_uint];gl.glGetBufferParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)];gl.glGetBufferSubData.argtypes=[ctypes.c_uint,ctypes.c_ssize_t,ctypes.c_ssize_t,ctypes.c_void_p];gl.glGetError.restype=ctypes.c_uint
+gl.glGetVertexAttribfv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_float)];gl.glGetVertexAttribiv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
 gl.glBindFramebuffer.argtypes=[ctypes.c_uint,ctypes.c_uint]
 gl.glGetFramebufferAttachmentParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)];gl.glBindRenderbuffer.argtypes=[ctypes.c_uint,ctypes.c_uint];gl.glGetRenderbufferParameteriv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
 gl.glIsEnabled.argtypes=[ctypes.c_uint];gl.glIsEnabled.restype=ctypes.c_ubyte;gl.glGetFloatv.argtypes=[ctypes.c_uint,ctypes.POINTER(ctypes.c_float)]
@@ -38,6 +39,13 @@ def uniform_float(program,location,n):assert location>=0;a=(ctypes.c_float*n)();
 def raster_state():
  def float_values(key,n=1):a=(ctypes.c_float*n)();gl.glGetFloatv(key,a);return list(a)
  return {"depth_test":bool(gl.glIsEnabled(0x0B71)),"depth_func":integers(0x0B74)[0],"depth_write":bool(integers(0x0B72)[0]),"depth_range":float_values(0x0B70,2),"blend_enabled":bool(gl.glIsEnabled(0x0BE2)),"blend_src_rgb":integers(0x80C9)[0],"blend_dst_rgb":integers(0x80C8)[0],"blend_equation_rgb":integers(0x8009)[0],"line_width":float_values(0x0B21)[0],"line_smooth":bool(gl.glIsEnabled(0x0B20)),"multisample":bool(gl.glIsEnabled(0x809D)),"samples":integers(0x80A9)[0],"sample_alpha_to_coverage":bool(gl.glIsEnabled(0x809E)),"sample_coverage":bool(gl.glIsEnabled(0x80A0)),"scissor_test":bool(gl.glIsEnabled(0x0C11)),"scissor_box":integers(0x0C10,4),"polygon_offset_fill":bool(gl.glIsEnabled(0x8037)),"draw_framebuffer":integers(0x8CA6)[0]}
+def instance_attribute_state():
+ result=[]
+ for index in range(3,7):
+  values=(ctypes.c_float*4)();enabled=(ctypes.c_int*1)();gl.glGetVertexAttribfv(index,0x8626,values);gl.glGetVertexAttribiv(index,0x8622,enabled)
+  result.append({"location":index,"array_enabled":bool(enabled[0]),"generic_values":list(values),"generic_bits":list(struct.unpack("<4I",bytes(values)))})
+ assert gl.glGetError()==0
+ return result
 def attachment_state():
  def attachment(key,param):a=(ctypes.c_int*1)();gl.glGetFramebufferAttachmentParameteriv(0x8CA9,key,param,a);return a[0]
  def renderbuffer(param):a=(ctypes.c_int*1)();gl.glGetRenderbufferParameteriv(0x8D41,param,a);return a[0]
@@ -115,7 +123,7 @@ class ObservedGl:
     data=(ctypes.c_ubyte*length[0])();gl.glGetBufferSubData(0x8892,0,length[0],data);raw=bytes(data);assert gl.glGetError()==0
    finally:gl.glBindBuffer(0x8892,previous)
    digest=hashlib.sha256(raw).hexdigest();buffers[digest]=raw;clip=(ctypes.c_int*1)();gl.glGetUniformiv(program,v._loc_clip_enable,clip)
-   rows.append({"mode":int(mode),"first":int(first),"count":int(count),"vao":integers(0x85B5)[0],"vbo":int(buffer_id),"vbo_sha256":digest,"mvp":uniform_float(program,v._loc_mvp,16),"color":uniform_float(program,v._loc_color,4),"opacity":uniform_float(program,v._loc_opacity,1),"clip_enabled":clip[0],"clip_plane":uniform_float(program,v._loc_clip_plane,4),"viewport":integers(0x0BA2,4),"raster_state":raster_state(),"attachments":attachment_state()})
+   rows.append({"mode":int(mode),"first":int(first),"count":int(count),"vao":integers(0x85B5)[0],"vbo":int(buffer_id),"vbo_sha256":digest,"mvp":uniform_float(program,v._loc_mvp,16),"color":uniform_float(program,v._loc_color,4),"opacity":uniform_float(program,v._loc_opacity,1),"clip_enabled":clip[0],"clip_plane":uniform_float(program,v._loc_clip_plane,4),"viewport":integers(0x0BA2,4),"raster_state":raster_state(),"attachments":attachment_state(),"instance_attributes":instance_attribute_state()})
    assert gl.glGetError()==0
    if args.sample_counts:sample_rows.extend(sample_counts(arguments))
   return original_gl.glDrawArrays(*arguments)
