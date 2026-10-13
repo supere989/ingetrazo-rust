@@ -1,0 +1,81 @@
+{
+  "scope": "Apple Rust metadata and nine existing shared text-canvas tests; no actual Mac phase observations or pixel acceptance",
+  "executed_revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+  "archive_sha256": "583ddb2670c838a8893b0369a3240d773fb502a261024e8aa33481424917a0c3",
+  "members": {
+    "arm-metadata.log": {
+      "size": 31437,
+      "sha256": "a7a4e35016e28035cd55361ec22ef33a024da6559a5cde049a5f9b0cd5ec718a",
+      "origin": "/tmp/ingetrazo-metal-phase-aarch64-apple-darwin-metadata-r1.log"
+    },
+    "intel-metadata.log": {
+      "size": 31048,
+      "sha256": "ea389facf04fe2ec9a4def3c5d5029571f2415c75cb4d06e2f1f786b441877aa",
+      "origin": "/tmp/ingetrazo-metal-phase-x86_64-apple-darwin-metadata-r1.log"
+    },
+    "zero-filter-r1.log": {
+      "size": 26408,
+      "sha256": "370932e3dd085828da4e957773b2ed11fa3f669824334a5a32144b76a27f386b",
+      "origin": "/tmp/ingetrazo-macos-phase-shared-tests-r1.log"
+    },
+    "zero-filter-r2.log": {
+      "size": 26219,
+      "sha256": "553939c5937a2d7e20303728ce4b2a80f75fd9dfeae7784d0cd5f48dd0b7229b",
+      "origin": "/tmp/ingetrazo-macos-phase-shared-tests-r2.log"
+    },
+    "actual-tests-r3.log": {
+      "size": 1055,
+      "sha256": "9669a69e72a0e1e6b8ba274933fed321cda1139b6215212925b23ad35f975ced",
+      "origin": "/tmp/ingetrazo-macos-phase-shared-tests-r3.log"
+    }
+  },
+  "git_bindings": [
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+      "sha256": "b8a811349f783b1c4c95f46b8fcfb5df7753bebf6261c4bf370bf7a7ae690b99"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "crates/ingetrazo-formats/src/paper_font.rs",
+      "sha256": "9aa7eefcc2bd4e26863f5e3e72307b974f534c9847a65abda9862debd25e972c"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "crates/ingetrazo-gui/examples/sheet_image_workflows.rs",
+      "sha256": "75727fef29daa82920f1e70a1f62342960fd730d8c5cd136b0920e916e23bf8f"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "sha256": "5973dc6938a1f1634f77da33afe933049b0fe7424ad4a91b4ce6947d561064a6"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "scripts/replay-platform-sheet-text.py",
+      "sha256": "083e670736651703122c2b232a9ed046ff1ccd8ca8ac01524d0df172022aff41"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "docs/audits/macos-glyph-phase/fixture-contract.json",
+      "sha256": "d9183141df83fd225b947c19de5dfe6d9209b93d4ed80c52455db5132b01d217"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "crates/ingetrazo-gui/src/native_metal/bridge_capture_probe.rs",
+      "sha256": "fb0793369ad05591a4b33c545894115c69d58d238b4ad7e97dce684f66b4d773"
+    },
+    {
+      "revision": "e72a077a1ab02cb3d17ad93d6dea48ef165982ab",
+      "path": "scripts/check-metal-gui-metadata.sh",
+      "sha256": "66aac8a02eb94b52d9d0933ad259f759c4fb8b9309a2bb6f6d744f613a4ab82b"
+    }
+  ],
+  "tests": {
+    "zero_filter_attempts": 2,
+    "actual_filtered_binary_run": 9,
+    "full_suite": false
+  },
+  "native_execution": false,
+  "cleanup_performed": false
+}
