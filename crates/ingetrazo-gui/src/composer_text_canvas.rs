@@ -10,13 +10,14 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
 #[path="composer_text_ordered.rs"] mod ordered;
 #[derive(Clone)]struct Tile{factory_identity:Option<(u8,usize)>,ordered:Option<ordered::Ordered>,draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
-/// Explicit cold-export diagnostic; contains no font bytes or glyph coverage.
+/// Explicit bounded cold-export diagnostic; no font bytes retained.
 #[derive(Clone,serde::Serialize)]
 struct PhysicalGlyphObservation {
  draw:usize,glyph_index:usize,glyph:u32,font_owner:uuid::Uuid,font_face:u32,
  origin_mm:[f64;2],scale_mm:f64,density:f64,rotation_deg:f64,
  position_px:[f64;2],position_bits:[u64;2],device_px:[f64;2],device_bits:[u64;2],
  device_26_6:[i64;2],phase_count:u8,raster_origin:[f64;2],phase:[u8;2],
+ #[serde(skip_serializing_if="Option::is_none")] phase_probe:Option<serde_json::Value>,
 }
 #[derive(Clone,Default)]pub(crate) struct CanvasPainter {
  context:Option<(u64,u64,uuid::Uuid)>,layouts:HashMap<uuid::Uuid,Layout>,layout_bytes:usize,layout_order:VecDeque<uuid::Uuid>,font_refs:HashMap<FontKey,(usize,usize)>,font_bytes:usize,
@@ -71,7 +72,9 @@ impl CanvasPainter {
    if text.rotation_deg!=0.&&!text.decorations.is_empty(){return Err("Rotated physical text decorations unavailable".into());}
    for (glyph_index,glyph) in text.glyphs.iter().enumerate(){
     let x=pos[0]+(glyph.position_px[0]*cos-glyph.position_px[1]*sin)*scale;let y=pos[1]+(glyph.position_px[0]*sin+glyph.position_px[1]*cos)*scale;
-    let count=text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?;
+    let(count,phase_probe)=if OBSERVE&&glyph_index==0 {
+     text.font.observe_raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?
+    }else{(text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?,None)};
     let(fx,fy,phase)=device_position_with_count((x*64.)as i64,(y*64.)as i64,count);
     if OBSERVE {
      let rows=self.physical_observation.as_mut().ok_or("Physical observation owner lost")?;
@@ -80,7 +83,7 @@ impl CanvasPainter {
      rows.push(PhysicalGlyphObservation{draw:draw_index,glyph_index,glyph:glyph.glyph,font_owner:key.identity,font_face:key.face_index,
       origin_mm:draw.origin_mm,scale_mm:text.scale_mm,density,rotation_deg:text.rotation_deg,
       position_px:glyph.position_px,position_bits:glyph.position_px.map(f64::to_bits),device_px:[x,y],device_bits:[x.to_bits(),y.to_bits()],
-      device_26_6:[(x*64.)as i64,(y*64.)as i64],phase_count:count,raster_origin:[fx,fy],phase});
+      device_26_6:[(x*64.)as i64,(y*64.)as i64],phase_count:count,raster_origin:[fx,fy],phase,phase_probe});
     }
     let image=self.rotated_image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color,text.rotation_deg)?;
     let sample=Sample{x:fx as i64+i64::from(image.left),y:fy as i64-i64::from(image.top),image,clip};

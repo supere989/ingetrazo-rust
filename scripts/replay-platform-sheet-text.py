@@ -132,7 +132,30 @@ def main():
                                   "native_phase_counts": sorted({r["phase_count"] for r in rows}),
                                   "native_baselines": sorted({r["position_px"][1] for r in rows})})
                 assert {r["draw"] for r in placements} == set(range(len(layout["lines"])))
-                diagnostic.update(valid=True, lines=lines)
+                phase_initializations = []
+                total_mask_bytes = 0
+                for row in placements:
+                    probe = row.get("phase_probe")
+                    if probe is None:
+                        continue
+                    assert row["glyph_index"] == 0 and probe["glyph"] == row["glyph"]
+                    assert probe["cache"] in {"cold", "warm"}
+                    masks = probe["masks"]
+                    assert len(masks) == (12 if probe["cache"] == "cold" else 0)
+                    retained_masks = []
+                    for index, mask in enumerate(masks):
+                        assert mask["probe"] == index and mask["phase"] == [index * 64 // 12, 0]
+                        relative = Path(mask["file"])
+                        assert not relative.is_absolute() and ".." not in relative.parts
+                        data = (native / relative).read_bytes()
+                        assert len(data) == mask["bytes"] == mask["width"] * mask["height"]
+                        total_mask_bytes += len(data)
+                        assert total_mask_bytes <= 1024 * 1024
+                        retained_masks.append(dict(mask, sha256=digest(data)))
+                    phase_initializations.append(dict(probe, draw=row["draw"], glyph_index=row["glyph_index"], masks=retained_masks))
+                diagnostic.update(valid=True, lines=lines, phase_initializations=phase_initializations,
+                                  phase_mask_bytes=total_mask_bytes,
+                                  phase_scope="Actual native acquisition used by this physical export; source private Qt count is unobserved")
             except (AssertionError, KeyError, TypeError, ValueError, IndexError, OSError) as error:
                 diagnostic["error"] = f"{type(error).__name__}: {error}"
         else:

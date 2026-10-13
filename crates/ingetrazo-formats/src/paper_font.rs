@@ -276,6 +276,14 @@ impl CachedFont {
         }
         let _=(glyph,scale,bold,italic);Ok(4)
     }
+    /// Explicit cold-export observer; shares actual acquisition, never re-probes warm state.
+    pub fn observe_raster_phase_count(&self,glyph:u32,scale:f64,bold:bool,italic:bool)->Result<(u8,Option<serde_json::Value>),String>{
+        #[cfg(target_os="macos")]if let Some(n)=&self.native {
+            let shear=if italic&&!self.italic{crate::paper_coretext_glyph::synthetic_italic_shear()}else{0.};
+            return n.observe_raster_phase_count(glyph,scale,shear,self.synthetic_bold_offset_px(bold)?)
+        }
+        Ok((self.raster_phase_count(glyph,scale,bold,italic)?,None))
+    }
     pub fn rasterize_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic:bool)->Result<crate::paper_text::RasterGlyph,String>{
         self.rasterize_styled_glyph(glyph,scale,phase,false,italic)
     }

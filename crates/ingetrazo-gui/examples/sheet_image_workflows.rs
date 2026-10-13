@@ -4,6 +4,33 @@ use ingetrazo_core::composition::{
 };
 use ingetrazo_formats::sheet_image::Format;
 use std::path::Path;
+fn write_physical_glyph_observation(out: &Path, mut rows: serde_json::Value) -> Result<(), Box<dyn std::error::Error>> {
+    let entries = rows.as_array_mut().ok_or("Physical observation rows invalid")?;
+    let mut total = 0usize;
+    for (row_index, row) in entries.iter_mut().enumerate() {
+        let Some(probe) = row.get_mut("phase_probe") else { continue };
+        let masks = probe.get_mut("masks").and_then(|v| v.as_array_mut()).ok_or("Phase mask inventory invalid")?;
+        if masks.len() > 12 { return Err("Phase mask count exceeds actual probe bound".into()); }
+        for (index, mask) in masks.iter_mut().enumerate() {
+            let values = mask.get_mut("coverage").ok_or("Actual phase coverage missing")?.take();
+            let values = values.as_array().ok_or("Actual phase coverage invalid")?;
+            total = total.checked_add(values.len()).filter(|&n| n <= 1024*1024).ok_or("Phase output byte budget exceeded")?;
+            let mut bytes = Vec::new();
+            bytes.try_reserve_exact(values.len())?;
+            for value in values { bytes.push(u8::try_from(value.as_u64().ok_or("Phase coverage byte invalid")?)?); }
+            let width = mask["width"].as_u64().ok_or("Phase width invalid")?;
+            let height = mask["height"].as_u64().ok_or("Phase height invalid")?;
+            if width.checked_mul(height) != Some(bytes.len() as u64) { return Err("Phase mask extent invalid".into()); }
+            let file = format!("text-phase-{row_index}-{index}.a8");
+            std::fs::write(out.join(&file), &bytes)?;
+            mask.as_object_mut().ok_or("Phase mask record invalid")?.remove("coverage");
+            mask["file"] = file.into();
+            mask["bytes"] = bytes.len().into();
+        }
+    }
+    std::fs::write(out.join("text-placement.json"), serde_json::to_vec_pretty(&rows)?)?;
+    Ok(())
+}
 fn sheet(row: &serde_json::Value) -> Sheet {
     let paper = if row["paper"] == "A3" {
         PaperSize::A3
@@ -214,7 +241,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let (request, plan) = app
                 .prepare_sheet_image_request(&ctx)
                 .ok_or("Missing App export request")??;
-            if observe{std::fs::write(out.join("text-placement.json"),serde_json::to_vec_pretty(&app.take_sheet_glyph_observation()?)?)?;}
+            if observe{write_physical_glyph_observation(&out,app.take_sheet_glyph_observation()?)?;}
             renderer.save(&plan, &request.path)?;
             let decoded = image::open(&path)?.to_rgba8();
             std::fs::write(

@@ -467,23 +467,43 @@ impl NativeFont {
     /// Qt probes twelve raster positions once, using the first nonempty outline.
     /// Font engine state retains the resulting count across later glyphs/zooms.
     pub(crate) fn raster_phase_count(&self,glyph:u32,scale:f64,shear:f64,bold_offset:f64)->Result<u8,String>{
+        self.raster_phase_count_impl::<false>(glyph,scale,shear,bold_offset).map(|v|v.0)
+    }
+    pub(crate) fn observe_raster_phase_count(&self,glyph:u32,scale:f64,shear:f64,bold_offset:f64)->Result<(u8,Option<serde_json::Value>),String>{
+        self.raster_phase_count_impl::<true>(glyph,scale,shear,bold_offset)
+    }
+    fn raster_phase_count_impl<const OBSERVE:bool>(&self,glyph:u32,scale:f64,shear:f64,bold_offset:f64)->Result<(u8,Option<serde_json::Value>),String>{
         let style=usize::from(shear!=0.)*2+usize::from(bold_offset!=0.);
         let mut counts=self.raster_phase_counts.get();
-        if counts[style]!=0{return Ok(counts[style]);}
-        if self.outline(glyph)?.is_empty(){return Ok(0);}
+        if counts[style]!=0 {
+            let observation=if OBSERVE{Some(serde_json::json!({"cache":"warm","glyph":glyph,"scale":scale,"shear":shear,"bold_offset":bold_offset,"style":style,"before":counts,"after":counts,"masks":[],"scope":"No new raster probes; original acquisition was not observed"}))}else{None};
+            return Ok((counts[style],observation));
+        }
+        if self.outline(glyph)?.is_empty(){return Ok((0,None));}
+        let before=counts;
         let mut images:Vec<crate::paper_text::RasterGlyph>=Vec::new();
         images.try_reserve_exact(12).map_err(|_|"Native raster phase allocation failed")?;
+        let mut observed=Vec::new();
+        if OBSERVE{observed.try_reserve_exact(12).map_err(|_|"Native phase diagnostic allocation refused")?;}
+        let mut observed_bytes=0usize;
         let mut bytes=0usize;
         for i in 0..12 {
             let phase=(i*64/12) as u8;
             let image=self.raster(glyph,scale,[phase,0],shear,bold_offset)?;
-            if images.iter().any(|old|old.width==image.width&&old.height==image.height&&old.coverage==image.coverage){continue;}
+            let duplicate=images.iter().position(|old|old.width==image.width&&old.height==image.height&&old.coverage==image.coverage);
+            if OBSERVE {
+                observed_bytes=observed_bytes.checked_add(image.coverage.len()).filter(|&n|n<=1024*1024).ok_or("Native phase diagnostic mask budget exceeded")?;
+                observed.push(serde_json::json!({"probe":i,"phase":[phase,0],"left":image.left,"top":image.top,"width":image.width,"height":image.height,"duplicate_of_unique":duplicate,"coverage":image.coverage}));
+            }
+            if duplicate.is_some(){continue;}
             bytes=bytes.checked_add(image.coverage.len()).filter(|&n|n<=16*1024*1024).ok_or("Native raster phase byte budget exceeded")?;
             images.push(image);
         }
         let count=images.len()as u8;
         if count==0{return Err("Native raster phase count invariant failed".into());}
-        counts[style]=count;self.raster_phase_counts.set(counts);Ok(count)
+        counts[style]=count;self.raster_phase_counts.set(counts);
+        let observation=if OBSERVE{Some(serde_json::json!({"cache":"cold","glyph":glyph,"scale":scale,"shear":shear,"bold_offset":bold_offset,"style":style,"before":before,"after":counts,"count":count,"masks":observed,"scope":"Actual twelve phase rasters used by this cache initialization, including duplicates"}))}else{None};
+        Ok((count,observation))
     }
     pub(crate) fn raster(
         &self, id:u32, scale:f64, phase:[u8;2], shear:f64, bold_offset:f64,

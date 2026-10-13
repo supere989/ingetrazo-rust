@@ -1,0 +1,10 @@
+{
+  "scope": "Opt-in observation of actual native physical-export glyph acquisition; no new source images",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sources": ["docs/audits/sheet-metal-allocation/first-arm-text", "docs/audits/sheet-metal-allocation/first-intel-text"],
+  "ingress": "Existing replay-platform-sheet-text.py --observe-placement, same actual App preparation and renderer.save",
+  "observations": ["existing actual device and QFixed positions", "first glyph per actual draw", "actual style-slot count before/after", "cold twelve actual raster masks including duplicates", "warm count with no re-probe"],
+  "bounds": {"glyph_rows": 2048, "phase_masks_per_cold_acquisition": 12, "raw_mask_bytes": 1048576},
+  "invariants": ["no cache reset or pre-probe", "ordinary render math unchanged", "normal specialization retains no masks or JSON", "source Qt private cache count remains unobserved"],
+  "acceptance": "Existing strict whole-image comparison remains unchanged; diagnostic is not a parity oracle"
+}
