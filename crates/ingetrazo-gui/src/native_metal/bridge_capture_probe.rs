@@ -112,7 +112,7 @@ impl Probe {
         // allocation/device errors as an unsupported capability.
         if self.worker.is_none() && !self.done {
             let reason=app.native_metal_world.as_ref().and_then(|v|v.last_route_reason.as_deref()).filter(|reason|
-                ingetrazo_metal::world_scene::unsupported_stage(reason)
+                ingetrazo_metal::world_scene::unsupported_stage(reason.strip_prefix("Metal viewport compatibility path: ").unwrap_or(reason))
                 || *reason=="Metal default sample positions cannot admit measured source annotation resolve"
                 || *reason=="Metal device does not support source4x samples"
             ).map(str::to_owned);
