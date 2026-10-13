@@ -1,0 +1,10 @@
+{
+ "scope":"Actual Metal World submission admission and bounded probe failure diagnostic",
+ "candidate":"Successfully prepared and submitted paint contains nonempty mesh with native World TEXTURE and positive clip",
+ "storage":{"serials":32,"fixed_array":true,"warm_allocation":false},
+ "admission":"At least one exact candidate serial returns true from actual MetalPresentation.was_displayed(serial)",
+ "preserved":"First submitted World serial remains diagnostic provenance, never sole readiness requirement",
+ "refusals":["all candidates skipped","no positive displayed timestamp","backend poisoned","unsupported current capture route"],
+ "failure_report":["actual first serial","bounded candidates","exact candidate displayed checks","presentation and displayed/skipped counters","native GPU diagnostics","actual full App observation","actual capture owner events"],
+ "forbidden":["count-based visible inference","retired or skipped fallback","fake presented frame","source recapture"]
+}

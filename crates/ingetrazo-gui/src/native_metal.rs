@@ -95,6 +95,9 @@ struct State {
     world_submitted: bool,
     capture: capture::Owner,
     first_world_submission: Option<u64>,
+    world_submission_candidates: [u64; 32],
+    world_submission_cursor: usize,
+    displayed_world_submission: Option<u64>,
 }
 struct Host {
     state: Option<State>,
@@ -198,6 +201,7 @@ impl Host {
                 .unwrap_or_else(|| Instant::now() + Duration::from_secs(3600));
         }
         state.pending_textures.append(output.textures_delta);
+        let mut prepared_contains_world = false;
         let result = (|| -> Result<bool, String> {
             if !state.gpu.can_prepare()? {
                 return Ok(false);
@@ -232,16 +236,29 @@ impl Host {
                 state
                     .painter
                     .prepare(state.gpu.metal(), &primitives, output.pixels_per_point)?;
+            // Preparation succeeded with the live World texture installed. Only
+            // real, nonempty World meshes in this submitted paint are candidates.
+            prepared_contains_world = primitives.iter().any(|primitive| {
+                matches!(&primitive.primitive, egui::epaint::Primitive::Mesh(mesh)
+                    if mesh.texture_id == world_viewport::TEXTURE
+                    && !mesh.indices.is_empty() && !mesh.vertices.is_empty()
+                    && primitive.clip_rect.is_positive())
+            });
             state.painter.free_textures(&state.pending_textures.free);
             state.pending_textures.free.clear();
             state.gpu.present_paint(paint)
         })();
         match result {
             Ok(true) => {
-                if state.app.native_gpu_viewport_enabled && state.app.native_gpu_viewport_texture.is_some() && !state.world_submitted {
-                    eprintln!("Graphics backend: native Metal; first GPU world frame submitted; document={:?}", state.app.current_file);
-                    state.world_submitted=true;
-                    state.first_world_submission=Some(state.gpu.counters().0);
+                if prepared_contains_world {
+                    let serial = state.gpu.counters().0;
+                    state.world_submission_candidates[state.world_submission_cursor] = serial;
+                    state.world_submission_cursor = (state.world_submission_cursor + 1) % state.world_submission_candidates.len();
+                    if !state.world_submitted {
+                        eprintln!("Graphics backend: native Metal; first GPU world frame submitted; document={:?}", state.app.current_file);
+                        state.world_submitted = true;
+                        state.first_world_submission = Some(serial);
+                    }
                 }
                 if let Some(probe) = self.probe.as_mut() {
                     probe.submitted(&state.app, state.gpu.counters().0);
@@ -329,6 +346,9 @@ impl ApplicationHandler for Host {
                 world_submitted: false,
                 capture: {let mut owner=capture::Owner::default();if self.bridge_probe.is_some(){owner.enable_diagnostics();}owner},
                 first_world_submission: None,
+                world_submission_candidates: [0; 32],
+                world_submission_cursor: 0,
+                displayed_world_submission: None,
             })
         })();
         match result {
@@ -403,8 +423,14 @@ impl ApplicationHandler for Host {
                 state.window.set_title(&state.app.status_message);
                 self.repaint = Instant::now() + Duration::from_millis(100);
             }
-            if EguiPainter::capture_admission(state.gpu.metal()).is_ok() && state.first_world_submission.is_some_and(|serial|state.gpu.was_displayed(serial)) {
-                state.app.ai_bridge_metal_capture_ready=true;
+            if EguiPainter::capture_admission(state.gpu.metal()).is_ok() {
+                if state.displayed_world_submission.is_none() {
+                    state.displayed_world_submission = state.world_submission_candidates.iter()
+                        .copied().find(|&serial| serial != 0 && state.gpu.was_displayed(serial));
+                }
+                if state.displayed_world_submission.is_some() {
+                    state.app.ai_bridge_metal_capture_ready = true;
+                }
             }
             if let Some(probe)=self.bridge_probe.as_mut(){
                 match probe.tick(state,&self.ctx){
